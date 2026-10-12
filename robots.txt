@@ -11,4 +11,4 @@ Disallow: /ftmotion-web/siparis.html
 Disallow: /ftmotion-web/giris.html
 Disallow: /ftmotion-web/sifre-yenile.html
 
-Sitemap: https://ftmotiondesign.github.io/ftmotion-web/sitemap.xml
+Sitemap: https://ftmotion.com/sitemap.xml
