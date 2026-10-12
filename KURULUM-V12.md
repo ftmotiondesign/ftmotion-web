@@ -1,0 +1,1 @@
+FTMotion QR V12: yalnızca qr/index.html dosyasını güncelleyin. Kapak yüksekliği azaltıldı, galeri ve ek sayfa alanlarına boş durum mesajları eklendi. SQL değişikliği yok. İçerikler veri tabanında eksikse yönetim panelinden eklemek gerekir. GitHub Pages üzerinde qr/index.html konumu korunmalıdır.
