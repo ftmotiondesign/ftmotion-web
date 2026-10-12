@@ -1,14 +1,14 @@
 User-agent: *
-Allow: /ftmotion-web/
-Disallow: /ftmotion-web/panel.html
-Disallow: /ftmotion-web/yonetim.html
-Disallow: /ftmotion-web/admin-duyurular.html
-Disallow: /ftmotion-web/admin-isletmeler.html
-Disallow: /ftmotion-web/isletme-yonetimi.html
-Disallow: /ftmotion-web/qr-yonetimi.html
-Disallow: /ftmotion-web/paket-yonetimi.html
-Disallow: /ftmotion-web/siparis.html
-Disallow: /ftmotion-web/giris.html
-Disallow: /ftmotion-web/sifre-yenile.html
+Allow: /
+Disallow: /panel.html
+Disallow: /yonetim.html
+Disallow: /admin-duyurular.html
+Disallow: /admin-isletmeler.html
+Disallow: /isletme-yonetimi.html
+Disallow: /qr-yonetimi.html
+Disallow: /paket-yonetimi.html
+Disallow: /siparis.html
+Disallow: /giris.html
+Disallow: /sifre-yenile.html
 
 Sitemap: https://ftmotion.com/sitemap.xml
