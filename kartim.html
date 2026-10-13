@@ -13,6 +13,7 @@ button.secondary,.btn.secondary{background:#283b50;color:white;border:1px solid 
 .top{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}.actions{display:flex;gap:10px;flex-wrap:wrap}.preview{overflow-wrap:anywhere;color:#91f2da}
 #notice{margin-top:13px;color:#c5e6df}#notice.error{color:#ffbaa7}[hidden]{display:none!important}
 @media(max-width:650px){.fields{grid-template-columns:1fr}.card{padding:17px}}
+.photoModal[hidden]{display:none!important}.photoModal{position:fixed;inset:0;z-index:9999;background:#050a13dd;display:grid;place-items:center;padding:16px}.photoDialog{width:min(560px,100%);max-height:92vh;overflow:auto;background:#172438;border:1px solid #48617b;border-radius:17px;padding:20px}.photoDialog header{padding:0 0 12px;border:0}.photoLarge{display:block;width:100%;max-height:75vh;object-fit:contain;border-radius:10px}.photoActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}.mediaImage img{object-fit:contain;background:#0b1726}.mediaTile:first-child .mediaImage img{object-fit:contain}.mediaTile:nth-child(2) .mediaImage img{object-fit:cover}
 </style></head><body>
 <header><strong>FT<span style="color:#58dfc5">Motion</span> · QR Kartım</strong><button id="logout" class="secondary" type="button">Çıkış</button></header>
 <main><h1>İşletme Kartım</h1><p class="muted">Dijital kartınızda görünen bilgileri buradan düzenleyin.</p>
@@ -46,6 +47,7 @@ button.secondary,.btn.secondary{background:#283b50;color:white;border:1px solid 
 <label style="grid-column:1/-1">İçerik<textarea id="pContent"></textarea></label>
 </div><label><input type="checkbox" id="pActive" checked style="width:auto"> Sayfa aktif</label><div class="actions" style="margin-top:14px"><button type="submit">Sayfayı Kaydet</button><button type="button" class="secondary" id="cancelPage">Vazgeç</button></div></form></section>
 </div></main>
+<div id="photoModal" class="photoModal" hidden role="dialog" aria-modal="true" aria-labelledby="photoModalTitle"><div class="photoDialog"><header class="top"><h2 id="photoModalTitle">Fotoğraf</h2><button id="closePhotoModal" class="secondary" type="button">✕ Kapat</button></header><div id="photoModalContent"></div></div></div>
 <script type="module">
 import {client,currentUser} from './shared/supabase-client.js';
 const $=id=>document.getElementById(id), notice=(s,bad=false)=>{$('notice').textContent=s;$('notice').classList.toggle('error',bad)};
@@ -54,6 +56,18 @@ const keys=['name','location_text','phone','whatsapp','instagram','website','goo
 const mediaKeys=['logo_url','cover_url','location_video_url'];
 const slugify=s=>s.toLocaleLowerCase('tr').replace(/ı/g,'i').replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ş/g,'s').replace(/ö/g,'o').replace(/ç/g,'c').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 function pageUrl(slug){return url()+'&page='+encodeURIComponent(slug)}
+let modalReturnFocus=null;
+function closePhotoModal(){const modal=$('photoModal');modal.hidden=true;$('photoModalContent').replaceChildren();document.body.style.overflow='';modalReturnFocus?.focus();modalReturnFocus=null}
+function openPhotoModal(title,build){modalReturnFocus=document.activeElement;$('photoModalTitle').textContent=title;const content=$('photoModalContent');content.replaceChildren();build(content);$('photoModal').hidden=false;document.body.style.overflow='hidden';$('closePhotoModal').focus()}
+$('closePhotoModal').onclick=closePhotoModal;
+$('photoModal').onclick=e=>{if(e.target===$('photoModal'))closePhotoModal()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('photoModal').hidden)closePhotoModal()});
+function enlargePhoto(url,title){openPhotoModal(title,content=>{const img=document.createElement('img');img.className='photoLarge';img.src=url;img.alt=title;content.append(img)})}
+function choosePhoto(type,title){openPhotoModal(title+' Değiştir',content=>{
+const help=document.createElement('p');help.className='muted';help.textContent='Fotoğraf çekin veya cihazınızdan seçin. Ardından Dosyayı Yükle butonuna basın.';
+const actions=document.createElement('div');actions.className='photoActions';
+for(const [label,mode] of [['📷 Fotoğraf Çek','camera'],['📁 Dosya Seç','file']]){const btn=document.createElement('button');btn.type='button';btn.className=mode==='file'?'secondary':'';btn.textContent=label;btn.onclick=()=>{closePhotoModal();$('uploadType').value=type;$('uploadType').dispatchEvent(new Event('change'));if(mode==='camera')$('cameraInput').click();else $('uploadFile').click()};actions.append(btn)}
+content.append(help,actions)})}
 function drawMedia(){
  const list=$('mediaList');list.replaceChildren();
  const group=document.createElement('div');group.className='mediaGrid';
@@ -65,13 +79,13 @@ function drawMedia(){
   if(url){const img=document.createElement('img');img.src=url;img.alt=title;img.loading='lazy';img.onerror=()=>{frame.textContent='Görsel açılamadı'};frame.append(img)}
   else frame.textContent='Henüz fotoğraf yok';
   const actions=document.createElement('div');actions.className='actions';
-  const change=document.createElement('button');change.type='button';change.className='secondary';change.textContent='Fotoğrafı Değiştir';change.onclick=()=>{selectMedia(key)};
+  const change=document.createElement('button');change.type='button';change.className='secondary';change.textContent='Fotoğrafı Değiştir';change.onclick=()=>choosePhoto(key,title);
   actions.append(change);
-  if(url){const view=document.createElement('a');view.href=url;view.target='_blank';view.rel='noopener';view.textContent='Büyüt ↗';actions.append(view)}
+  if(url){const view=document.createElement('button');view.type='button';view.className='secondary';view.textContent='Büyüt';view.onclick=()=>enlargePhoto(url,title);actions.append(view)}
   tile.append(h,frame,actions);group.append(tile)
  }
  list.append(group);
- const heading=document.createElement('div');heading.className='top galleryHeading';const ht=document.createElement('h2');ht.textContent='Galeri Fotoğrafları';const add=document.createElement('button');add.type='button';add.className='secondary';add.textContent='+ Fotoğraf Ekle';add.onclick=()=>selectMedia('gallery');heading.append(ht,add);list.append(heading);
+ const heading=document.createElement('div');heading.className='top galleryHeading';const ht=document.createElement('h2');ht.textContent='Galeri Fotoğrafları';const add=document.createElement('button');add.type='button';add.className='secondary';add.textContent='+ Fotoğraf Ekle';add.onclick=()=>choosePhoto('gallery','Galeriye Fotoğraf Ekle');heading.append(ht,add);list.append(heading);
  const gallery=document.createElement('div');gallery.className='mediaGrid';
  const items=Array.isArray(record.gallery)?record.gallery:[];
  if(!items.length){const p=document.createElement('p');p.className='muted';p.textContent='Henüz galeri fotoğrafı yok.';list.append(p)}
@@ -81,7 +95,7 @@ function drawMedia(){
   const frame=document.createElement('div');frame.className='mediaImage';
   const img=document.createElement('img');img.src=url;img.alt=h.textContent;img.loading='lazy';img.onerror=()=>{frame.textContent='Görsel açılamadı'};frame.append(img);
   const actions=document.createElement('div');actions.className='actions';
-  const view=document.createElement('a');view.href=url;view.target='_blank';view.rel='noopener';view.textContent='Büyüt ↗';
+  const view=document.createElement('button');view.type='button';view.className='secondary';view.textContent='Büyüt';view.onclick=()=>enlargePhoto(url,h.textContent);
   const del=document.createElement('button');del.type='button';del.className='secondary';del.textContent='Kaldır';
   del.onclick=async()=>{if(!confirm('Fotoğraf galeriden kaldırılsın mı?'))return;
    del.disabled=true;try{const next=record.gallery.filter((v,i)=>i!==index);
