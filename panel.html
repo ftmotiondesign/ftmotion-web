@@ -58,6 +58,7 @@ if(!isAdmin){
  const check=await db.rpc('ft_admin_list_businesses');
  if(!check.error && Array.isArray(check.data)){isAdmin=true;cachedAdminList=check.data;}
 }
+if(!isAdmin){location.replace('kartim.html');throw Error('QR Kartım ekranına yönlendiriliyorsunuz.')}
 if(isAdmin){
  ['adminLink','allBusinessesLink','adminAllLink','mobileAllBusinesses','adminAnnouncementsLink','manageAnnouncements'].forEach(id=>$(id)?.classList.remove('hidden'));
  $('adminNote').hidden=false;
