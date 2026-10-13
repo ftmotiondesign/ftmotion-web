@@ -23,6 +23,41 @@ body.template-light .footer{color:#617487}
 body.template-light .extra button,body.template-light .extra a{background:#f3f7fb;color:#18364c;border-color:#d9e4ee}
 body.template-light .empty-note{color:#526778;border-color:#cedce6}
 body.template-light #webNotice{color:#516979}
+
+/* Premium Navy: dark editorial business card */
+body.template-premium{background:#081426;color:#f7f3e9}
+body.template-premium .wrap{background:#0c1e34;box-shadow:0 0 55px #030b17}
+body.template-premium .hero{height:clamp(255px,58vw,350px);background:#18314a}
+body.template-premium .shade{background:linear-gradient(transparent,#0c1e34)}
+body.template-premium .identity{padding:0 26px 24px}
+body.template-premium .identity h1{font-family:Georgia,serif;font-size:33px;letter-spacing:.2px}
+body.template-premium .identity p{color:#c5d2df}
+body.template-premium .logo{border-radius:13px;border:3px solid #c8aa6b;box-shadow:0 8px 28px #0009}
+body.template-premium .chip{background:#19334c;border:1px solid #b69a60;color:#f0ddb4}
+body.template-premium .tile{background:#132a42;border:1px solid #31506a;border-radius:12px}
+body.template-premium .tile small{color:#bac9d5}
+body.template-premium .save{background:linear-gradient(105deg,#ac8746,#e9d19a);color:#10253c;border-radius:12px}
+body.template-premium .block h2{font-family:Georgia,serif;color:#e9d4a6}
+body.template-premium .extra button{background:#152c45;border-color:#52647a}
+body.template-premium .footer{color:#b6c2d0}
+/* Orange showcase: bright contrast and strong accent */
+body.template-vitrine{background:#f6ece4;color:#2f231e}
+body.template-vitrine .wrap{background:#fff8f2;color:#33241a;box-shadow:0 12px 45px #67381825}
+body.template-vitrine .hero{height:clamp(195px,46vw,275px);background:linear-gradient(135deg,#f9ac52,#f37034)}
+body.template-vitrine .shade{background:linear-gradient(transparent,#fff8f2)}
+body.template-vitrine .identity{margin-top:-32px;padding-bottom:21px}
+body.template-vitrine .identity h1{font-size:31px;font-weight:950;letter-spacing:-.7px}
+body.template-vitrine .identity p{color:#806456}
+body.template-vitrine .logo{width:73px;height:73px;border-radius:19px;box-shadow:0 7px 20px #8c583e44}
+body.template-vitrine .chip{background:#fff0df;border:1px solid #f9b474;color:#a64813}
+body.template-vitrine .tiles{gap:12px}
+body.template-vitrine .tile{background:#fff;border:1px solid #efcbb1;border-radius:23px;box-shadow:0 3px 11px #d38c5420}
+body.template-vitrine .tile small{color:#856d5d}
+body.template-vitrine .save{background:linear-gradient(110deg,#f06519,#ff9d3d);color:#fff;border-radius:23px}
+body.template-vitrine .block h2{color:#9e411b}
+body.template-vitrine .extra button{background:#fff2e7;border-color:#f3c6a6;color:#5a321c}
+body.template-vitrine .empty-note{color:#846552;border-color:#edc6a8}
+body.template-vitrine .footer{color:#927561}
 </style></head><body><main class="wrap" id="qrWrap"><header class="subpage-head" id="subpageHead"><a id="subpageBack" href="../">← İşletme kartına dön</a><h1 id="subpageTitle">Bilgilendirme</h1><p class="muted" id="subpageBusiness"></p></header><div class="hero"><img id="cover" alt="İşletme kapak"><div class="shade"></div><div class="arrows"><button id="prev" aria-label="Önceki">‹</button><button id="next" aria-label="Sonraki">›</button></div></div><div class="identity"><img class="logo" id="logo" alt="Logo"><h1 id="name">İşletme yükleniyor…</h1><p id="place"></p><p id="about"></p></div><div class="actions" id="special"></div><div class="tiles" id="tiles"></div><p class="empty-note" id="webNotice" hidden style="margin:10px 17px">Web sitesi adresi işletme profilinde kayıtlı değil. QR yönetim panelinden “Web sitesi URL” alanını doldurup profili kaydedin.</p><a class="save" href="#" id="contact">＋ Rehbere Kaydet</a><section class="block" id="photosBlock"><h2>Fotoğraf & Videolar <small style="font-size:11px;color:#a5b2bf;font-weight:400">← kaydır · dokun ve büyüt →</small></h2><div class="gallery" id="photos"></div><p class="empty-note" id="noPhotos" hidden>Henüz yayınlanan galeri görseli yok. İşletme panelinden fotoğraf ekleyebilirsiniz.</p></section><section class="block" id="extraBlock"><h2>Bilgilendirme & Ek Sayfalar</h2><div class="extra" id="extra"></div><p class="empty-note" id="noPages" hidden>Henüz aktif ek sayfa bulunmuyor.</p></section><div id="error" class="error" hidden></div><div id="videoModal" class="video-modal" hidden><div class="video-content"><button id="closeVideo" type="button">✕ Kapat</button><video id="videoPlayer" controls playsinline></video></div></div><footer class="footer">FTMotion · Dijital İşletme Kartı</footer></main><div id="galleryLightbox" class="lightbox" hidden><div class="lightbox-top"><div class="lightbox-count" id="galleryCount">1 / 1</div><button id="galleryClose" class="lightbox-close" type="button">✕ Kapat</button></div><div class="lightbox-stage" id="galleryStage"><button id="galleryPrev" class="lightbox-nav lightbox-prev" type="button" aria-label="Önceki görsel">‹</button><img id="galleryImage" alt="Galeri görseli"><button id="galleryNext" class="lightbox-nav lightbox-next" type="button" aria-label="Sonraki görsel">›</button></div><div class="lightbox-thumbs" id="galleryThumbs"></div></div><div id="linkModal" class="page-modal" hidden role="dialog" aria-modal="true" aria-labelledby="linkModalTitle"><div class="page-dialog"><button type="button" class="page-x" id="linkModalClose" aria-label="Kapat">✕</button><h2 id="linkModalTitle"></h2><p id="linkModalText"></p><a id="linkModalGo" class="link-modal-go" href="#" target="_blank" rel="noopener noreferrer">Bağlantıyı Aç ↗</a></div></div><div id="extraPageModal" class="page-modal" hidden role="dialog" aria-modal="true" aria-labelledby="extraModalTitle"><div class="page-dialog"><button type="button" class="page-x" id="extraModalClose" aria-label="Kapat">✕</button><h2 id="extraModalTitle"></h2><p id="extraModalContent"></p><button id="extraModalCopy" class="page-copy" type="button" hidden>IBAN Kopyala</button></div></div>
 <script type="module">
 import {client} from '../shared/supabase-client.js';
@@ -53,7 +88,7 @@ function tile(icon,title,sub,url,color){if(!url)return;const a=el('a','tile'),i=
 function chip(name,url,playVideo=false){if(!url)return;let a=el('a','chip');a.textContent=name;a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.onclick=e=>{e.preventDefault();if(playVideo&&/\.(mp4|webm|ogg)(?:[?#]|$)/i.test(url)){$('videoPlayer').src=url;$('videoModal').hidden=false;$('videoPlayer').play().catch(()=>{});return}openLinkModal(name,url)};$('special').append(a)}
 $('closeVideo').onclick=()=>{$('videoPlayer').pause();$('videoPlayer').removeAttribute('src');$('videoPlayer').load();$('videoModal').hidden=true};$('videoModal').onclick=e=>{if(e.target===$('videoModal'))$('closeVideo').click()};function img(src){const index=galleryItems.push(src)-1;let a=el('a'),im=el('img');a.href='#';a.setAttribute('role','button');a.setAttribute('aria-label','Görseli büyüt');im.src=src;im.loading='lazy';a.append(im);a.onclick=e=>{e.preventDefault();openGallery(Math.max(0,galleryItems.indexOf(src)))};im.onerror=()=>{a.remove();const bad=galleryItems.indexOf(src);if(bad!==-1)galleryItems.splice(bad,1);$('noPhotos').hidden=false;$('noPhotos').textContent='Bazı galeri görselleri açılamadı. İşletme panelinden fotoğraf bağlantılarını kontrol edin.'};$('photos').append(a)}
 try{if(!slug)throw Error('İşletme bağlantısı belirtilmedi.');const db=await client();const {data:b,error}=await db.from('businesses').select('*').eq('slug',slug).eq('active',true).maybeSingle();if(error)throw error;if(!b)throw Error('Bu QR sayfası bulunamadı veya yayında değil.');
-if((new URLSearchParams(location.search).get('template_preview')||b.qr_template)==='light')document.body.classList.add('template-light');document.title=b.name+' | FTMotion';$('name').textContent=b.name;$('place').textContent=b.location_text||b.address||'';$('about').textContent=b.qr_description||'';if(b.logo_url){$('logo').src=b.logo_url;$('logo').onerror=()=>{$('logo').style.display='none'}}else{$('logo').style.display='none'}
+const chosenTemplate=new URLSearchParams(location.search).get('template_preview')||b.qr_template||'classic';if(['light','premium','vitrine'].includes(chosenTemplate))document.body.classList.add('template-'+chosenTemplate);document.title=b.name+' | FTMotion';$('name').textContent=b.name;$('place').textContent=b.location_text||b.address||'';$('about').textContent=b.qr_description||'';if(b.logo_url){$('logo').src=b.logo_url;$('logo').onerror=()=>{$('logo').style.display='none'}}else{$('logo').style.display='none'}
 const covers=[...new Set([...(Array.isArray(b.cover_images)?b.cover_images:[]),b.cover_url].filter(Boolean).map(link).filter(Boolean))];let ix=0;function photo(){if(covers.length){$('cover').src=covers[ix];$('cover').style.display='block';$('cover').onerror=()=>{$('cover').style.display='none'}}else $('cover').style.display='none'}photo();$('prev').onclick=()=>{ix=(ix+covers.length-1)%covers.length;photo()};$('next').onclick=()=>{ix=(ix+1)%covers.length;photo()};if(covers.length<2){$('prev').hidden=true;$('next').hidden=true}
 chip('◉ 360° Mekânı Gez',link(b.tour_url));chip('◎ 360° Sokak Görünümü',link(b.streetview_url));chip('▶ Konum Videosu',link(b.location_video_url),true);
 const digits=(b.whatsapp||b.phone||'').replace(/\D/g,'');tile('☎','Telefon','Hemen Ara',b.phone?'tel:'+b.phone.replace(/[^+\d]/g,''):null,'#06c761');tile('✆','WhatsApp','Mesaj Gönder',digits?'https://wa.me/'+digits:null,'#02b95a');tile('◎','Instagram','Takip Et',link(b.instagram?.startsWith('@')?'https://instagram.com/'+b.instagram.slice(1):b.instagram),'#cd2373');tile('●','Konum','Haritada Gör',link(b.maps_url),'#e62939');const websiteUrl=link(b.website||b.website_url||b.web_url);tile('🌐','Web Sitesi','Siteyi Aç',websiteUrl,'#168ef0');if(!websiteUrl){$('webNotice').hidden=false;if(String(b.website||'').trim())$('webNotice').textContent='Web sitesi adresi geçersiz görünüyor: '+b.website+' — QR yönetiminde adresi kontrol edin.';}tile('G','Google Yorum','Yorumları Gör',link(b.google_review_url),'#f8f8f8');
