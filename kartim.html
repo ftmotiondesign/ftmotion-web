@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QR Kartım | FTMotion</title>
+<style>
+:root{color-scheme:dark;--bg:#0b111c;--card:#172438;--line:#30445b;--accent:#58dfc5;--text:#f3f8ff;--muted:#aabdd0}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 system-ui,Arial;background:var(--bg);color:var(--text)}main{max-width:850px;margin:auto;padding:22px 16px 90px}
+header{border-bottom:1px solid var(--line);padding:15px max(16px,calc((100vw - 850px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px}
+h1{font-size:clamp(25px,5vw,37px);margin:14px 0 4px}h2{font-size:18px;margin:0 0 16px}.muted{color:var(--muted);font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:21px;margin:18px 0}.fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+label{display:block;font-size:13px;color:#c5d7e8}input,textarea{width:100%;font:inherit;background:#0d1b2c;color:white;border:1px solid #49617a;border-radius:10px;padding:12px;margin-top:5px}textarea{min-height:85px;resize:vertical}
+button,.btn{font:inherit;border:0;border-radius:10px;padding:11px 17px;cursor:pointer;background:var(--accent);color:#072c2d;font-weight:800;text-decoration:none;display:inline-block}
+button.secondary,.btn.secondary{background:#283b50;color:white;border:1px solid #4b6480}button:disabled{opacity:.5;cursor:not-allowed}
+.top{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}.actions{display:flex;gap:10px;flex-wrap:wrap}.preview{overflow-wrap:anywhere;color:#91f2da}
+#notice{margin-top:13px;color:#c5e6df}#notice.error{color:#ffbaa7}[hidden]{display:none!important}
+@media(max-width:650px){.fields{grid-template-columns:1fr}.card{padding:17px}}
+</style></head><body>
+<header><strong>FT<span style="color:#58dfc5">Motion</span> · QR Kartım</strong><button id="logout" class="secondary" type="button">Çıkış</button></header>
+<main><h1>İşletme Kartım</h1><p class="muted">Dijital kartınızda görünen bilgileri buradan düzenleyin.</p>
+<p id="notice" role="status">Hesabınız kontrol ediliyor...</p>
+<div id="work" hidden>
+<section class="card"><div class="top"><div><h2 id="businessName">İşletmem</h2><div class="muted">Kalıcı QR bağlantınız</div><a id="view" class="preview" rel="noopener" target="_blank"></a></div><div class="actions"><a id="previewButton" class="btn secondary" rel="noopener" target="_blank">Kartımı Gör</a><button id="copy" class="secondary">Linki Kopyala</button></div></div><p class="muted">QR adresiniz sabittir. Bilgilerinizi değiştirseniz de basılı kart çalışmaya devam eder.</p></section>
+<form id="profile" class="card"><h2>İşletme ve İletişim</h2><div class="fields">
+<label>İşletme adı<input name="name" required maxlength="150"></label>
+<label>İl / İlçe<input name="location_text"></label>
+<label>Telefon<input name="phone" inputmode="tel"></label>
+<label>WhatsApp<input name="whatsapp" inputmode="tel"></label>
+<label>Instagram bağlantısı<input name="instagram" type="url" placeholder="https://instagram.com/..."></label>
+<label>Web sitesi<input name="website" type="url" placeholder="https://..."></label>
+<label>Google yorum bağlantısı<input name="google_review_url" type="url"></label>
+<label>Harita bağlantısı<input name="maps_url" type="url"></label>
+<label>360° Mekân bağlantısı<input name="tour_url" type="url"></label>
+<label>360° Sokak Görünümü<input name="streetview_url" type="url"></label>
+<label style="grid-column:1/-1">Adres<textarea name="address"></textarea></label>
+<label style="grid-column:1/-1">Kısa tanıtım<textarea name="qr_description"></textarea></label>
+</div><div class="actions" style="margin-top:17px"><button id="save" type="submit">Değişiklikleri Kaydet</button></div></form>
+<section class="card"><h2>Logo, Kapak ve Galeri</h2><p class="muted">Bu alanda yalnızca kendi kartınıza ait medya dosyalarını düzenleyebilirsiniz.</p>
+<div class="fields"><label>Logo URL<input name="logo_url" form="mediaForm" type="url"></label><label>Kapak URL<input name="cover_url" form="mediaForm" type="url"></label><label style="grid-column:1/-1">Konum videosu URL<input name="location_video_url" form="mediaForm" type="url"></label></div>
+<form id="mediaForm"><div class="actions" style="margin-top:14px"><button type="submit">Medya Bağlantılarını Kaydet</button></div></form>
+<p class="muted">Dosya yükleme ve galeri yönetimi, güvenli depolama yetkileri doğrulandıktan sonra bu ekrana eklenecek.</p>
+</section>
+</div></main>
+<script type="module">
+import {client,currentUser} from './shared/supabase-client.js';
+const $=id=>document.getElementById(id), notice=(s,bad=false)=>{$('notice').textContent=s;$('notice').classList.toggle('error',bad)};
+let db,user,record;
+const keys=['name','location_text','phone','whatsapp','instagram','website','google_review_url','maps_url','tour_url','streetview_url','address','qr_description'];
+const mediaKeys=['logo_url','cover_url','location_video_url'];
+function url(){return new URL('qr/?slug='+encodeURIComponent(record.slug),location.href).href}
+function fill(){for(const k of [...keys,...mediaKeys]){const el=document.querySelector('[name="'+k+'"]');if(el)el.value=record[k]||''}
+$('businessName').textContent=record.name||'İşletmem';$('view').href=url();$('view').textContent=url();$('previewButton').href=url();}
+$('logout').onclick=async()=>{if(db)await db.auth.signOut();location.replace('giris.html?app=qr')};
+$('copy').onclick=async()=>{try{await navigator.clipboard.writeText(url());notice('QR bağlantısı kopyalandı.')}catch{notice('Kopyalama engellendi; bağlantıyı elle kopyalayabilirsiniz.',true)}};
+async function save(form,fields){if(!record)return;const button=form.querySelector('button[type=submit]');button.disabled=true;notice('Kaydediliyor...');
+try{const payload={};for(const k of fields)payload[k]=document.querySelector('[name="'+k+'"]').value.trim();
+const {data,error}=await db.from('businesses').update(payload).eq('id',record.id).eq('owner_id',user.id).select('id').maybeSingle();
+if(error)throw error;if(!data)throw Error('Kayda erişim izniniz yok.');Object.assign(record,payload);fill();notice('Değişiklikler kaydedildi.');}
+catch(e){notice('Kaydedilemedi: '+e.message,true)}finally{button.disabled=false}}
+$('profile').onsubmit=e=>{e.preventDefault();save(e.currentTarget,keys)};
+$('mediaForm').onsubmit=e=>{e.preventDefault();save(e.currentTarget,mediaKeys)};
+try{db=await client();user=await currentUser(db);if(!user){location.replace('giris.html?app=qr');throw Error('Oturum açmanız gerekiyor.')}
+const {data,error}=await db.from('businesses').select('id,owner_id,slug,'+[...keys,...mediaKeys].join(',')).eq('owner_id',user.id).order('created_at',{ascending:false}).limit(2);
+if(error)throw error;
+if(!data?.length)throw Error('Hesabınıza atanmış QR kart bulunamadı. FTMotion ile iletişime geçin.');
+if(data.length>1)throw Error('Hesabınıza birden fazla işletme bağlı. Kart seçiminiz için FTMotion ile iletişime geçin.');
+record=data[0];if(!record.slug)throw Error('QR adresiniz henüz tanımlanmamış. FTMotion ile iletişime geçin.');
+fill();$('work').hidden=false;notice('Kartınız hazır. Bilgilerinizi düzenleyebilirsiniz.');
+}catch(e){notice(e.message,true)}
+</script></body></html>
