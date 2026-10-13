@@ -9,7 +9,7 @@ h1{font-size:clamp(25px,5vw,37px);margin:14px 0 4px}h2{font-size:18px;margin:0 0
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:21px;margin:18px 0}.fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}
 label{display:block;font-size:13px;color:#c5d7e8}input,textarea{width:100%;font:inherit;background:#0d1b2c;color:white;border:1px solid #49617a;border-radius:10px;padding:12px;margin-top:5px}textarea{min-height:85px;resize:vertical}
 button,.btn{font:inherit;border:0;border-radius:10px;padding:11px 17px;cursor:pointer;background:var(--accent);color:#072c2d;font-weight:800;text-decoration:none;display:inline-block}
-button.secondary,.btn.secondary{background:#283b50;color:white;border:1px solid #4b6480}button:disabled{opacity:.5;cursor:not-allowed}.item{padding:11px 0;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.item a{color:var(--accent);overflow-wrap:anywhere}.mini{max-width:90px;max-height:70px;border-radius:8px;object-fit:cover}.mediarow{display:flex;gap:12px;align-items:center}.hint{font-size:12px;color:var(--muted)}
+button.secondary,.btn.secondary{background:#283b50;color:white;border:1px solid #4b6480}button:disabled{opacity:.5;cursor:not-allowed}.item{padding:11px 0;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.item a{color:var(--accent);overflow-wrap:anywhere}.mini{max-width:90px;max-height:70px;border-radius:8px;object-fit:cover}.mediarow{display:flex;gap:12px;align-items:center}.hint{font-size:12px;color:var(--muted)}.mediaGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:13px}.mediaTile{min-width:0;background:#102034;border:1px solid #354f65;border-radius:13px;padding:12px;display:flex;flex-direction:column;gap:10px}.mediaTile h3{font-size:14px;margin:0}.mediaImage{display:grid;place-items:center;height:150px;background:#0b1726;border-radius:10px;overflow:hidden;color:#839db2}.mediaImage img{width:100%;height:100%;object-fit:cover}.mediaTile .actions{margin-top:auto}.mediaTile a{color:var(--accent);font-size:13px}.mediaTile button{padding:9px 12px;font-size:13px}.galleryHeading{margin:22px 0 8px}@media(max-width:520px){.mediaGrid{grid-template-columns:1fr}.mediaImage{height:185px}}
 .top{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}.actions{display:flex;gap:10px;flex-wrap:wrap}.preview{overflow-wrap:anywhere;color:#91f2da}
 #notice{margin-top:13px;color:#c5e6df}#notice.error{color:#ffbaa7}[hidden]{display:none!important}
 @media(max-width:650px){.fields{grid-template-columns:1fr}.card{padding:17px}}
@@ -54,7 +54,47 @@ const keys=['name','location_text','phone','whatsapp','instagram','website','goo
 const mediaKeys=['logo_url','cover_url','location_video_url'];
 const slugify=s=>s.toLocaleLowerCase('tr').replace(/ı/g,'i').replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ş/g,'s').replace(/ö/g,'o').replace(/ç/g,'c').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 function pageUrl(slug){return url()+'&page='+encodeURIComponent(slug)}
-function drawMedia(){const list=$('mediaList');list.replaceChildren();const entries=[['Logo',record.logo_url,false],['Kapak',record.cover_url,false],['Konum videosu',record.location_video_url,false],...(Array.isArray(record.gallery)?record.gallery:[]).map((u,i)=>['Galeri '+(i+1),u,true])];for(const [title,u,isGallery] of entries){if(!u)continue;const row=document.createElement('div');row.className='item';const a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';a.textContent=title+' ↗';const left=document.createElement('div');left.className='mediarow';if(/\.(jpg|jpeg|png|webp)(\?|$)/i.test(u)){const img=document.createElement('img');img.src=u;img.className='mini';img.alt=title;left.append(img)}left.append(a);row.append(left);if(isGallery){const remove=document.createElement('button');remove.type='button';remove.className='secondary';remove.textContent='Kaldır';remove.onclick=async()=>{if(!confirm('Görsel galeriden kaldırılsın mı?'))return;try{const gallery=(record.gallery||[]).filter(x=>x!==u);const {error}=await db.from('businesses').update({gallery}).eq('id',record.id).eq('owner_id',user.id);if(error)throw error;record.gallery=gallery;drawMedia();notice('Görsel galeriden kaldırıldı.')}catch(e){notice(e.message,true)}};row.append(remove)}list.append(row)}}
+function drawMedia(){
+ const list=$('mediaList');list.replaceChildren();
+ const group=document.createElement('div');group.className='mediaGrid';
+ for(const [title,key] of [['Logo','logo_url'],['Kapak fotoğrafı','cover_url']]){
+  const tile=document.createElement('div');tile.className='mediaTile';
+  const h=document.createElement('h3');h.textContent=title;
+  const frame=document.createElement('div');frame.className='mediaImage';
+  const url=record[key];
+  if(url){const img=document.createElement('img');img.src=url;img.alt=title;img.loading='lazy';img.onerror=()=>{frame.textContent='Görsel açılamadı'};frame.append(img)}
+  else frame.textContent='Henüz fotoğraf yok';
+  const actions=document.createElement('div');actions.className='actions';
+  const change=document.createElement('button');change.type='button';change.className='secondary';change.textContent='Fotoğrafı Değiştir';change.onclick=()=>{selectMedia(key)};
+  actions.append(change);
+  if(url){const view=document.createElement('a');view.href=url;view.target='_blank';view.rel='noopener';view.textContent='Büyüt ↗';actions.append(view)}
+  tile.append(h,frame,actions);group.append(tile)
+ }
+ list.append(group);
+ const heading=document.createElement('div');heading.className='top galleryHeading';const ht=document.createElement('h2');ht.textContent='Galeri Fotoğrafları';const add=document.createElement('button');add.type='button';add.className='secondary';add.textContent='+ Fotoğraf Ekle';add.onclick=()=>selectMedia('gallery');heading.append(ht,add);list.append(heading);
+ const gallery=document.createElement('div');gallery.className='mediaGrid';
+ const items=Array.isArray(record.gallery)?record.gallery:[];
+ if(!items.length){const p=document.createElement('p');p.className='muted';p.textContent='Henüz galeri fotoğrafı yok.';list.append(p)}
+ for(const [index,url] of items.entries()){
+  const tile=document.createElement('div');tile.className='mediaTile';
+  const h=document.createElement('h3');h.textContent='Galeri '+(index+1);
+  const frame=document.createElement('div');frame.className='mediaImage';
+  const img=document.createElement('img');img.src=url;img.alt=h.textContent;img.loading='lazy';img.onerror=()=>{frame.textContent='Görsel açılamadı'};frame.append(img);
+  const actions=document.createElement('div');actions.className='actions';
+  const view=document.createElement('a');view.href=url;view.target='_blank';view.rel='noopener';view.textContent='Büyüt ↗';
+  const del=document.createElement('button');del.type='button';del.className='secondary';del.textContent='Kaldır';
+  del.onclick=async()=>{if(!confirm('Fotoğraf galeriden kaldırılsın mı?'))return;
+   del.disabled=true;try{const next=record.gallery.filter((v,i)=>i!==index);
+    const {data,error}=await db.from('businesses').update({gallery:next}).eq('id',record.id).eq('owner_id',user.id).select('id').maybeSingle();
+    if(error)throw error;if(!data)throw Error('İşletme güncellenemedi.');
+    record.gallery=next;drawMedia();notice('Galeri fotoğrafı kaldırıldı.');
+   }catch(e){notice('Kaldırılamadı: '+e.message,true);del.disabled=false}};
+  actions.append(view,del);tile.append(h,frame,actions);gallery.append(tile)
+ }
+ list.append(gallery)
+}
+function selectMedia(type){$('uploadType').value=type;$('uploadType').dispatchEvent(new Event('change'));$('uploadType').scrollIntoView({behavior:'smooth',block:'center'});notice(type==='gallery'?'Galerinize fotoğraf ekleyebilirsiniz.':'Fotoğraf seçin veya kamerayla çekin, ardından Dosyayı Yükle butonuna basın.')}
+
 let capturedPhoto=null;
 $('takePhoto').onclick=()=>{if($('uploadType').value==='location_video_url'){notice('Fotoğraf çekmek için Logo, Kapak veya Galeri görselini seçin.',true);return}$('cameraInput').click()};
 $('cameraInput').onchange=()=>{capturedPhoto=$('cameraInput').files[0]||null;if(capturedPhoto){$('uploadFile').value='';$('photoSelection').textContent='Çekilen fotoğraf hazır: '+capturedPhoto.name;notice('Fotoğraf hazır. Kaydetmek için Dosyayı Yükle butonuna basın.')}};
