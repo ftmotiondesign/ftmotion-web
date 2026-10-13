@@ -1,0 +1,18 @@
+/* FT Motion siyah-beyaz-turuncu hizmet sayfalari temasi.
+   Mevcut formlari, kimlik dogrulamayi ve JavaScript davranislarini degistirmez. */
+:root{color-scheme:dark;--bg:#090909;--panel:#171717;--line:#383838;--txt:#fff;--accent:#ff7900;--border:#383838;--ink:#fff;--dim:#c2c2c2;--a:#ff7900;--card:#171717;--muted:#c2c2c2}
+html{background:#090909}
+body{background:#090909!important;color:#fff!important}
+header{background:#0b0b0b!important;border-bottom:1px solid #333!important}
+.card,.box,article.card{background:#171717!important;border-color:#383838!important}
+.card p,.muted,.small,p{color:#c8c8c8}
+h1,h2,h3{color:#fff}
+a:not(.btn):not([class*=button]){color:#ff7900}
+button,.btn,input[type=submit]{background:#ff7900;color:#101010;border-color:#ff7900}
+button:hover,.btn:hover,input[type=submit]:hover{filter:brightness(1.12)}
+button:focus-visible,.btn:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #ff7900;outline-offset:3px}
+input,select,textarea{background:#151515;color:#fff;border-color:#555}
+.pill,.price,.accent{color:#ff7900}
+.empty{background:radial-gradient(circle,#392414,#121212)}
+::selection{background:#ff7900;color:#090909}
+@media(max-width:650px){.card,.box{border-radius:14px}}
