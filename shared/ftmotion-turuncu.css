@@ -16,3 +16,16 @@ input,select,textarea{background:#151515;color:#fff;border-color:#555}
 .empty{background:radial-gradient(circle,#392414,#121212)}
 ::selection{background:#ff7900;color:#090909}
 @media(max-width:650px){.card,.box{border-radius:14px}}
+
+/* v2: eski lacivert/turkuaz sayfa temalarina uyum katmani */
+:root{--bg:#090909;--panel:#171717;--line:#383838;--txt:#fff;--accent:#ff7900;--border:#383838;--ink:#fff;--dim:#c2c2c2;--a:#ff7900;--card:#171717;--muted:#c2c2c2;--mint:#ff7900;--primary:#ff7900}
+body{background:#090909!important;background-image:none!important}
+header,nav,.top,.navbar{background:#0b0b0b!important;border-color:#333!important}
+section.hero,.hero,.hero-section{background:radial-gradient(ellipse at 78% 20%,#42200c 0%,#17100d 40%,#090909 80%)!important}
+.card,.box,.feature,.feature-card,.panel,.pricing-card{background:#171717!important;border-color:#383838!important}
+a:not(.btn):not([class*=button]):hover{color:#ff9d40}
+button:not(.secondary):not(.outline),.btn:not(.secondary):not(.outline),a.btn:not(.secondary):not(.outline),input[type=submit]{background:#ff7900!important;color:#101010!important;border-color:#ff7900!important}
+.pill,.tag,.eyebrow,.kicker,.price,.accent{color:#ff7900!important}
+header a,nav a,.top a{color:#fff!important}
+header a:hover,nav a:hover,.top a:hover{color:#ff7900!important}
+input,textarea,select{background:#151515!important;color:#fff!important;border-color:#555!important}
