@@ -110,7 +110,7 @@ for(const panel of document.querySelectorAll('#work > section.card, #work > form
  const heading=panel.querySelector(':scope > h2, :scope > .top > h2');
  if(!heading)continue;
  const title=heading.textContent.trim();
- const details=document.createElement('details');details.className='card foldPanel';details.open=panelTitles[title]??false;
+ const details=document.createElement('details');details.className='card foldPanel';details.open=panelTitles[title]??false;if(panel.id&&panel.tagName!=='FORM')details.id=panel.id;
  const summary=document.createElement('summary');summary.className='foldHead';summary.textContent=title;
  const content=document.createElement('div');content.className='foldContent';
  // Form elemanlarını formun içinde tut; mevcut submit olayları değişmesin.
@@ -122,6 +122,17 @@ for(const panel of document.querySelectorAll('#work > section.card, #work > form
   panel.append(details);
  }else panel.replaceWith(details);
 }
+// Mobil işlem kartları: açılır panelleri önce aç, ardından alana git.
+document.querySelectorAll('.ft-home-action, .ft-quick a').forEach(link=>{
+ link.addEventListener('click',event=>{
+  const hash=link.getAttribute('href');if(!hash?.startsWith('#'))return;
+  const target=document.getElementById(hash.slice(1));if(!target)return;
+  event.preventDefault();
+  const fold=target.matches('details.foldPanel')?target:target.querySelector('details.foldPanel')||target.closest('details.foldPanel');
+  if(fold)fold.open=true;
+  requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'}));
+ });
+});
 let saveToastTimer;
 function showSaveToast(message='✓ Değişiklikler kaydedildi'){
  const toast=$('saveToast');toast.textContent=message;toast.hidden=false;
