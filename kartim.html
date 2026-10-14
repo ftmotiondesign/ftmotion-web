@@ -2,7 +2,7 @@
 <html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QR Kartım | FTMotion</title>
 <style>
-:root{color-scheme:dark;--bg:#0b111c;--card:#172438;--line:#30445b;--accent:#58dfc5;--text:#f3f8ff;--muted:#aabdd0}
+:root{color-scheme:dark;--bg:#0b0b0b;--card:#171717;--line:#363636;--accent:#ff7900;--text:#ffffff;--muted:#bcbcbc}
 *{box-sizing:border-box}body{margin:0;font:15px/1.5 system-ui,Arial;background:var(--bg);color:var(--text)}main{max-width:850px;margin:auto;padding:22px 16px 90px}
 header{border-bottom:1px solid var(--line);padding:15px max(16px,calc((100vw - 850px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px}
 h1{font-size:clamp(25px,5vw,37px);margin:14px 0 4px}h2{font-size:18px;margin:0 0 16px}.muted{color:var(--muted);font-size:13px}
@@ -14,7 +14,14 @@ button.secondary,.btn.secondary{background:#283b50;color:white;border:1px solid 
 #notice{margin-top:13px;color:#c5e6df}#notice.error{color:#ffbaa7}[hidden]{display:none!important}
 @media(max-width:650px){.fields{grid-template-columns:1fr}.card{padding:17px}}
 .photoModal[hidden]{display:none!important}.photoModal{position:fixed;inset:0;z-index:9999;background:#050a13dd;display:grid;place-items:center;padding:16px}.photoDialog{width:min(560px,100%);max-height:92vh;overflow:auto;background:#172438;border:1px solid #48617b;border-radius:17px;padding:20px}.photoDialog header{padding:0 0 12px;border:0}.photoLarge{display:block;width:100%;max-height:75vh;object-fit:contain;border-radius:10px}.photoActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}.mediaImage img{object-fit:contain;background:#0b1726}.mediaTile:first-child .mediaImage img{object-fit:contain}.mediaTile:nth-child(2) .mediaImage img{object-fit:cover}
-.templateChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0}.templateOption{border:1px solid #49617a;border-radius:13px;padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:9px}.templateOption:has(input:checked){outline:2px solid #58dfc5}.templateOption input{width:auto;margin:0;accent-color:#58dfc5}.templateMini{height:160px;max-width:160px;width:100%;display:block;position:relative;border-radius:12px;overflow:hidden;margin:auto}.templateClassic{background:#101114}.templateLight{background:#f7fafb}.demoCover{display:block;height:45px;background:linear-gradient(100deg,#2b4452,#455e60)}.templateLight .demoCover{background:linear-gradient(100deg,#b4ded3,#d4e8f4)}.demoCircle{display:block;background:#fff;border-radius:50%;width:30px;height:30px;border:2px solid #dde8ed;position:absolute;top:31px;left:calc(50% - 15px)}.demoTitle{display:block;background:#bbc2c8;width:60%;height:7px;border-radius:6px;margin:25px auto 14px}.demoButtons{display:block;background:linear-gradient(90deg,#217f66 45%,transparent 45%,transparent 55%,#217f66 55%);width:80%;height:37px;border-radius:6px;margin:auto}.templateClassic .demoButtons{background:linear-gradient(90deg,#28363b 45%,transparent 45%,transparent 55%,#28363b 55%)}@media(max-width:520px){.templateChoices{gap:9px}.templateMini{height:135px}} .templatePremium{background:#0c1e34}.templatePremium .demoCover{background:linear-gradient(100deg,#18314a,#567087)}.templatePremium .demoTitle{background:#d7c297}.templatePremium .demoButtons{background:linear-gradient(90deg,#b79758 45%,transparent 45%,transparent 55%,#b79758 55%)}.templateVitrine{background:#fff8f2}.templateVitrine .demoCover{background:linear-gradient(100deg,#ed7534,#ffba65)}.templateVitrine .demoTitle{background:#bc6132}.templateVitrine .demoButtons{background:linear-gradient(90deg,#fc8b2f 45%,transparent 45%,transparent 55%,#fc8b2f 55%)}</style></head><body>
+.templateChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0}.templateOption{border:1px solid #49617a;border-radius:13px;padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:9px}.templateOption:has(input:checked){outline:2px solid #58dfc5}.templateOption input{width:auto;margin:0;accent-color:#58dfc5}.templateMini{height:160px;max-width:160px;width:100%;display:block;position:relative;border-radius:12px;overflow:hidden;margin:auto}.templateClassic{background:#101114}.templateLight{background:#f7fafb}.demoCover{display:block;height:45px;background:linear-gradient(100deg,#2b4452,#455e60)}.templateLight .demoCover{background:linear-gradient(100deg,#b4ded3,#d4e8f4)}.demoCircle{display:block;background:#fff;border-radius:50%;width:30px;height:30px;border:2px solid #dde8ed;position:absolute;top:31px;left:calc(50% - 15px)}.demoTitle{display:block;background:#bbc2c8;width:60%;height:7px;border-radius:6px;margin:25px auto 14px}.demoButtons{display:block;background:linear-gradient(90deg,#217f66 45%,transparent 45%,transparent 55%,#217f66 55%);width:80%;height:37px;border-radius:6px;margin:auto}.templateClassic .demoButtons{background:linear-gradient(90deg,#28363b 45%,transparent 45%,transparent 55%,#28363b 55%)}@media(max-width:520px){.templateChoices{gap:9px}.templateMini{height:135px}} .templatePremium{background:#0c1e34}.templatePremium .demoCover{background:linear-gradient(100deg,#18314a,#567087)}.templatePremium .demoTitle{background:#d7c297}.templatePremium .demoButtons{background:linear-gradient(90deg,#b79758 45%,transparent 45%,transparent 55%,#b79758 55%)}.templateVitrine{background:#fff8f2}.templateVitrine .demoCover{background:linear-gradient(100deg,#ed7534,#ffba65)}.templateVitrine .demoTitle{background:#bc6132}.templateVitrine .demoButtons{background:linear-gradient(90deg,#fc8b2f 45%,transparent 45%,transparent 55%,#fc8b2f 55%)}
+/* FT Motion web sitesi ile uyumlu tema */
+label{color:#e3e3e3}input,textarea,select{background:#202020!important;border-color:#484848!important;color:#fff!important}button,.btn{color:#171717}button.secondary,.btn.secondary{background:#282828;color:#fff;border-color:#505050}.mediaTile{background:#202020;border-color:#414141}.mediaImage{background:#101010}.photoDialog{background:#171717;border-color:#555}.preview,.mediaTile a,.item a{color:#ff9b45}#notice{color:#ffd3ae}.templateOption{border-color:#4b4b4b}.templateOption:has(input:checked){outline-color:#ff7900}.templateOption input{accent-color:#ff7900}.templateChoices{margin:14px 0}.card:hover{border-color:#555}
+/* Açılır-kapanır paneller */
+.foldHead{display:flex;align-items:center;justify-content:space-between;gap:14px;cursor:pointer;list-style:none;font-weight:800;font-size:18px;min-height:28px}.foldHead::-webkit-details-marker{display:none}.foldHead::after{content:'+';font-size:25px;color:var(--accent);font-weight:500}.foldPanel[open]>.foldHead::after{content:'−'}.foldHead:focus-visible{outline:2px solid var(--accent);outline-offset:5px;border-radius:5px}.foldPanel>.foldHead{margin-bottom:0}.foldPanel[open]>.foldHead{margin-bottom:17px}.foldPanel>.foldHead h2{margin:0;font-size:18px}.foldContent>p:first-child{margin-top:0}
+/* Alt sabit kaydet ve başarı bildirimi */
+body{padding-bottom:70px}.stickySave{position:fixed;bottom:0;left:0;right:0;z-index:110;background:#101010f2;border-top:1px solid #494949;backdrop-filter:blur(12px);padding:11px max(16px,calc((100vw - 850px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px}.stickySave span{color:#ddd;font-size:13px}.stickySave button{white-space:nowrap}.saveToast{position:fixed;left:50%;top:24px;transform:translateX(-50%);background:#202020;border:1px solid #ff7900;color:white;padding:15px 25px;border-radius:12px;box-shadow:0 16px 45px #0009;z-index:20000;max-width:calc(100vw - 32px);text-align:center;font-weight:700}.saveToast[hidden]{display:none!important}@media(max-width:520px){.stickySave span{font-size:11px}.stickySave button{padding:10px 12px;font-size:13px}}
+</style></head><body>
 <header><strong>FT<span style="color:#58dfc5">Motion</span> · QR Kartım</strong><button id="logout" class="secondary" type="button">Çıkış</button></header>
 <main><h1>İşletme Kartım</h1><p class="muted">Dijital kartınızda görünen bilgileri buradan düzenleyin.</p>
 <p id="notice" role="status">Hesabınız kontrol ediliyor...</p>
@@ -50,11 +57,37 @@ button.secondary,.btn.secondary{background:#283b50;color:white;border:1px solid 
 <label style="grid-column:1/-1">İçerik<textarea id="pContent"></textarea></label>
 </div><label><input type="checkbox" id="pActive" checked style="width:auto"> Sayfa aktif</label><div class="actions" style="margin-top:14px"><button type="submit">Sayfayı Kaydet</button><button type="button" class="secondary" id="cancelPage">Vazgeç</button></div></form></section>
 </div></main>
+<div id="stickySave" class="stickySave" hidden><span>İşletme bilgilerini kaydet</span><button id="stickySaveButton" type="button">Değişiklikleri Kaydet</button></div><div id="saveToast" class="saveToast" role="status" aria-live="polite" hidden>✓ Değişiklikler kaydedildi</div>
 <div id="photoModal" class="photoModal" hidden role="dialog" aria-modal="true" aria-labelledby="photoModalTitle"><div class="photoDialog"><header class="top"><h2 id="photoModalTitle">Fotoğraf</h2><button id="closePhotoModal" class="secondary" type="button">✕ Kapat</button></header><div id="photoModalContent"></div></div></div>
 <script type="module">
 import {client,currentUser} from './shared/supabase-client.js';
 const $=id=>document.getElementById(id), notice=(s,bad=false)=>{$('notice').textContent=s;$('notice').classList.toggle('error',bad)};
 let db,user,record,pages=[],editingPage=null;
+// Form alanlarını bozmadan panelleri açılır-kapanır hale getir.
+const panelTitles={'QR Kodum':true,'QR Kart Tasarımım':false,'İşletme ve İletişim':true,'Logo, Kapak ve Galeri':false,'Ek Sayfalarım':false};
+for(const panel of document.querySelectorAll('#work > section.card, #work > form.card')){
+ const heading=panel.querySelector(':scope > h2, :scope > .top > h2');
+ if(!heading)continue;
+ const title=heading.textContent.trim();
+ const details=document.createElement('details');details.className='card foldPanel';details.open=panelTitles[title]??false;
+ const summary=document.createElement('summary');summary.className='foldHead';summary.textContent=title;
+ const content=document.createElement('div');content.className='foldContent';
+ // Form elemanlarını formun içinde tut; mevcut submit olayları değişmesin.
+ while(panel.firstChild)content.append(panel.firstChild);
+ details.append(summary,content);
+ if(panel.tagName==='FORM'){
+  panel.classList.remove('card');panel.classList.add('foldForm');
+  // Formu details içinde tutmak yerine details'ı formun içine al.
+  panel.append(details);
+ }else panel.replaceWith(details);
+}
+let saveToastTimer;
+function showSaveToast(message='✓ Değişiklikler kaydedildi'){
+ const toast=$('saveToast');toast.textContent=message;toast.hidden=false;
+ clearTimeout(saveToastTimer);saveToastTimer=setTimeout(()=>{toast.hidden=true},2000);
+}
+$('stickySaveButton').onclick=()=>{const form=$('profile');const details=form.querySelector('details');if(details)details.open=true;form.requestSubmit()};
+
 const keys=['name','location_text','phone','whatsapp','instagram','website','google_review_url','maps_url','tour_url','streetview_url','address','qr_description'];
 const mediaKeys=['logo_url','cover_url','location_video_url'];
 const slugify=s=>s.toLocaleLowerCase('tr').replace(/ı/g,'i').replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ş/g,'s').replace(/ö/g,'o').replace(/ç/g,'c').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
@@ -143,7 +176,7 @@ $('copy').onclick=async()=>{try{await navigator.clipboard.writeText(url());notic
 async function save(form,fields){if(!record)return;const button=form.querySelector('button[type=submit]');button.disabled=true;notice('Kaydediliyor...');
 try{const payload={};for(const k of fields)payload[k]=document.querySelector('[name="'+k+'"]').value.trim();
 const {data,error}=await db.from('businesses').update(payload).eq('id',record.id).eq('owner_id',user.id).select('id').maybeSingle();
-if(error)throw error;if(!data)throw Error('Kayda erişim izniniz yok.');Object.assign(record,payload);fill();notice('Değişiklikler kaydedildi.');}
+if(error)throw error;if(!data)throw Error('Kayda erişim izniniz yok.');Object.assign(record,payload);fill();notice('');showSaveToast();}
 catch(e){notice('Kaydedilemedi: '+e.message,true)}finally{button.disabled=false}}
 $('profile').onsubmit=e=>{e.preventDefault();save(e.currentTarget,keys)};
 $('mediaForm').onsubmit=e=>{e.preventDefault();save(e.currentTarget,mediaKeys)};
@@ -155,6 +188,6 @@ if(!data?.length){$('createCard').hidden=false;notice('İlk QR kartınızı olu�
 else {
 if(data.length>1){notice('Hesabınıza birden fazla kart bağlı. İlk kartınız açıldı; ek kartların etkinleştirilmesi için FT Motion ile iletişime geçin. Ek kart: 299 TL/yıl.');}
 record=data[0];await loadTemplate();if(!record.slug)throw Error('QR adresiniz henüz tanımlanmamış. FTMotion ile iletişime geçin.');
-const galleryResult=await db.from('businesses').select('gallery').eq('id',record.id).eq('owner_id',user.id).single();if(galleryResult.error)throw galleryResult.error;record.gallery=galleryResult.data.gallery||[];fill();drawMedia();await refreshPages();$('work').hidden=false;await renderQr();if(data.length===1)notice('Kartınız hazır. Bilgilerinizi düzenleyebilirsiniz.');}
+const galleryResult=await db.from('businesses').select('gallery').eq('id',record.id).eq('owner_id',user.id).single();if(galleryResult.error)throw galleryResult.error;record.gallery=galleryResult.data.gallery||[];fill();drawMedia();await refreshPages();$('work').hidden=false;$('stickySave').hidden=false;await renderQr();if(data.length===1)notice('Kartınız hazır. Bilgilerinizi düzenleyebilirsiniz.');}
 }catch(e){notice(e.message,true)}
 </script></body></html>
