@@ -50,7 +50,7 @@ body{padding-bottom:70px}.stickySave{position:fixed;bottom:0;left:0;right:0;z-in
 <label style="grid-column:1/-1">Adres<textarea name="address"></textarea></label>
 <label style="grid-column:1/-1">Kısa tanıtım<textarea name="qr_description"></textarea></label>
 </div><div class="actions" style="margin-top:17px"><button id="save" type="submit">Değişiklikleri Kaydet</button></div></form>
-<section class="card"><h2>🔗 Ek Bağlantılarım</h2><p class="muted">Facebook, X, Sahibinden, TikTok, YouTube ve diğer bağlantılarınızı ekleyin. Kaydettiğiniz bağlantılar QR kartınızda görünür.</p><form id="extraLinksForm"><div id="extraLinksList"></div><div class="actions" style="margin-top:14px"><button type="button" class="secondary" id="addExtraLink">＋ Bağlantı Ekle</button><button type="submit">Bağlantıları Kaydet</button></div></form></section>
+<section class="card"><h2>🔗 Ek Bağlantılarım</h2><p class="muted">Facebook, X, Sahibinden, TikTok, YouTube ve diğer bağlantılarınızı ekleyin. Kaydettiğiniz bağlantılar QR kartınızda görünür.</p><form id="extraLinksForm"><div id="extraLinksList"></div><p id="extraLinksStatus" role="status" aria-live="polite" style="margin:12px 0 0;font-weight:700" hidden></p><div class="actions" style="margin-top:14px"><button type="button" class="secondary" id="addExtraLink">＋ Bağlantı Ekle</button><button type="submit">Bağlantıları Kaydet</button></div></form></section>
 <section class="card"><h2>Logo, Kapak ve Galeri</h2><p class="muted">Bu alanda yalnızca kendi kartınıza ait medya dosyalarını düzenleyebilirsiniz.</p>
 <div class="fields"><label>Logo URL<input name="logo_url" form="mediaForm" type="url"></label><label>Kapak URL<input name="cover_url" form="mediaForm" type="url"></label><label style="grid-column:1/-1">Konum videosu URL<input name="location_video_url" form="mediaForm" type="url"></label></div>
 <form id="mediaForm"><div class="actions" style="margin-top:14px"><button type="submit">Medya Bağlantılarını Kaydet</button></div></form>
@@ -187,7 +187,29 @@ const linkOptions=[['facebook','Facebook'],['x','X / Twitter'],['sahibinden','Sa
 function addLinkRow(entry={}){const row=document.createElement('div');row.className='item extra-link-row';const select=document.createElement('select');select.className='extra-type';select.style.cssText='min-width:0;width:100%;padding:11px;background:#0d1b2c;color:white;border:1px solid #49617a;border-radius:10px';for(const [v,label] of linkOptions){const opt=document.createElement('option');opt.value=v;opt.textContent=label;select.append(opt)}select.value=linkOptions.some(x=>x[0]===entry.type)?entry.type:'other';const url=document.createElement('input');url.type='url';url.className='extra-url';url.placeholder='https://...';url.value=entry.url||'';url.required=true;url.style.minWidth='0';url.setAttribute('aria-label','Bağlantı web adresi');const remove=document.createElement('button');remove.type='button';remove.textContent='Sil';remove.className='secondary';remove.onclick=()=>row.remove();row.append(select,url,remove);$('extraLinksList').append(row)}
 $('addExtraLink').onclick=()=>addLinkRow();
 async function loadExtraLinks(){const {data,error}=await db.from('businesses').select('extra_links').eq('id',record.id).eq('owner_id',user.id).single();if(error){notice('Ek bağlantılar için Supabase alanı henüz oluşturulmamış olabilir: '+error.message,true);return}record.extra_links=Array.isArray(data?.extra_links)?data.extra_links:[];$('extraLinksList').replaceChildren();for(const link of record.extra_links)addLinkRow(link)}
-$('extraLinksForm').onsubmit=async e=>{e.preventDefault();const rows=[...$('extraLinksList').children],links=[];for(const row of rows){const type=row.querySelector('.extra-type').value;const raw=row.querySelector('.extra-url').value.trim();let parsed;try{parsed=new URL(raw)}catch{return notice('Geçerli bağlantı girin: https://...',true)}if(!['https:','http:'].includes(parsed.protocol))return notice('Yalnızca http/https bağlantıları kullanılabilir.',true);links.push({type,url:parsed.href})}if(links.length>20)return notice('En fazla 20 ek bağlantı eklenebilir.',true);const btn=e.currentTarget.querySelector('[type=submit]');btn.disabled=true;try{const {error}=await db.from('businesses').update({extra_links:links}).eq('id',record.id).eq('owner_id',user.id);if(error)throw error;record.extra_links=links;notice('Ek bağlantılarınız kaydedildi.')}catch(ex){notice('Kaydedilemedi: '+ex.message,true)}finally{btn.disabled=false}};
+function extraLinkStatus(message,bad=false){const el=$('extraLinksStatus');el.hidden=false;el.textContent=message;el.style.color=bad?'#ff9999':'#55e5aa'}
+$('extraLinksForm').onsubmit=async e=>{
+ e.preventDefault();
+ if(!record?.id)return extraLinkStatus('İşletme yüklenemedi. Sayfayı yenileyip tekrar deneyin.',true);
+ const rows=[...$('extraLinksList').children],links=[];
+ for(const row of rows){
+  const type=row.querySelector('.extra-type').value,raw=row.querySelector('.extra-url').value.trim();
+  let parsed;try{parsed=new URL(raw)}catch{return extraLinkStatus('Lütfen bağlantıyı https:// ile birlikte eksiksiz yazın.',true)}
+  if(!['https:','http:'].includes(parsed.protocol))return extraLinkStatus('Yalnızca http/https bağlantıları kullanılabilir.',true);
+  links.push({type,url:parsed.href});
+ }
+ if(links.length>20)return extraLinkStatus('En fazla 20 bağlantı kaydedilebilir.',true);
+ const btn=e.currentTarget.querySelector('[type=submit]');btn.disabled=true;btn.textContent='Kaydediliyor…';extraLinkStatus('Bağlantılar kaydediliyor…');
+ try{
+  const {data,error}=await db.from('businesses').update({extra_links:links}).eq('id',record.id).eq('owner_id',user.id).select('id,extra_links').maybeSingle();
+  if(error)throw error;
+  if(!data)throw Error('Kaydetme izni bulunamadı veya işletme kaydı güncellenemedi.');
+  record.extra_links=Array.isArray(data.extra_links)?data.extra_links:[];
+  extraLinkStatus('✓ Bağlantılar başarıyla kaydedildi.');
+  showSaveToast('✓ Bağlantılar kaydedildi');
+ }catch(ex){extraLinkStatus('Kaydedilemedi: '+ex.message,true)}
+ finally{btn.disabled=false;btn.textContent='Bağlantıları Kaydet'}
+};
 function fill(){for(const k of [...keys,...mediaKeys]){const el=document.querySelector('[name="'+k+'"]');if(el)el.value=record[k]||''}
 $('businessName').textContent=record.name||'İşletmem';$('view').href=url();$('view').textContent=url();$('previewButton').href=url();}
 $('logout').onclick=async()=>{if(db)await db.auth.signOut();location.replace('giris.html?app=qr')};
