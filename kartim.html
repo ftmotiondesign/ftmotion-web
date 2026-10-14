@@ -141,11 +141,11 @@ catch(e){notice('Kaydedilemedi: '+e.message,true)}finally{button.disabled=false}
 $('profile').onsubmit=e=>{e.preventDefault();save(e.currentTarget,keys)};
 $('mediaForm').onsubmit=e=>{e.preventDefault();save(e.currentTarget,mediaKeys)};
 try{db=await client();user=await currentUser(db);if(!user){location.replace('giris.html?app=qr');throw Error('Oturum açmanız gerekiyor.')}
-const {data,error}=await db.from('businesses').select('id,owner_id,slug,'+[...keys,...mediaKeys].join(',')).eq('owner_id',user.id).order('created_at',{ascending:false}).limit(2);
+const {data,error}=await db.from('businesses').select('id,owner_id,slug,'+[...keys,...mediaKeys].join(',')).eq('owner_id',user.id).order('created_at',{ascending:true}).limit(2);
 if(error)throw error;
 if(!data?.length)throw Error('Hesabınıza atanmış QR kart bulunamadı. FTMotion ile iletişime geçin.');
-if(data.length>1)throw Error('Hesabınıza birden fazla işletme bağlı. Kart seçiminiz için FTMotion ile iletişime geçin.');
-record=data[0];await loadTemplate();if(!record.slug)throw Error('QR adresiniz henüz tanımlanmamış. FTMotion ile iletişime geçin.');
-const galleryResult=await db.from('businesses').select('gallery').eq('id',record.id).eq('owner_id',user.id).single();if(galleryResult.error)throw galleryResult.error;record.gallery=galleryResult.data.gallery||[];fill();drawMedia();await refreshPages();$('work').hidden=false;notice('Kartınız hazır. Bilgilerinizi düzenleyebilirsiniz.');
+if(data.length>1){notice('Hesabınıza birden fazla kart bağlı. İlk kartınız açıldı; ek kartların etkinleştirilmesi için FT Motion ile iletişime geçin. Ek kart: 299 TL/yıl.');}
+record=data[data.length-1];await loadTemplate();if(!record.slug)throw Error('QR adresiniz henüz tanımlanmamış. FTMotion ile iletişime geçin.');
+const galleryResult=await db.from('businesses').select('gallery').eq('id',record.id).eq('owner_id',user.id).single();if(galleryResult.error)throw galleryResult.error;record.gallery=galleryResult.data.gallery||[];fill();drawMedia();await refreshPages();$('work').hidden=false;if(data.length===1)notice('Kartınız hazır. Bilgilerinizi düzenleyebilirsiniz.');
 }catch(e){notice(e.message,true)}
 </script></body></html>
