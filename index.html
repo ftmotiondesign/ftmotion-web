@@ -50,4 +50,19 @@ try{
   if(footer){footer.textContent='Panelim';footer.href='/'+dest}
  }
 }catch(e){console.warn('Üye oturumu kontrol edilemedi:',e)}
-</script></body></html>
+</script>
+<script type="module">
+import {client} from './shared/supabase-client.js';
+try{
+ const db=await client();
+ const {data,error}=await db.from('site_settings').select('media').eq('id',1).maybeSingle();
+ if(error)throw error;
+ const slides=[document.querySelector('.banner-slide.banner-two'),document.querySelector('.banner-slide.banner-three'),document.querySelector('.banner-slide.banner-one')];
+ const entries=data?.media?.home_banners;
+ if(Array.isArray(entries)){
+  const apply=()=>{const mobile=window.matchMedia('(max-width:700px)').matches;entries.forEach((entry,i)=>{const url=mobile?entry?.mobile||entry?.desktop:entry?.desktop||entry?.mobile;if(!slides[i]||!url||!/^https:\/\//i.test(url)&&!/^\/(?!\/)/.test(url))return;slides[i].style.setProperty('background-image','url('+JSON.stringify(url)+')','important')})};
+  apply();window.matchMedia('(max-width:700px)').addEventListener('change',apply);
+ }
+}catch(e){console.warn('Banner ayarları yüklenemedi; varsayılan görseller korunuyor.',e)}
+</script>
+</body></html>
