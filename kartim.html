@@ -107,7 +107,7 @@ let db,user,record,pages=[],editingPage=null;
 // Form alanlarını bozmadan panelleri açılır-kapanır hale getir.
 const panelTitles={'QR Kodum':true,'QR Kart Tasarımım':false,'İşletme ve İletişim':true,'Logo, Kapak ve Galeri':false,'Ek Sayfalarım':false};
 // Mobilde gerçek bölümler yerinde kalır: hızlı işlemler doğrudan HTML hedeflerine gider.
-if(!window.matchMedia('(max-width: 700px)').matches) for(const panel of document.querySelectorAll('#work > section.card, #work > form.card')){
+for(const panel of document.querySelectorAll('#work > section.card, #work > form.card')){
  const heading=panel.querySelector(':scope > h2, :scope > .top > h2');
  if(!heading)continue;
  const title=heading.textContent.trim();
