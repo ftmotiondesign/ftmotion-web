@@ -60,7 +60,7 @@ try{
  const slides=[document.querySelector('.banner-slide.banner-two'),document.querySelector('.banner-slide.banner-three'),document.querySelector('.banner-slide.banner-one')];
  const entries=data?.media?.home_banners;
  if(Array.isArray(entries)){
-  const apply=()=>{const mobile=window.matchMedia('(max-width:700px)').matches;entries.forEach((entry,i)=>{const url=mobile?entry?.mobile||entry?.desktop:entry?.desktop||entry?.mobile;if(!slides[i]||!url||!/^https:\/\//i.test(url)&&!/^\/(?!\/)/.test(url))return;slides[i].style.setProperty('background-image','url('+JSON.stringify(url)+')','important')})};
+  const apply=()=>{const mobile=window.matchMedia('(max-width:700px)').matches;entries.forEach((entry,i)=>{const kind=mobile?'mobile':'desktop';if(!slides[i]||!entry||!Object.prototype.hasOwnProperty.call(entry,kind))return;const url=entry[kind];if(url===null||url===''){slides[i].style.setProperty('background-image','none','important');return}if(!/^https:\/\//i.test(url)&&!/^\/(?!\/)/.test(url))return;slides[i].style.setProperty('background-image','url('+JSON.stringify(url)+')','important')})};
   apply();window.matchMedia('(max-width:700px)').addEventListener('change',apply);
  }
 }catch(e){console.warn('Banner ayarları yüklenemedi; varsayılan görseller korunuyor.',e)}
