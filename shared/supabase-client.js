@@ -1,4 +1,4 @@
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 let cache; export async function client(){if(cache)return cache;let response=await fetch(new URL('../supabase-config.json', import.meta.url),{cache:'no-store'});if(!response.ok)throw Error('Supabase ayar dosyası bulunamadı');let cfg=await response.json();if(!/^https:\/\//.test(cfg.url||'')||!cfg.anonKey)throw Error('Supabase ayarları eksik');cache=createClient(cfg.url,cfg.anonKey);return cache}
-export async function currentUser(db){const {data,error}=await db.auth.getUser();if(error)throw error;return data.user}
+export async function currentUser(db){const {data:sessionData,error:sessionError}=await db.auth.getSession();if(sessionError){if(/auth session missing/i.test(sessionError.message||''))return null;throw sessionError}if(!sessionData?.session)return null;const {data,error}=await db.auth.getUser();if(error){if(/auth session missing/i.test(error.message||''))return null;throw error}return data?.user||null}
 export function message(error){return error?.message||String(error)}
