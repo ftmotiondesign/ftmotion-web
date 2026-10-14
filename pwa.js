@@ -1,0 +1,2 @@
+/* FTMotion PWA • v1.0, üyeye ait bilgiler çevrimdışı önbelleğe alınmaz. */
+(()=>{if(!('serviceWorker' in navigator)||location.protocol!=='https:')return;window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(err=>console.warn('PWA kaydı başarısız:',err)));})();
