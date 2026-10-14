@@ -1,0 +1,5 @@
+/* FTMotion PWA • güvenli statik önbellek */
+const CACHE='ftmotion-assets-v1';const STATIC=['/pwa-icon.svg','/pwa-maskable.svg','/ftmotion-logo.webp','/offline.html'];
+self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(c=>c.addAll(STATIC)).then(()=>self.skipWaiting()));});
+self.addEventListener('activate',event=>{event.waitUntil((async()=>{const names=await caches.keys();await Promise.all(names.filter(n=>n.startsWith('ftmotion-assets-')&&n!==CACHE).map(n=>caches.delete(n)));await self.clients.claim();})());});
+self.addEventListener('fetch',event=>{const r=event.request;if(r.method!=='GET'||new URL(r.url).origin!==self.location.origin)return;const u=new URL(r.url);if(r.mode==='navigate'){event.respondWith(fetch(r).catch(()=>caches.match('/offline.html')));return;}if(!STATIC.includes(u.pathname))return;event.respondWith(caches.match(r).then(cached=>cached||fetch(r).then(response=>{if(response.ok){const copy=response.clone();caches.open(CACHE).then(c=>c.put(r,copy));}return response;})));});
