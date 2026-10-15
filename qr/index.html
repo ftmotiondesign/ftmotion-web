@@ -176,6 +176,8 @@ if(shortSlug){
 if(error)throw error;if(!b)throw Error('Bu QR sayfası bulunamadı veya yayında değil.');
 // İşletme introsunu diğer kart içerikleri yüklenirken eşzamanlı başlat.
 const introPromise=showBusinessIntro(b);
+const originLink=document.querySelector('#discoverLinkBlock a');
+if(originLink){const u=new URL(originLink.href,location.origin);u.searchParams.set('from',location.pathname+location.search);u.searchParams.set('from_name',b.name||'İşletme');originLink.href=u.pathname+u.search;}
 try{const ds=await db.from('business_discovery_settings').select('show_discover').eq('business_id',b.id).maybeSingle();if(!ds.error&&ds.data?.show_discover===true)document.getElementById('discoverLinkBlock').hidden=false}catch(e){console.warn('Keşfet görünürlüğü:',e)}
 
 if(shortSlug){
