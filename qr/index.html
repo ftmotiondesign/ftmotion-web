@@ -102,7 +102,7 @@ body.qr-failed #qrWrap #error{display:block!important;padding:45px 22px;text-ali
 /* FTMotion işletmeye özel hafif açılış animasyonu */
 body.qr-intro #qrWrap{display:none!important}
 #businessIntro[hidden]{display:none!important}
-#businessIntro{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;text-align:center;padding:26px;overflow:hidden;background:var(--intro-bg,#0b0b0d);color:#fff}
+#businessIntro{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;text-align:center;padding:26px;overflow:hidden;background:var(--intro-bg,#0b0b0d);color:#fff}
 #businessIntro .intro-logo{max-width:min(56vw,220px);max-height:210px;object-fit:contain;filter:drop-shadow(0 12px 24px #0006);animation:ftIntroPop 1.15s cubic-bezier(.2,.9,.22,1) both}
 #businessIntro .intro-name{margin-top:24px;font-weight:700;font-size:clamp(18px,4vw,28px);animation:ftIntroFade .85s .4s both}
 #businessIntro .intro-skip{position:absolute;right:20px;top:22px;background:#ffffff1c;border:1px solid #ffffff45;border-radius:999px;padding:9px 15px;color:#fff;cursor:pointer}
@@ -141,7 +141,7 @@ $('closeVideo').onclick=()=>{$('videoPlayer').pause();$('videoPlayer').removeAtt
 
 async function showBusinessIntro(b){
  const settings=b.intro_settings&&typeof b.intro_settings==='object'?b.intro_settings:{};
- if(settings.enabled===false||(!b.logo_url&&!b.premium_intro_url)||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ if(settings.enabled===false||(!b.logo_url&&!b.premium_intro_url))return; // Azaltılmış hareket ayarında intro tamamen atlanmaz; CSS animasyonu devre dışı kalır.
  const el=document.getElementById('businessIntro'),logo=document.getElementById('introLogo'),name=document.getElementById('introName');
  let src;try{src=new URL(b.logo_url,location.origin);if(!['https:','http:'].includes(src.protocol))return}catch{return}
  const premium=typeof b.premium_intro_url==='string'&&/^https:\/\//i.test(b.premium_intro_url)?b.premium_intro_url:null;
@@ -152,7 +152,7 @@ async function showBusinessIntro(b){
   return;
  }
  const duration=Math.min(3000,Math.max(1000,Number(settings.duration)||2000));
- logo.src=src.href;name.textContent=settings.show_name===false?'':b.name||'';
+ logo.removeAttribute('hidden');logo.style.display='block';logo.src=src.href;name.textContent=settings.show_name===false?'':b.name||'';
  el.style.setProperty('--intro-bg',/^#[0-9a-f]{6}$/i.test(settings.background||'')?settings.background:'#0b0b0d');
  await new Promise(resolve=>{
   let finished=false;const end=()=>{if(finished)return;finished=true;clearTimeout(timer);el.hidden=true;document.body.classList.remove('qr-intro');logo.removeAttribute('src');resolve()};
