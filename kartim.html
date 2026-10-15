@@ -294,7 +294,7 @@ $('introSave').onclick=async()=>{
  }catch(e){$('introStatus').textContent='Kaydedilemedi: '+e.message+' (Veritabanı SQL kurulumunu kontrol edin).'}
  finally{btn.disabled=false}
 };
-$('premiumIntroRequest').onclick=()=>{if(!record)return;const q=new URLSearchParams({hizmet:'Özel Logo Animasyonu',isletme:record.name||'',qr:record.slug||''});window.open('/siparis.html?'+q.toString(),'_blank','noopener')};
+$('premiumIntroRequest').onclick=()=>{if(!record)return;const msg='Merhaba FTMotion, '+(record.name||'işletmem')+' için QR/NFC kartıma özel profesyonel logo animasyonu yaptırmak istiyorum. Bilgi ve fiyat teklifi alabilir miyim?'+(record.slug?'\nQR işletme kodu: '+record.slug:'');window.open('https://wa.me/905347815105?text='+encodeURIComponent(msg),'_blank','noopener')};
 $('introPreview').onclick=()=>{if(!record)return;window.open(url()+'?intro_preview=1','_blank','noopener')};
 
 try{db=await client();user=await currentUser(db);if(!user){notice('Oturumunuz kapanmış. Yeniden giriş sayfasına yönlendiriliyorsunuz.');setTimeout(()=>location.replace('giris.html?app=qr'),500);throw Error('Yeniden giriş gerekli.')}
