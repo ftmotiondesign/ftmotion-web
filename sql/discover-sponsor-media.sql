@@ -25,3 +25,6 @@ drop policy if exists "discover_admin_upload" on storage.objects;
 create policy "discover_admin_upload" on storage.objects for insert to authenticated with check (bucket_id='sponsor-video-assets' and (storage.foldername(name))[1]='discover' and public.is_ftm_admin());
 drop policy if exists "discover_admin_read" on storage.objects;
 create policy "discover_admin_read" on storage.objects for select to anon,authenticated using (bucket_id='sponsor-video-assets' and (storage.foldername(name))[1]='discover');
+
+-- QR kartı bağlantısı
+alter table public.discover_sponsor_media add column if not exists qr_url text;
