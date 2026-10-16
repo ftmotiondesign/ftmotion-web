@@ -213,10 +213,13 @@ $('closeVideo').onclick=()=>{$('videoPlayer').pause();$('videoPlayer').removeAtt
 
 async function showBusinessIntro(b){
  const settings=b.intro_settings&&typeof b.intro_settings==='object'?b.intro_settings:{};
- if(settings.enabled===false||(!b.logo_url&&!b.premium_intro_url))return; // Azaltılmış hareket ayarında intro tamamen atlanmaz; CSS animasyonu devre dışı kalır.
+ const demoIntroUrl='https://trchdzdvacalsyrsllar.supabase.co/storage/v1/object/public/business-intros/matbaa_promosyon_intro-1.mp4';
+ const isMatbaa=String(b.slug||'').toLowerCase()==='matbaa-ve-promosyon';
+ const premium=isMatbaa?demoIntroUrl:(typeof b.premium_intro_url==='string'&&/^https:\/\//i.test(b.premium_intro_url)?b.premium_intro_url:null);
+ if(settings.enabled===false||(!b.logo_url&&!premium))return;
  const el=document.getElementById('businessIntro'),logo=document.getElementById('introLogo'),name=document.getElementById('introName');
- let src;try{src=new URL(b.logo_url,location.origin);if(!['https:','http:'].includes(src.protocol))return}catch{return}
- const premium=typeof b.premium_intro_url==='string'&&/^https:\/\//i.test(b.premium_intro_url)?b.premium_intro_url:null;
+ let src=null;try{if(b.logo_url){src=new URL(b.logo_url,location.origin);if(!['https:','http:'].includes(src.protocol))src=null}}catch{src=null}
+ if(!premium&&!src)return;
  if(premium){
   const video=document.createElement('video');video.src=premium;video.muted=true;video.playsInline=true;video.autoplay=true;video.preload='metadata';video.style.cssText='max-width:min(86vw,520px);max-height:60vh;border-radius:14px;object-fit:contain';
   const holder=logo.parentNode;logo.hidden=true;name.hidden=true;holder.prepend(video);el.hidden=false;document.body.classList.add('qr-intro');
