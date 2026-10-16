@@ -268,10 +268,15 @@ try{
  const safeSlug=String(b.slug||new URLSearchParams(location.search).get('slug')||location.pathname.split('/').filter(Boolean).pop()||'').replace(/[^a-z0-9-]/gi,'');
  if(safeSlug){
   const start='/qr/?slug='+encodeURIComponent(b.slug||safeSlug);
-  const iconUrl=(()=>{try{const u=new URL(b.logo_url||'/pwa-192.png',location.href);return u.origin===location.origin?u.pathname+u.search:'/pwa-192.png';}catch{return '/pwa-192.png';}})();
+  const iconUrl=(()=>{try{const u=new URL(b.logo_url||'/pwa-192.png',location.href);return ['https:','http:'].includes(u.protocol)?u.href:'/pwa-192.png';}catch{return '/pwa-192.png';}})();
   const manifest={id:start,name:b.name+' | İşletme Kartı',short_name:String(b.name||'İşletmem').slice(0,24),description:'Dijital işletme kartı',start_url:start,scope:'/qr/',display:'standalone',background_color:'#08090c',theme_color:'#08090c',icons:[{src:iconUrl,sizes:'any',purpose:'any'}]};
   const link=document.createElement('link');link.rel='manifest';link.href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(manifest));document.head.appendChild(link);
-  if(b.logo_url){const apple=document.querySelector('link[rel="apple-touch-icon"]');if(apple)apple.href=iconUrl;}
+  if(b.logo_url){
+   // Chrome kısayol oluştururken sayfanın favicon'unu da kullanır.
+   document.querySelectorAll('link[rel="icon"],link[rel="shortcut icon"],link[rel="apple-touch-icon"]').forEach(node=>node.remove());
+   const favicon=document.createElement('link');favicon.rel='icon';favicon.href=iconUrl;document.head.appendChild(favicon);
+   const apple=document.createElement('link');apple.rel='apple-touch-icon';apple.href=iconUrl;document.head.appendChild(apple);
+  }
  }
 }catch(e){console.warn('İşletme manifesti hazırlanamadı',e);}
 
