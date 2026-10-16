@@ -216,7 +216,7 @@ async function showBusinessIntro(b){
  const demoIntroUrl='https://trchdzdvacalsyrsllar.supabase.co/storage/v1/object/public/business-intros/matbaa_promosyon_intro-1.mp4';
  const isMatbaa=String(b.slug||'').toLowerCase()==='matbaa-ve-promosyon'||String(shortSlug||slug||'').toLowerCase()==='matbaa-ve-promosyon';
  const premium=settings.enabled===false?null:(typeof b.premium_intro_url==='string'&&/^https:\/\//i.test(b.premium_intro_url)?b.premium_intro_url:(isMatbaa?demoIntroUrl:null));
- if(settings.enabled===false||(!b.logo_url&&!premium))return;
+ if(!b.logo_url&&!premium)return;
  const el=document.getElementById('businessIntro'),logo=document.getElementById('introLogo'),name=document.getElementById('introName');
  let src=null;try{if(b.logo_url){src=new URL(b.logo_url,location.origin);if(!['https:','http:'].includes(src.protocol))src=null}}catch{src=null}
  if(!premium&&!src)return;
