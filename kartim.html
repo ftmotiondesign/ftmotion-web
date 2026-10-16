@@ -452,7 +452,7 @@ async function loadAnalytics(){
   const cards=[['Görüntüleme',sum('view')],['Tekil ziyaretçi (yaklaşık)',unique],['Buton tıklaması',sum('click')],['Cebimde tıklamaları',rows.filter(x=>x.source==='cebimde'&&x.event_type==='click').reduce((n,x)=>n+Number(x.total||0),0)]];
   for(const [label,value] of cards){const div=document.createElement('div');div.style.cssText='padding:14px;border:1px solid #ddd;border-radius:12px;background:#f6f7f9';const strong=document.createElement('strong');strong.style.cssText='display:block;font-size:24px';strong.textContent=value.toLocaleString('tr-TR');const small=document.createElement('small');small.textContent=label;div.append(strong,small);metrics.append(div)}
   const clicks=rows.filter(x=>x.event_type==='click').sort((a,b)=>Number(b.total)-Number(a.total)).slice(0,8);
-  if(clicks.length)breakdown.innerHTML='<h3>En çok tıklanan bağlantılar</h3>'+clicks.map(x=>'<p>'+esc(x.target||x.source)+' · '+Number(x.total).toLocaleString('tr-TR')+'</p>').join('');
+  if(clicks.length)breakdown.innerHTML='<h3>En çok tıklanan bağlantılar</h3>'+clicks.map(x=>'<p>'+esc(({saved_inspect:'Cebimde – İşletmeyi İncele',discover_inspect:'Cebimde – İşletmeyi İncele',discover_modal:'Cebimde – İşletme Detayı',open_qr:'Cebimde – QR Kartına Geçiş'}[x.target]||x.target||x.source))+' · '+Number(x.total).toLocaleString('tr-TR')+'</p>').join('');
   status.textContent='Seçilen dönem · QR ve Cebimde kayıtları';
  }catch(e){status.textContent='İstatistikler henüz etkin değil: '+e.message}
 }
