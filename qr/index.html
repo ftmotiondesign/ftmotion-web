@@ -258,6 +258,18 @@ if(shortSlug){
  if(location.pathname!==canonical){history.replaceState(null,'',canonical+location.hash)}
 }
 const chosenTemplate=new URLSearchParams(location.search).get('template_preview')||b.qr_template||'classic';if(['light','premium','vitrine'].includes(chosenTemplate))document.body.classList.add('template-'+chosenTemplate);document.title=b.name+' | FTMotion';
+// İşletmeye özel ana ekran kimliği: yönetim panelinin PWA kimliğinden bağımsızdır.
+try{
+ const safeSlug=String(b.slug||new URLSearchParams(location.search).get('slug')||location.pathname.split('/').filter(Boolean).pop()||'').replace(/[^a-z0-9-]/gi,'');
+ if(safeSlug){
+  const start='/qr/'+encodeURIComponent(safeSlug);
+  const iconUrl=(()=>{try{const u=new URL(b.logo_url||'/pwa-192.png',location.href);return u.origin===location.origin?u.pathname+u.search:'/pwa-192.png';}catch{return '/pwa-192.png';}})();
+  const manifest={id:start,name:b.name+' | İşletme Kartı',short_name:String(b.name||'İşletmem').slice(0,24),description:'Dijital işletme kartı',start_url:start,scope:'/qr/',display:'standalone',background_color:'#08090c',theme_color:'#08090c',icons:[{src:iconUrl,sizes:'any',purpose:'any'}]};
+  const link=document.createElement('link');link.rel='manifest';link.href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(manifest));document.head.appendChild(link);
+  if(b.logo_url){const apple=document.querySelector('link[rel="apple-touch-icon"]');if(apple)apple.href=iconUrl;}
+ }
+}catch(e){console.warn('İşletme manifesti hazırlanamadı',e);}
+
 // FTMotion müşteri kartları: isteğe bağlı, cihaz üzerinde kayıt.
 try{
  const storageKey='ftmotion-kartlarim-v1';
