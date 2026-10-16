@@ -158,8 +158,8 @@ const open=document.getElementById('cebimdeInstallOpen'),dialog=document.getElem
 let pendingInstall=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();pendingInstall=e});
 const installed=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
-const hide=()=>{dialog.hidden=true};
-const show=()=>{const ios=/iPad|iPhone|iPod/.test(navigator.userAgent);steps.textContent=installed()?'✓ Cebimde zaten uygulama olarak açılmış.':ios?'1. Safari’de alttaki Paylaş simgesine dokun.\n2. Ana Ekrana Ekle seçeneğini seç.\n3. Ekle’ye dokun.':'1. Tarayıcının sağ üstündeki ⋮ menüsüne dokun.\n2. Ana ekrana ekle veya Uygulamayı yükle seçeneğini seç.\n3. Ekle’ye dokun.';steps.style.whiteSpace='pre-line';dialog.hidden=false};
+let autoCloseTimer=null;const hide=()=>{dialog.hidden=true;if(autoCloseTimer){clearTimeout(autoCloseTimer);autoCloseTimer=null}};
+const show=()=>{const ios=/iPad|iPhone|iPod/.test(navigator.userAgent);steps.textContent=installed()?'✓ Cebimde zaten uygulama olarak açılmış.':ios?'1. Safari’de alttaki Paylaş simgesine dokun.\n2. Ana Ekrana Ekle seçeneğini seç.\n3. Ekle’ye dokun.':'1. Tarayıcının sağ üstündeki ⋮ menüsüne dokun.\n2. Ana ekrana ekle veya Uygulamayı yükle seçeneğini seç.\n3. Ekle’ye dokun.';steps.style.whiteSpace='pre-line';dialog.hidden=false;if(installed()){autoCloseTimer=setTimeout(hide,2000)}};
 open.addEventListener('click',async()=>{if(installed()){show();return}if(pendingInstall){try{const prompt=pendingInstall;pendingInstall=null;await prompt.prompt();const choice=await prompt.userChoice;if(choice?.outcome==='accepted')return}catch(e){console.warn('Ana ekran kurulumu',e)}}show()});
 close.onclick=hide;dialog.addEventListener('click',e=>{if(e.target===dialog)hide()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!dialog.hidden)hide()});
 window.addEventListener('appinstalled',()=>{open.textContent='✓ Telefona Eklendi'});
