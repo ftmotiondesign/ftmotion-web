@@ -294,7 +294,7 @@ try{
     const node=document.createElement('link');node.rel=rel;node.href=iconUrl;document.head.appendChild(node);
    }
   }
-  const manifest={id:start,name:b.name+' | İşletme Kartı',short_name:String(b.name||'İşletmem').slice(0,24),description:'Dijital işletme kartı',start_url:start,scope:'/qr/',display:'standalone',background_color:'#08090c',theme_color:'#08090c'};
+  const manifest={id:start+'?app=video-v2',name:b.name+' | İşletme Kartı',short_name:String(b.name||'İşletmem').slice(0,24),description:'Dijital işletme kartı',start_url:start+'?app=video-v2',scope:'/qr/',display:'standalone',background_color:'#08090c',theme_color:'#08090c'};
   if(iconUrl)manifest.icons=[{src:iconUrl,sizes:'any',purpose:'any'}];
   const previous=document.querySelector('link[rel="manifest"]');if(previous)previous.remove();
   const link=document.createElement('link');link.rel='manifest';link.href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(manifest));document.head.appendChild(link);
