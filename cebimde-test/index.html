@@ -123,7 +123,15 @@ const more=el('div','detail');more.append(el('h3','','İşletmenin Tüm Bilgiler
 if(id){const a=el('a','btn primary','Tüm Bilgileri Gör ↗');a.href='https://dijiyesor.com/firma.html?id='+encodeURIComponent(id);a.target='_blank';a.rel='noopener noreferrer';more.append(a)}container.append(more);
 window.scrollTo({top:0,behavior:'smooth'});
 }
-function openSavedDiji(x){let id='';try{id=new URL(x.url).searchParams.get('id')||''}catch{}const d=dijiRows.find(a=>String(a._id||a.id||'')===id);if(d){showDijiDetail(d);return}const fallback={_id:id,name:x.name,city:x.city||'',district:x.district||'',category:x.category||'',cardImageUrl:x.image||''};showDijiDetail(fallback);}
+async function openSavedDiji(x){let id='';try{id=new URL(x.url).searchParams.get('id')||''}catch{}
+const fallback={_id:id,name:x.name,city:x.city||'',district:x.district||'',category:x.category||'',cardImageUrl:(savedDijiImages.get(id)||[])[0]||x.image||''};
+const cached=dijiRows.find(a=>String(a._id||a.id||'')===id);
+if(cached){showDijiDetail(cached);return}
+showDijiDetail(fallback);
+if(!id)return;
+try{const db=await dijiConnect();const snap=await db.collection('institutions').doc(id).get();if(!snap.exists)return;
+const d={...snap.data(),_id:id};if(!$('detail').hidden&&$('detailContent').querySelector('h2')?.textContent===x.name){showDijiDetail(d)}}catch(e){console.warn('DijiyeSor işletme detayı yüklenemedi',e)}
+}
 const savedDijiImages=new Map(),savedDijiLoading=new Set();
 async function hydrateSavedDiji(id){if(!id||savedDijiImages.has(id)||savedDijiLoading.has(id))return;savedDijiLoading.add(id);try{const db=await dijiConnect();const snap=await db.collection('institutions').doc(id).get();if(!snap.exists){savedDijiImages.set(id,[]);return}const d=snap.data()||{};const images=[...(Array.isArray(d.coverUrls)?d.coverUrls:[]),d.cardImageUrl,d.coverUrl,d.bannerUrl,d.coverImageUrl,...(Array.isArray(d.galleryUrls)?d.galleryUrls:[]),d.logoUrl,d.logo_url].filter(v=>typeof v==='string'&&/^https:\/\//i.test(v));savedDijiImages.set(id,[...new Set(images)]);if(tab==='biz'&&$('detail').hidden)render()}catch(e){console.warn('Kayıtlı DijiyeSor kapak görseli alınamadı',e)}finally{savedDijiLoading.delete(id)}}
 function render(){data=(()=>{try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(x)?x.filter(a=>a&&a.name&&safeUrl(a.url)):[]}catch{return []}})();$('total').textContent=data.length;$('offers').textContent='—';$('favs').textContent=data.filter(x=>favorites.includes(x.url)).length;const list=$('list');list.replaceChildren();const q=$('search').value.toLocaleLowerCase('tr');let filtered=data.filter(x=>x.name.toLocaleLowerCase('tr').includes(q));if(!filtered.length){let empty=el('div','empty',data.length?'Aramana uygun işletme bulunamadı.':'Henüz kaydedilmiş işletmen yok. Keşfet bölümünden bir işletmeyi kaydedebilirsin.');list.append(empty);if(!data.length){const a=el('a','', 'Örnek QR sayfasını aç →');a.href='/qr/matbaa-ve-promosyon';list.append(a)}}for(let x of filtered){const card=el('article','business'),head=el('div','bizhead'),icon=el('div','symbol',x.name.trim().charAt(0).toUpperCase()),name=el('div');const p=profiles.get(x.url);
