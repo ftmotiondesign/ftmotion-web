@@ -214,14 +214,14 @@ $('closeVideo').onclick=()=>{$('videoPlayer').pause();$('videoPlayer').removeAtt
 async function showBusinessIntro(b){
  const settings=b.intro_settings&&typeof b.intro_settings==='object'?b.intro_settings:{};
  const demoIntroUrl='https://trchdzdvacalsyrsllar.supabase.co/storage/v1/object/public/business-intros/matbaa_promosyon_intro-1.mp4';
- const isMatbaa=String(b.slug||'').toLowerCase()==='matbaa-ve-promosyon';
+ const isMatbaa=String(b.slug||'').toLowerCase()==='matbaa-ve-promosyon'||String(shortSlug||slug||'').toLowerCase()==='matbaa-ve-promosyon';
  const premium=isMatbaa?demoIntroUrl:(typeof b.premium_intro_url==='string'&&/^https:\/\//i.test(b.premium_intro_url)?b.premium_intro_url:null);
  if((!isMatbaa&&settings.enabled===false)||(!b.logo_url&&!premium))return;
  const el=document.getElementById('businessIntro'),logo=document.getElementById('introLogo'),name=document.getElementById('introName');
  let src=null;try{if(b.logo_url){src=new URL(b.logo_url,location.origin);if(!['https:','http:'].includes(src.protocol))src=null}}catch{src=null}
  if(!premium&&!src)return;
  if(premium){
-  const video=document.createElement('video');video.src=premium;video.muted=true;video.playsInline=true;video.autoplay=true;video.preload='metadata';video.style.cssText='max-width:min(86vw,520px);max-height:60vh;border-radius:14px;object-fit:contain';
+  const video=document.createElement('video');video.src=premium;video.muted=true;video.playsInline=true;video.autoplay=true;video.preload='auto';video.setAttribute('webkit-playsinline','');video.style.cssText='max-width:min(86vw,520px);max-height:60vh;border-radius:14px;object-fit:contain';
   const holder=logo.parentNode;logo.hidden=true;name.hidden=true;holder.prepend(video);el.hidden=false;document.body.classList.add('qr-intro');
   await new Promise(resolve=>{let finished=false;const end=()=>{if(finished)return;finished=true;clearTimeout(timer);video.pause();video.remove();logo.hidden=false;name.hidden=false;el.hidden=true;document.body.classList.remove('qr-intro');resolve()};const timer=setTimeout(end,7000);document.getElementById('introSkip').onclick=end;video.onended=end;video.onerror=end;video.play().catch(end)});
   return;
