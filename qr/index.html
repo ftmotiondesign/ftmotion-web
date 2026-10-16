@@ -278,9 +278,10 @@ if(shortSlug){
 const chosenTemplate=new URLSearchParams(location.search).get('template_preview')||b.qr_template||'classic';if(['light','premium','vitrine'].includes(chosenTemplate))document.body.classList.add('template-'+chosenTemplate);document.title=b.name+' | FTMotion';
 // İşletmeye özel ana ekran kimliği: yönetim panelinin PWA kimliğinden bağımsızdır.
 try{
- const safeSlug=String(b.slug||new URLSearchParams(location.search).get('slug')||location.pathname.split('/').filter(Boolean).pop()||'').replace(/[^a-z0-9-]/gi,'');
+ const safeSlug=String(shortSlug||slug||b.slug||'').replace(/[^a-z0-9-]/gi,'');
  if(safeSlug){
-  const start='/qr/?slug='+encodeURIComponent(b.slug||safeSlug);
+  // Ana ekran kısayolu, doğrulanmış çalışan QR yolunu kullanır; DB slug'ına güvenmez.
+  const start='/qr/'+encodeURIComponent(safeSlug);
   const iconUrl=(()=>{try{if(!b.logo_url)return '';const u=new URL(b.logo_url,location.href);if(!['https:','http:'].includes(u.protocol))return '';u.hash='';return u.href;}catch{return '';}})();
   // Kısayol simgesi yalnızca işletme logosundan gelir; FTMotion logosuna düşmez.
   if(iconUrl){
