@@ -2,8 +2,8 @@
    No direct table writes; the RPC must be installed first. */
 window.FTMAnalytics = Object.freeze({
  track(db,{businessKey,source,eventType,target=''}) {
-   if (!db || !businessKey || !['qr','cebimde','dijiyesor','sponsor'].includes(source)) return;
-   if (!['view','impression','click','save'].includes(eventType)) return;
+   if (!db || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(businessKey)) || !['qr','cebimde'].includes(source)) return;
+   if (!['view','click','save'].includes(eventType)) return;
    const key='ftm_visitor_v1';
    let visitor='';
    try {
