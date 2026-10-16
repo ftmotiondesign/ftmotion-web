@@ -13,7 +13,8 @@ create table if not exists public.ftm_diji_publication_requests (
 create index if not exists ftm_diji_requests_status_idx on public.ftm_diji_publication_requests(status,created_at desc);
 alter table public.ftm_diji_publication_requests enable row level security;
 revoke all on public.ftm_diji_publication_requests from anon;
-grant select,insert on public.ftm_diji_publication_requests to authenticated;
+grant select on public.ftm_diji_publication_requests to authenticated;
+grant insert (business_id,owner_id) on public.ftm_diji_publication_requests to authenticated;
 create policy "owner read own publication request" on public.ftm_diji_publication_requests
  for select to authenticated using (owner_id = (select auth.uid()));
 create policy "owner submit own business" on public.ftm_diji_publication_requests
