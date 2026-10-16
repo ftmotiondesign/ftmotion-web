@@ -239,10 +239,15 @@ try{if(!slug&&!shortSlug)throw Error('İşletme bağlantısı belirtilmedi.');co
 let b,error;
 if(shortSlug){
  const alias=await db.from('qr_short_links').select('business_id').eq('short_slug',shortSlug).maybeSingle();
- if(alias.error)throw Error('Kısa QR adresleri henüz etkin değil: '+alias.error.message);
- if(!alias.data)throw Error('Bu kısa QR adresi bulunamadı.');
- const result=await db.from('businesses').select('*').eq('id',alias.data.business_id).eq('active',true).maybeSingle();
- b=result.data;error=result.error;
+ if(alias.data?.business_id){
+  const result=await db.from('businesses').select('*').eq('id',alias.data.business_id).eq('active',true).maybeSingle();
+  b=result.data;error=result.error;
+ }else{
+  // Eski basılı QR bağlantıları ve Chrome kısayolları doğrudan işletme slug'ı kullanabilir.
+  const result=await db.from('businesses').select('*').eq('slug',shortSlug).eq('active',true).maybeSingle();
+  b=result.data;error=result.error;
+ }
+
 }else{const result=await db.from('businesses').select('*').eq('slug',slug).eq('active',true).maybeSingle();b=result.data;error=result.error}
 if(error)throw error;if(!b)throw Error('Bu QR sayfası bulunamadı veya yayında değil.');
 window.ftmAnalyticsDB=db;window.ftmAnalyticsBusinessId=b.id;
