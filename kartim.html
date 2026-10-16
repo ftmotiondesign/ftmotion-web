@@ -147,6 +147,7 @@ button.secondary,.btn.secondary{background:#f4f5f7;color:#343b44;border-color:#d
 <form id="mediaForm"><div class="actions" style="margin-top:14px"><button type="submit">Medya Bağlantılarını Kaydet</button></div></form>
 <div style="margin-top:18px"><h2>Dosya Yükle</h2><label>Dosya türü<select id="uploadType"><option value="logo_url">Logo</option><option value="cover_url">Kapak fotoğrafı</option><option value="gallery">Galeri görseli</option><option value="location_video_url">Konum videosu</option></select></label><label>Bilgisayardan seç<input type="file" id="uploadFile" accept="image/jpeg,image/png,image/webp,video/mp4"></label><p class="hint">JPG, PNG, WEBP veya MP4 · En fazla 50 MB. Yüklenen dosyalar işletmenize özel klasöre kaydedilir.</p><div class="actions" style="margin:10px 0"><button id="takePhoto" class="secondary" type="button">📷 Fotoğraf Çek</button><span id="photoSelection" class="hint" role="status"></span></div><input id="cameraInput" type="file" accept="image/*" capture="environment" hidden><button id="uploadButton" type="button">Dosyayı Yükle</button><div id="mediaList"></div></div>
 </section>
+<section class="card" id="ftmAnalyticsSection" style="padding:18px;margin:12px 0"><div class="top"><h2>📊 İstatistikler</h2><select id="ftmAnalyticsPeriod" aria-label="İstatistik dönemi"><option value="1">Bugün (son 24 saat)</option><option value="7">7 Gün</option><option value="30" selected>30 Gün</option><option value="3650">Tüm Zamanlar (son 10 yıl)</option></select></div><p class="muted" id="ftmAnalyticsStatus">İstatistikler yükleniyor...</p><div id="ftmAnalyticsMetrics" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px"></div><div id="ftmAnalyticsBreakdown"></div></section>
 <section class="card" id="pwa-pages"><div class="top"><h2>Ek Sayfalarım</h2><button id="newPage" type="button" class="secondary">+ Sayfa Ekle</button></div><p class="muted">IBAN, ödeme bilgisi veya açıklama sayfası oluşturabilirsiniz.</p><div id="pageList"></div>
 <form id="pageForm" hidden><h2 id="pageFormHeading">Yeni Sayfa</h2><div class="fields">
 <label>Başlık<input id="pTitle" required maxlength="120"></label><label>Tür<select id="pType"><option value="aciklama">Açıklama</option><option value="not">Not</option><option value="diger">Diğer</option><option value="iban">IBAN / Ödeme</option></select></label>
@@ -433,4 +434,27 @@ const galleryResult=await db.from('businesses').select('gallery').eq('id',record
  dialog.addEventListener('cancel',e=>{e.preventDefault();goBack();});
  window.addEventListener('popstate',()=>{if(opened)dismiss();});
 })();
-</script></body></html>
+</script><script type="module">
+import {client as ftmClient} from './shared/supabase-client.js';
+const status=document.getElementById('ftmAnalyticsStatus'),metrics=document.getElementById('ftmAnalyticsMetrics'),breakdown=document.getElementById('ftmAnalyticsBreakdown'),period=document.getElementById('ftmAnalyticsPeriod');
+const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function loadAnalytics(){
+ status.textContent='Yükleniyor...';metrics.replaceChildren();breakdown.replaceChildren();
+ try{
+  const db=await ftmClient(),{data:{user}}=await db.auth.getUser();if(!user)throw Error('Üye girişi gerekli.');
+  const found=await db.from('businesses').select('id').eq('owner_id',user.id).limit(1).maybeSingle();if(found.error)throw found.error;
+  if(!found.data){status.textContent='Henüz işletme kartı oluşturulmadı.';return}
+  const r=await db.rpc('ftm_analytics_summary',{p_business_id:found.data.id,p_days:Number(period.value)});if(r.error)throw r.error;
+  const rows=r.data||[],sum=(type)=>rows.filter(x=>x.event_type===type).reduce((n,x)=>n+Number(x.total||0),0);
+  const views=rows.filter(x=>x.event_type==='view');
+  const unique=views.reduce((n,x)=>n+Number(x.unique_visitors||0),0);
+  const cards=[['Görüntüleme',sum('view')],['Tekil ziyaretçi (yaklaşık)',unique],['Buton tıklaması',sum('click')],['Cebimde tıklamaları',rows.filter(x=>x.source==='cebimde'&&x.event_type==='click').reduce((n,x)=>n+Number(x.total||0),0)]];
+  for(const [label,value] of cards){const div=document.createElement('div');div.style.cssText='padding:14px;border:1px solid #ddd;border-radius:12px;background:#f6f7f9';const strong=document.createElement('strong');strong.style.cssText='display:block;font-size:24px';strong.textContent=value.toLocaleString('tr-TR');const small=document.createElement('small');small.textContent=label;div.append(strong,small);metrics.append(div)}
+  const clicks=rows.filter(x=>x.event_type==='click').sort((a,b)=>Number(b.total)-Number(a.total)).slice(0,8);
+  if(clicks.length)breakdown.innerHTML='<h3>En çok tıklanan bağlantılar</h3>'+clicks.map(x=>'<p>'+esc(x.target||x.source)+' · '+Number(x.total).toLocaleString('tr-TR')+'</p>').join('');
+  status.textContent='Seçilen dönem · QR ve Cebimde kayıtları';
+ }catch(e){status.textContent='İstatistikler henüz etkin değil: '+e.message}
+}
+period.addEventListener('change',loadAnalytics);loadAnalytics();
+</script>
+</body></html>
