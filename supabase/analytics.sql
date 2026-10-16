@@ -30,3 +30,25 @@ revoke all on function public.ftm_track_event(text,text,text,text,text) from pub
 grant execute on function public.ftm_track_event(text,text,text,text,text) to anon,authenticated;
 -- IMPORTANT: Before production, add edge rate limiting, bot filtering, and
 -- authorized reporting RPCs based on actual business ownership schema.
+
+-- Read only aggregate for the owner of the business, or a central administrator.
+create or replace function public.ftm_analytics_summary(p_business_id uuid, p_days integer default 30)
+returns table(source text,event_type text,target text,total bigint,unique_visitors bigint)
+language plpgsql security definer set search_path=public as $$
+begin
+ if auth.uid() is null or not exists(
+   select 1 from public.businesses b
+   where b.id=p_business_id and b.owner_id=auth.uid()
+ ) and not coalesce(public.is_ftm_admin(),false) then
+   raise exception 'Not authorized';
+ end if;
+ if p_days not between 1 and 3650 then raise exception 'Invalid period'; end if;
+ return query
+ select e.source,e.event_type,e.target,count(*)::bigint,count(distinct e.visitor_hash)::bigint
+ from public.ftm_analytics_events e
+ where e.business_key=p_business_id::text
+ and e.occurred_at >= now()-make_interval(days=>p_days)
+ group by e.source,e.event_type,e.target;
+end $$;
+revoke all on function public.ftm_analytics_summary(uuid,integer) from public,anon;
+grant execute on function public.ftm_analytics_summary(uuid,integer) to authenticated;
