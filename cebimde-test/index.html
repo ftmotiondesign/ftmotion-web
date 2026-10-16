@@ -104,8 +104,10 @@ document.body.classList.add('detail-open');$('businesses').hidden=true;$('campai
 const container=$('detailContent');container.replaceChildren();
 $('back').textContent='← Kaydettiklerime Dön';
 const header=el('div','detail');header.style.cssText='display:flex;align-items:center;gap:15px';
-const logo=el('div','symbol',name.trim().charAt(0).toUpperCase());const logoUrl=d.logoUrl||d.logo_url;
-if(typeof logoUrl==='string'&&/^https:\/\//.test(logoUrl)){const im=el('img');im.src=logoUrl;im.alt='';im.style.cssText='width:100%;height:100%;object-fit:contain';im.onerror=()=>im.remove();logo.replaceChildren(im)}
+const logo=el('div','symbol',name.trim().charAt(0).toUpperCase());
+const logoCandidates=[d.logoUrl,d.logo_url,d.logo,d.logoImageUrl,d.logoImage,d.businessLogo,d.profileLogo,d.profileImageUrl].filter(v=>typeof v==='string'&&/^https:\/\//i.test(v));
+function displayLogo(i){if(i>=logoCandidates.length)return;const im=el('img');im.src=logoCandidates[i];im.alt=name+' logosu';im.style.cssText='width:100%;height:100%;object-fit:contain';im.onerror=()=>{im.remove();displayLogo(i+1)};logo.replaceChildren(im)}
+displayLogo(0);
 const title=el('div');title.append(el('h2','',name));const subtitle=[address,[district,city].filter(Boolean).join(' / ')].filter(Boolean).join(' · ');if(subtitle)title.append(el('p','muted',subtitle));header.append(logo,title);container.append(header);
 const photos=[...(Array.isArray(d.coverUrls)?d.coverUrls:[]),...(Array.isArray(d.galleryUrls)?d.galleryUrls:[]),d.cardImageUrl,d.coverUrl,d.image,d.logoUrl].filter(v=>typeof v==='string'&&/^https:\/\//i.test(v));
 const unique=[...new Set(photos)].slice(0,8);
