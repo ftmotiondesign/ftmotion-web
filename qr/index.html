@@ -383,12 +383,13 @@ await introPromise;document.body.classList.add('qr-ready');$('qrLoading').hidden
 (function(){
  const actions=document.querySelector('.ftm-card-actions');
  const hero=document.querySelector('#qrWrap > .hero');
- if(!actions||!hero)return;
+ const identity=document.querySelector('#qrWrap > .identity');
+ if(!actions||!hero||!identity)return;
  const originalParent=actions.parentNode;
  const originalNext=actions.nextSibling;
  const media=window.matchMedia('(max-width:600px)');
  function placeActions(){
-  if(media.matches){hero.insertAdjacentElement('afterend',actions);}
+  if(media.matches){identity.insertAdjacentElement('afterend',actions);}
   else if(originalNext&&originalNext.parentNode===originalParent){originalParent.insertBefore(actions,originalNext);}
   else{originalParent.appendChild(actions);}
  }
