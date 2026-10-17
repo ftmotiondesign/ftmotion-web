@@ -256,16 +256,18 @@ async function showBusinessIntro(b){
 
 try{if(!slug&&!shortSlug)throw Error('İşletme bağlantısı belirtilmedi.');const db=await client();
 let b,error;
-if(shortSlug){
- // Her adres için yayın durumu bağımsızdır. Pasif takma ad doğrudan slug ile atlatılamaz.
- const alias=await db.from('qr_short_links').select('business_id,is_active').eq('short_slug',shortSlug).maybeSingle();
+// Kısa /qr/adres ve eski /qr/?slug=adres aynı yayın kontrolünü kullanır.
+const requestedQrSlug=shortSlug||slug;
+if(requestedQrSlug){
+ const alias=await db.from('qr_short_links').select('business_id,is_active').eq('short_slug',requestedQrSlug).maybeSingle();
  if(alias.error)throw alias.error;
  if(alias.data){
   if(alias.data.is_active){const result=await db.from('businesses').select('*').eq('id',alias.data.business_id).eq('active',true).maybeSingle();b=result.data;error=result.error;}
  }else{
-  const direct=await db.from('businesses').select('*').eq('slug',shortSlug).eq('active',true).maybeSingle();b=direct.data;error=direct.error;
+  // Henüz QR takma adı olmayan eski işletmelerin bağlantıları çalışmaya devam eder.
+  const direct=await db.from('businesses').select('*').eq('slug',requestedQrSlug).eq('active',true).maybeSingle();b=direct.data;error=direct.error;
  }
-}else{const result=await db.from('businesses').select('*').eq('slug',slug).eq('active',true).maybeSingle();b=result.data;error=result.error}
+}
 if(error)throw error;if(!b)throw Error('Bu QR sayfası bulunamadı veya yayında değil.');
 window.ftmAnalyticsDB=db;window.ftmAnalyticsBusinessId=b.id;
 window.FTMAnalytics?.track(db,{businessKey:b.id,source:'qr',eventType:'view'});
