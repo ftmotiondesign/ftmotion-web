@@ -1,0 +1,29 @@
+/* FTMotion Yönetim v2026.10 — tek renk sistemi, sadece yönetim ekranları. */
+:root{color-scheme:dark!important;--bg:#0e0e0f!important;--side:#141416!important;--sidebar:#141416!important;--card:#1b1b1e!important;--panel:#1b1b1e!important;--line:#37373b!important;--text:#fafafa!important;--white:#fafafa!important;--txt:#fafafa!important;--muted:#b4b4b9!important;--mint:#f4f4f5!important;--accent:#f4f4f5!important;--blue:#d4d4d8!important;--gold:#f4f4f5!important}
+html{background:#0e0e0f!important}
+body{background:#0e0e0f!important;color:#f5f5f5!important}
+.app,.main,.ft-layout{background:transparent!important;color:inherit}
+.sidebar,.ft-sidebar,.ft-mobilebar,.mobilebar,header{background:#141416!important;border-color:#36363a!important;color:#fafafa!important}
+.brand,.ft-brand{color:#fafafa!important}.brand span,.ft-brand span,.kicker,.eyebrow{color:#fafafa!important}
+.navtitle,.navgroup,.ft-label,.brand small,.ft-brand small,.crumb{color:#b0b0b6!important}
+.nav a,.nav button,.ft-nav a,.nav{color:#dadade!important}
+.nav a:hover,.nav button:hover,.nav a.active,.ft-nav a:hover,.ft-nav a[aria-current=page],.nav:hover,.nav.active{background:#2d2d31!important;color:#fff!important;border-color:#57575f!important}
+.card,.box,.quick,.metric,.editor-card,.gallery-item,.service-row,.uploader,.ann-dialog,.announcement,.admin-service-shortcut{background:#1b1b1e!important;color:#fafafa!important;border-color:#38383d!important;box-shadow:none!important}
+.card h2,.box h2,h1,h2,h3,strong,.metric,.value{color:#f5f5f5}
+p,.sub,.lead,.small,.mini,.note,.metric-label,.label,.quick span{color:#b9b9be!important}
+.btn,button.primary,.ft-mobilebar button,.mobilebar button,.quick .ico{background:#f1f1f2!important;color:#141416!important;border:1px solid #f1f1f2!important;box-shadow:none!important}
+.btn.secondary,.btn.outline,.btn.soft,button.secondary,.ann-close{background:#29292d!important;color:#fafafa!important;border:1px solid #55555b!important}
+.btn.danger{background:#432d2f!important;color:#fff!important;border-color:#795053!important}
+a{color:#f0f0f1}a:hover{text-decoration-color:#fff}
+input:not([type=checkbox]):not([type=radio]),select,textarea,.field input,.field select,.field textarea{background:#111113!important;border:1px solid #57575e!important;color:#f9f9f9!important}
+input:focus,select:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:2px solid #e5e5e7!important;outline-offset:2px}
+input[type=checkbox],input[type=radio]{accent-color:#dedee2!important}
+.status,.notice{background:#242428!important;border:1px solid #55555b!important;color:#eee!important}
+.notice.warn,.status.warn{background:#302a22!important;color:#f3ead6!important}
+.status.error{background:#38252b!important;color:#ffe4e8!important}
+.pill,.pill.gray,.pill.amber,.ann-count{background:#333338!important;color:#f5f5f5!important}
+td,th,table,.divider{border-color:#38383e!important}
+.ft-sidebar{background:#141416!important}
+.links a{background:#29292e!important;color:#f8f8f8!important}
+.ann-modal{background:#060606e8!important}
+@media(max-width:760px){.main{padding-inline:14px!important}.card,.box{border-radius:13px!important}}
