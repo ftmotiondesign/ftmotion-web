@@ -280,6 +280,14 @@ if(requestedQrSlug){
  }
 }
 if(error)throw error;if(!b)throw Error('Bu QR sayfası bulunamadı veya yayında değil.');
+// Çalışan kartı: şirketin ortak bilgileri korunur, kişisel iletişim eklenir.
+let employee=null;
+if(pageSlug){
+ const employeeResult=await db.from('corporate_employees').select('full_name,job_title,phone,whatsapp,email,photo_url,is_active').eq('business_id',b.id).eq('slug',pageSlug).eq('is_active',true).maybeSingle();
+ if(employeeResult.error)throw employeeResult.error;
+ if(!employeeResult.data)throw Error('Çalışan kartı bulunamadı veya pasif.');
+ employee=employeeResult.data;
+}
 window.ftmAnalyticsDB=db;window.ftmAnalyticsBusinessId=b.id;
 window.FTMAnalytics?.track(db,{businessKey:b.id,source:'qr',eventType:'view'});
 // İşletme introsunu diğer kart içerikleri yüklenirken eşzamanlı başlat.
@@ -366,6 +374,18 @@ try{
 $('name').textContent=b.name;$('place').textContent=b.location_text||b.address||'';$('about').textContent=b.qr_description||'';const savedAddress=String(b.address||'').trim();$('addressBlock').hidden=!savedAddress;$('addressText').textContent=savedAddress;const savedMapsLink=link(b.maps_url);const directionsUrl=savedMapsLink||('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(savedAddress));$('addressDirections').hidden=!savedAddress;$('addressDirections').href=directionsUrl;$('addressDirections').onclick=e=>{e.preventDefault();const win=window.open(directionsUrl,'_blank','noopener,noreferrer');if(!win)window.location.href=directionsUrl};if(b.logo_url){$('logo').src=b.logo_url;$('logo').onerror=()=>{$('logo').style.display='none'}}else{$('logo').style.display='none'}
 const covers=[...new Set([...(Array.isArray(b.cover_images)?b.cover_images:[]),b.cover_url].filter(Boolean).map(link).filter(Boolean))];let ix=0;function photo(){if(covers.length){$('cover').src=covers[ix];$('cover').style.display='block';$('cover').onerror=()=>{$('cover').style.display='none'}}else $('cover').style.display='none'}photo();$('prev').onclick=()=>{ix=(ix+covers.length-1)%covers.length;photo()};$('next').onclick=()=>{ix=(ix+1)%covers.length;photo()};if(covers.length<2){$('prev').hidden=true;$('next').hidden=true}
 chip('◉ 360° Mekânı Gez',link(b.tour_url));chip('◎ 360° Sokak Görünümü',link(b.streetview_url));chip('▶ Konum Videosu',link(b.location_video_url),true);
+if(employee){
+ const section=el('section');section.style.cssText='margin:10px 17px 18px;padding:17px;border:1px solid #393939;border-radius:18px;background:#1b1b1e;text-align:center';
+ const heading=el('h2');heading.textContent=employee.full_name;heading.style.cssText='font-size:23px;margin:4px 0';
+ const role=el('p');role.textContent=employee.job_title||'Şirket çalışanı';role.style.cssText='margin:0;color:#bbb';
+ if(employee.photo_url&&/^https:\/\//i.test(employee.photo_url)){const photo=el('img');photo.src=employee.photo_url;photo.alt=employee.full_name;photo.style.cssText='width:90px;height:90px;border-radius:50%;object-fit:cover';section.append(photo)}
+ section.append(heading,role);$('tiles').before(section);
+ const companyPhone=b.phone;const companyWhatsapp=b.whatsapp;
+ b={...b,phone:employee.phone||null,whatsapp:employee.whatsapp||employee.phone||null};
+ if(companyPhone)tile('☎','Şirket Telefonu','Şirketi Ara','tel:'+companyPhone.replace(/[^+\d]/g,''),'#333');
+ if(companyWhatsapp){const cd=companyWhatsapp.replace(/\D/g,'');if(cd)tile('✆','Şirket WhatsApp','Şirkete Yaz','https://wa.me/'+cd,'#075e54')}
+ if(employee.email)tile('✉','E-posta','Çalışana Yaz','mailto:'+employee.email,'#333');
+}
 const digits=(b.whatsapp||b.phone||'').replace(/\D/g,'');tile('☎','Telefon','Hemen Ara',b.phone?'tel:'+b.phone.replace(/[^+\d]/g,''):null,'#06c761');tile('✆','WhatsApp','Mesaj Gönder',digits?'https://wa.me/'+digits:null,'#02b95a');tile('◎','Instagram','Takip Et',link(b.instagram?.startsWith('@')?'https://instagram.com/'+b.instagram.slice(1):b.instagram),'#cd2373');tile('●','Konum','Haritada Gör',link(b.maps_url),'#e62939');const websiteUrl=link(b.website||b.website_url||b.web_url);tile('🌐','Web Sitesi','Siteyi Aç',websiteUrl,'#168ef0');if(!websiteUrl){$('webNotice').hidden=false;if(String(b.website||'').trim())$('webNotice').textContent='Web sitesi adresi geçersiz görünüyor: '+b.website+' — QR yönetiminde adresi kontrol edin.';}tile('G','Google Yorum','Yorumları Gör',link(b.google_review_url),'#f8f8f8');
 const extraColors={facebook:'#1877f2',x:'#202020',sahibinden:'#ffe000',tiktok:'#111111',youtube:'#ff0033',linkedin:'#0a66c2',threads:'#202020',pinterest:'#bd081c',telegram:'#229ed9',trendyol:'#f27a1a',hepsiburada:'#f28b00',etsy:'#f1641e',randevu:'#158a70',menu:'#ec7b18',other:'#4b627d'};
 const extraIcons={facebook:'f',x:'𝕏',sahibinden:'S',tiktok:'♪',youtube:'▶',linkedin:'in',threads:'@',pinterest:'P',telegram:'➤',trendyol:'T',hepsiburada:'H',etsy:'E',randevu:'▦',menu:'☰',other:'↗'};
