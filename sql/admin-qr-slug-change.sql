@@ -27,6 +27,16 @@ begin
    raise exception 'Eski QR adresi korunamadı. İşlem iptal edildi.';
   end if;
  end if;
+ -- Yeni adresi de aynı işletmenin QR yönetim listesine kaydet.
+ -- Daha önce pasifse yönetici tarafından yeniden seçildiği için etkinleştir.
+ insert into public.qr_short_links (business_id,short_slug,is_active)
+ values (p_business_id,clean_slug,true)
+ on conflict (short_slug) do update
+ set is_active=true
+ where public.qr_short_links.business_id=excluded.business_id;
+ if not exists(select 1 from public.qr_short_links where short_slug=clean_slug and business_id=p_business_id and is_active) then
+  raise exception 'Yeni QR adresi kaydedilemedi.';
+ end if;
  update public.businesses set slug=clean_slug where id=p_business_id;
 end $$;
 revoke all on function public.ft_admin_change_qr_slug(uuid,text) from public,anon;
