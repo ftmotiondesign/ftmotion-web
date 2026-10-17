@@ -180,8 +180,8 @@ html body main .foldHead::after{color:#ed7000!important}
 <section class="card"><h2>Kurumsal Kartlar</h2><p>Şirket çalışanlarına ayrı QR kart oluşturun ve tüm bilgileri tek panelden yönetin.</p><a href="/kurumsal-kartlar.html" style="display:inline-block;background:#ff7900;color:#111;padding:12px 18px;border-radius:12px;font-weight:800;text-decoration:none">Çalışan Kartlarını Yönet →</a></section><form id="profile" class="card"><h2>İşletme ve İletişim</h2><div class="fields">
 <label>İşletme adı<input name="name" required maxlength="150"></label>
 <label>İl / İlçe<input name="location_text"></label>
-<label>Telefon<input name="phone" inputmode="tel"></label>
-<label>WhatsApp<input name="whatsapp" inputmode="tel"></label>
+<label>Telefon<input name="phone" inputmode="tel" placeholder="+90"></label>
+<label>WhatsApp<input name="whatsapp" inputmode="tel" placeholder="+90"></label>
 <label>Instagram bağlantısı<input name="instagram" type="url" placeholder="https://instagram.com/..."></label>
 <label>Web sitesi<input name="website" type="url" placeholder="https://..."></label>
 <label>Google yorum bağlantısı<input name="google_review_url" type="url"></label>
@@ -522,4 +522,6 @@ async function loadAnalytics(){
 }
 period.addEventListener('change',loadAnalytics);loadAnalytics();
 </script>
-</body></html>
+<script>
+(()=>{const init=()=>{for(const name of ['phone','whatsapp']){const input=document.querySelector('#profile [name="'+name+'"]');if(!input)continue;input.addEventListener('focus',()=>{if(!input.value.trim())input.value='+90'});input.addEventListener('blur',()=>{if(input.value.trim()==='+90')input.value=''})}};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init()})();
+</script></body></html>
