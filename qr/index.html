@@ -257,17 +257,13 @@ async function showBusinessIntro(b){
 try{if(!slug&&!shortSlug)throw Error('İşletme bağlantısı belirtilmedi.');const db=await client();
 let b,error;
 if(shortSlug){
- // Önce güncel işletme slug'ını dene. Eski QR kodları için takma ad tablosuna geri dön.
- const direct=await db.from('businesses').select('*').eq('slug',shortSlug).eq('active',true).maybeSingle();
- if(direct.error)throw direct.error;
- b=direct.data;
- if(!b){
-  const alias=await db.from('qr_short_links').select('business_id').eq('short_slug',shortSlug).maybeSingle();
-  if(alias.error)throw alias.error;
-  if(alias.data?.business_id){
-   const result=await db.from('businesses').select('*').eq('id',alias.data.business_id).eq('active',true).maybeSingle();
-   b=result.data;error=result.error;
-  }
+ // Her adres için yayın durumu bağımsızdır. Pasif takma ad doğrudan slug ile atlatılamaz.
+ const alias=await db.from('qr_short_links').select('business_id,is_active').eq('short_slug',shortSlug).maybeSingle();
+ if(alias.error)throw alias.error;
+ if(alias.data){
+  if(alias.data.is_active){const result=await db.from('businesses').select('*').eq('id',alias.data.business_id).eq('active',true).maybeSingle();b=result.data;error=result.error;}
+ }else{
+  const direct=await db.from('businesses').select('*').eq('slug',shortSlug).eq('active',true).maybeSingle();b=direct.data;error=direct.error;
  }
 }else{const result=await db.from('businesses').select('*').eq('slug',slug).eq('active',true).maybeSingle();b=result.data;error=result.error}
 if(error)throw error;if(!b)throw Error('Bu QR sayfası bulunamadı veya yayında değil.');
