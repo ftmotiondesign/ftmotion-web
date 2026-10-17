@@ -254,6 +254,7 @@ const help=document.createElement('p');help.className='muted';help.textContent='
 const actions=document.createElement('div');actions.className='photoActions';
 for(const [label,mode] of [['📷 Fotoğraf Çek','camera'],['📁 Dosya Seç','file']]){const btn=document.createElement('button');btn.type='button';btn.className=mode==='file'?'secondary':'';btn.textContent=label;btn.onclick=()=>{closePhotoModal();$('uploadType').value=type;$('uploadType').dispatchEvent(new Event('change'));if(mode==='camera')$('cameraInput').click();else $('uploadFile').click()};actions.append(btn)}
 content.append(help,actions)})}
+async function deleteMainPhoto(key,title){if(!record||!user)return;if(!confirm(title+' silinsin mi?'))return;notice('Fotoğraf siliniyor...');try{const {data,error}=await db.from('businesses').update({[key]:null}).eq('id',record.id).eq('owner_id',user.id).select('id').maybeSingle();if(error)throw error;if(!data)throw Error('Kayda erişim izniniz yok.');record[key]=null;const input=document.querySelector('[name="'+key+'"]');if(input)input.value='';drawMedia();notice('');showSaveToast()}catch(e){notice('Fotoğraf silinemedi: '+e.message,true)}}
 function drawMedia(){
  const list=$('mediaList');list.replaceChildren();
  const group=document.createElement('div');group.className='mediaGrid';
@@ -267,7 +268,7 @@ function drawMedia(){
   const actions=document.createElement('div');actions.className='actions';
   const change=document.createElement('button');change.type='button';change.className='secondary';change.textContent='Fotoğrafı Değiştir';change.onclick=()=>choosePhoto(key,title);
   actions.append(change);
-  if(url){const view=document.createElement('button');view.type='button';view.className='secondary';view.textContent='Büyüt';view.onclick=()=>enlargePhoto(url,title);actions.append(view)}
+  if(url){const view=document.createElement('button');view.type='button';view.className='secondary';view.textContent='Büyüt';view.onclick=()=>enlargePhoto(url,title);actions.append(view);const del=document.createElement('button');del.type='button';del.className='secondary';del.textContent='Sil';del.style.color='#dc3545';del.onclick=()=>deleteMainPhoto(key,title);actions.append(del)}
   tile.append(h,frame,actions);group.append(tile)
  }
  list.append(group);
