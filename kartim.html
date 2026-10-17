@@ -184,6 +184,7 @@ html body main .foldHead::after{color:#ed7000!important}
 <label>WhatsApp<input name="whatsapp" inputmode="tel" placeholder="+90"></label>
 <label>Instagram bağlantısı<input name="instagram" type="url" placeholder="https://instagram.com/..."></label>
 <label>Web sitesi<input name="website" type="url" placeholder="https://..."></label>
+<label>E-posta Adresi<input name="email" type="email" autocomplete="email" placeholder="ornek@firma.com"></label>
 <label>Google yorum bağlantısı<input name="google_review_url" type="url"></label>
 <label>Harita bağlantısı<input name="maps_url" type="url"></label>
 <label>360° Mekân bağlantısı<input name="tour_url" type="url"></label>
@@ -283,7 +284,7 @@ function showSaveToast(message='✓ Değişiklikler kaydedildi'){
 }
 $('stickySaveButton').onclick=()=>{const form=$('profile');const details=form.querySelector('details');if(details)details.open=true;form.requestSubmit()};
 
-const keys=['name','location_text','phone','whatsapp','instagram','website','google_review_url','maps_url','tour_url','streetview_url','address','qr_description'];
+const keys=['name','location_text','phone','whatsapp','instagram','website','email','google_review_url','maps_url','tour_url','streetview_url','address','qr_description'];
 const mediaKeys=['logo_url','cover_url','location_video_url'];
 const slugify=s=>s.toLocaleLowerCase('tr').replace(/ı/g,'i').replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ş/g,'s').replace(/ö/g,'o').replace(/ç/g,'c').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 function pageUrl(slug){return record.short_slug?new URL('qr/'+encodeURIComponent(record.short_slug)+'/'+encodeURIComponent(slug),location.href).href:url()+'&page='+encodeURIComponent(slug)}
