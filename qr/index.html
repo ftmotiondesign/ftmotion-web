@@ -378,4 +378,22 @@ if(pageSlug){const p=(pages||[]).find(p=>p.slug===pageSlug);if(!p)throw Error('E
 else{for(const p of pages||[]){const a=el('button');a.type='button';a.textContent=p.title+'   ↗';a.setAttribute('aria-label',p.title+' bilgisini aç');a.onclick=e=>{e.preventDefault();showExtraPage(p)};$('extra').append(a)}$('extraBlock').hidden=!$('extra').children.length;}
 await introPromise;document.body.classList.add('qr-ready');$('qrLoading').hidden=true;
 }catch(e){$('error').hidden=false;$('error').textContent=e.message;document.body.classList.add('qr-failed','qr-ready');$('qrLoading').hidden=true;document.title='QR sayfası açılamadı | FTMotion'}
+</script><script>
+/* Yalnızca mobilde rehbere kaydet / paylaş butonlarını kapak görselinin altına taşı. */
+(function(){
+ const actions=document.querySelector('.ftm-card-actions');
+ const hero=document.querySelector('#qrWrap > .hero');
+ if(!actions||!hero)return;
+ const originalParent=actions.parentNode;
+ const originalNext=actions.nextSibling;
+ const media=window.matchMedia('(max-width:600px)');
+ function placeActions(){
+  if(media.matches){hero.insertAdjacentElement('afterend',actions);}
+  else if(originalNext&&originalNext.parentNode===originalParent){originalParent.insertBefore(actions,originalNext);}
+  else{originalParent.appendChild(actions);}
+ }
+ placeActions();
+ if(media.addEventListener)media.addEventListener('change',placeActions);
+ else media.addListener(placeActions);
+})();
 </script></body></html>
