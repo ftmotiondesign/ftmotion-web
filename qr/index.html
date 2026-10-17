@@ -313,7 +313,7 @@ try{
 
 if(shortSlug){
  const canonical='/qr/'+encodeURIComponent(shortSlug)+(pageSlug?'/'+encodeURIComponent(pageSlug):'');
- if(location.pathname!==canonical){history.replaceState(null,'',canonical+location.hash)}
+ if(location.pathname!==canonical){history.replaceState(null,'',canonical+location.search+location.hash)}
 }
 const chosenTemplate=new URLSearchParams(location.search).get('template_preview')||b.qr_template||'classic';if(['light','premium','vitrine','gold','minimal','glass','personal'].includes(chosenTemplate))document.body.classList.add('template-'+chosenTemplate);document.title=b.name+' | FTMotion';
 // İşletmeye özel ana ekran kimliği: yönetim panelinin PWA kimliğinden bağımsızdır.
