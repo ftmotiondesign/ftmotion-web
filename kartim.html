@@ -551,7 +551,11 @@ async function loadAnalytics(){
  status.textContent='Yükleniyor...';metrics.replaceChildren();breakdown.replaceChildren();
  try{
   const db=await ftmClient(),{data:{user}}=await db.auth.getUser();if(!user)throw Error('Üye girişi gerekli.');
-  const found=await db.from('businesses').select('id').eq('owner_id',selectedOwner()).limit(1).maybeSingle();if(found.error)throw found.error;
+  const adminRequestedId=new URLSearchParams(location.search).get('business_id');
+  const {data:analyticsAdmin}=await db.from('admin_users').select('user_id').eq('user_id',user.id).maybeSingle();
+  let analyticsQuery=db.from('businesses').select('id');
+  analyticsQuery=analyticsAdmin&&adminRequestedId?analyticsQuery.eq('id',adminRequestedId):analyticsQuery.eq('owner_id',user.id);
+  const found=await analyticsQuery.limit(1).maybeSingle();if(found.error)throw found.error;
   if(!found.data){status.textContent='Henüz işletme kartı oluşturulmadı.';return}
   const r=await db.rpc('ftm_analytics_summary',{p_business_id:found.data.id,p_days:Number(period.value)});if(r.error)throw r.error;
   const rows=r.data||[],sum=(type)=>rows.filter(x=>x.event_type===type).reduce((n,x)=>n+Number(x.total||0),0);
