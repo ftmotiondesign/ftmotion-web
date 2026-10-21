@@ -428,7 +428,13 @@ function updateBusinessHomeIcon(){
  const identity={id:'/kartim.html?business_id='+encodeURIComponent(record.id),name:name+' | Kart Yönetimi',short_name:name.slice(0,24),description:name+' dijital kartvizit yönetimi',lang:'tr',start_url:start,scope:'/',display:'standalone',background_color:'#0b0b0b',theme_color:'#ff7900'};
  if(icon)identity.icons=[{src:icon,sizes:'any',purpose:'any'}];
  const manifest=document.querySelector('link[rel="manifest"]');
- if(manifest)manifest.href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(identity));
+ if(manifest){
+  const fallback='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(identity));
+  manifest.href=fallback;
+  if(icon)fetch('/business-manifests/'+encodeURIComponent(record.id)+'-manager.webmanifest',{method:'HEAD'}).then(r=>{
+   if(r.ok&&record.id===identity.id.split('business_id=')[1])manifest.href='/business-manifests/'+encodeURIComponent(record.id)+'-manager.webmanifest';
+  }).catch(()=>{});
+ }
  if(icon)for(const rel of ['icon','apple-touch-icon']){
   let tag=document.querySelector('link[rel="'+rel+'"]');
   if(!tag){tag=document.createElement('link');tag.rel=rel;document.head.append(tag);}
