@@ -1,0 +1,18 @@
+{
+  "id": "/kartim.html?business_id=fac65968-7bf0-489b-9412-527eb2259f6f",
+  "name": "Sistem Makina İş Güvenlik Ekipmanları | Kart Yönetimi",
+  "short_name": "Sistem Makina İş Güvenli",
+  "lang": "tr",
+  "start_url": "/kartim.html?business_id=fac65968-7bf0-489b-9412-527eb2259f6f",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b0b0b",
+  "theme_color": "#ff7900",
+  "icons": [
+    {
+      "src": "https://trchdzdvacalsyrsllar.supabase.co/storage/v1/object/public/ftm-qr/fac65968-7bf0-489b-9412-527eb2259f6f/4645c3ff-f709-4aa6-9720-050f66229c8e-logo.png",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ]
+}
