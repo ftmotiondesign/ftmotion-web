@@ -418,8 +418,26 @@ $('extraLinksForm').onsubmit=async e=>{
  }catch(ex){extraLinkStatus('Kaydedilemedi: '+ex.message,true)}
  finally{btn.disabled=false;btn.textContent='Bağlantıları Kaydet'}
 };
+function updateBusinessHomeIcon(){
+ if(!record)return;
+ const name=String(record.name||'İşletmem').trim();
+ let icon='';
+ try{if(record.logo_url){const u=new URL(record.logo_url,location.origin);if(u.protocol==='https:'||u.protocol==='http:')icon=u.href;}}catch{}
+ const start='/kartim.html?business_id='+encodeURIComponent(record.id)+'&utm_source=home';
+ // İşletmeye özel yönetici ikonu. Genel FTMotion PWA dosyasını değiştirme.
+ const identity={id:'/kartim.html?business_id='+encodeURIComponent(record.id),name:name+' | Kart Yönetimi',short_name:name.slice(0,24),description:name+' dijital kartvizit yönetimi',lang:'tr',start_url:start,scope:'/',display:'standalone',background_color:'#0b0b0b',theme_color:'#ff7900'};
+ if(icon)identity.icons=[{src:icon,sizes:'any',purpose:'any'}];
+ const manifest=document.querySelector('link[rel="manifest"]');
+ if(manifest)manifest.href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(identity));
+ if(icon)for(const rel of ['icon','apple-touch-icon']){
+  let tag=document.querySelector('link[rel="'+rel+'"]');
+  if(!tag){tag=document.createElement('link');tag.rel=rel;document.head.append(tag);}
+  tag.href=icon;
+ }
+ document.title=name+' | Kart Yönetimi';
+}
 function fill(){const summaryName=document.getElementById('ftMemberBusinessName');if(summaryName)summaryName.textContent=record.name||'İşletmem';const summaryView=document.getElementById('ftMemberView');if(summaryView)summaryView.href=url();for(const k of [...keys,...mediaKeys]){const el=document.querySelector('[name="'+k+'"]');if(el)el.value=record[k]||''}
-$('businessName').textContent=record.name||'İşletmem';$('view').href=url();$('view').textContent=url();$('previewButton').href=url();}
+$('businessName').textContent=record.name||'İşletmem';$('view').href=url();$('view').textContent=url();$('previewButton').href=url();updateBusinessHomeIcon();}
 $('logout').onclick=async()=>{try{if(db)await db.auth.signOut()}catch(e){console.warn('Çıkış sırasında oturum zaten kapanmış olabilir:',e?.message)}finally{location.replace('giris.html?app=qr')}};
 $('copy').onclick=async()=>{try{await navigator.clipboard.writeText(url());notice('QR bağlantısı kopyalandı.')}catch{notice('Kopyalama engellendi; bağlantıyı elle kopyalayabilirsiniz.',true)}};
 async function save(form,fields){if(!record)return;const button=form.querySelector('button[type=submit]');button.disabled=true;notice('Kaydediliyor...');
