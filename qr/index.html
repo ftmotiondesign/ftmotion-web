@@ -415,7 +415,25 @@ const extraColors={whatsapp_catalog:'#25d366',facebook:'#1877f2',x:'#202020',sah
 const extraIcons={whatsapp_catalog:'🛍',facebook:'f',x:'𝕏',sahibinden:'S',tiktok:'♪',youtube:'▶',linkedin:'in',threads:'@',pinterest:'P',telegram:'➤',trendyol:'T',hepsiburada:'H',etsy:'E',randevu:'▦',menu:'☰',other:'↗'};
 const extraNames={whatsapp_catalog:'Ürün Kataloğu',facebook:'Facebook',x:'X / Twitter',sahibinden:'Sahibinden',tiktok:'TikTok',youtube:'YouTube',linkedin:'LinkedIn',threads:'Threads',pinterest:'Pinterest',telegram:'Telegram',trendyol:'Trendyol',hepsiburada:'Hepsiburada',etsy:'Etsy',randevu:'Randevu Al',menu:'Dijital Menü',other:'Diğer'};
 for(const item of (Array.isArray(b.extra_links)?b.extra_links:[])){if(!item||!Object.hasOwn(extraNames,item.type))continue;const safe=link(item.url);if(safe)tile(extraIcons[item.type],extraNames[item.type],item.type==='whatsapp_catalog'?'Kataloğu İncele':'Bağlantıyı Aç',safe,extraColors[item.type])}
-const vcard='BEGIN:VCARD\nVERSION:3.0\nFN:'+b.name.replaceAll('\n',' ')+'\nTEL:'+b.phone+'\nURL:'+location.origin+'/qr/'+encodeURIComponent(shortSlug||b.slug)+'\nEND:VCARD';const file=URL.createObjectURL(new Blob([vcard],{type:'text/vcard'}));$('contact').href=file;$('contact').download=(b.slug||'isletme')+'.vcf';
+const vEscape=v=>String(v??'').replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/;/g,'\\;').replace(/,/g,'\\,');
+const vLines=['BEGIN:VCARD','VERSION:3.0','FN:'+vEscape(b.name||'İşletme'),'N:'+vEscape(b.name||'İşletme')+';;;;'];
+const add=(key,value)=>{if(value!=null&&String(value).trim())vLines.push(key+':'+vEscape(value))};
+add('ORG',b.name);
+add('TEL;TYPE=WORK,VOICE',b.phone);
+if(b.whatsapp&&b.whatsapp!==b.phone)add('TEL;TYPE=CELL',b.whatsapp);
+add('EMAIL;TYPE=WORK',b.email);
+if(b.address||b.location_text)add('ADR;TYPE=WORK',';;'+vEscape(b.address||b.location_text)+';;;;');
+const cardUrl=location.origin+'/qr/'+encodeURIComponent(shortSlug||b.slug);
+const website=link(b.website||b.website_url||b.web_url);
+if(website)add('URL;TYPE=WORK',website);
+add('URL;TYPE=CARD',cardUrl);
+const socials=[['Instagram',b.instagram?.startsWith('@')?'https://instagram.com/'+b.instagram.slice(1):b.instagram],['WhatsApp',b.whatsapp?'https://wa.me/'+String(b.whatsapp).replace(/\D/g,''):null],['Facebook',b.facebook],['Google Haritalar',b.maps_url],['Google Yorum',b.google_review_url]];
+for(const item of (Array.isArray(b.extra_links)?b.extra_links:[])){if(item?.url)socials.push([String(item.type||'Diğer'),item.url])}
+const notes=[];for(const [label,url] of socials){const safe=link(url);if(safe){add('URL;TYPE='+label.replace(/[^A-Za-z0-9]/g,'').toUpperCase(),safe);notes.push(label+': '+safe)}}
+if(notes.length)add('NOTE',notes.join('\n'));
+vLines.push('END:VCARD');
+const vcard=vLines.join('\r\n')+'\r\n';
+const file=URL.createObjectURL(new Blob([vcard],{type:'text/vcard;charset=utf-8'}));$('contact').href=file;$('contact').download=(b.slug||'isletme')+'.vcf';
 $('shareCard').onclick=async()=>{const url=location.origin+'/qr/'+encodeURIComponent(shortSlug||b.slug);const title=b.name||'Dijital Kartvizit';try{if(navigator.share){await navigator.share({title,text:title+' - Dijital Kartvizit',url});return}}catch(e){if(e?.name==='AbortError')return}try{await navigator.clipboard.writeText(url);alert('Kartvizit bağlantısı kopyalandı.')}catch(e){prompt('Kartvizit bağlantısını kopyalayın:',url)}};
 let gal=Array.isArray(b.gallery)?b.gallery:[];if(typeof b.gallery==='string'){try{let g=JSON.parse(b.gallery);if(Array.isArray(g))gal=g}catch{}}for(const item of gal){const raw=typeof item==='string'?item:(item?.url||item?.src||item?.publicUrl||item?.secure_url||'');const safe=link(raw);if(safe)img(safe)}if(b.location_video_url && /\.(mp4|webm|ogg)(?:[?#]|$)/i.test(b.location_video_url)){const vid=el('video');vid.src=link(b.location_video_url);vid.controls=true;vid.playsInline=true;vid.preload='metadata';vid.style.cssText='width:80%;max-width:300px;flex:0 0 80%;border-radius:12px;max-height:250px;scroll-snap-align:start';$('photos').append(vid)}if(!$('photos').children.length){$('noPhotos').hidden=false;$('noPhotos').textContent='Bu işletme için yayınlanan galeri fotoğrafı bulunamadı. QR Yönetimi → Fotoğraf & Video → Galeri fotoğrafı seçip Dosyayı Yükle butonuna basın.';}
 const {data:pages,error:pe}=await db.from('business_pages').select('*').eq('business_id',b.id).eq('active',true).order('sort_order');if(pe){console.warn('QR ek sayfa sorgusu:',pe.message);}
