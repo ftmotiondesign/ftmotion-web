@@ -264,7 +264,7 @@ async function showBusinessIntro(b){
   const video=document.createElement('video');
   video.src=premium;video.muted=true;video.defaultMuted=true;video.playsInline=true;video.autoplay=true;video.preload='auto';
   video.setAttribute('muted','');video.setAttribute('autoplay','');video.setAttribute('playsinline','');video.setAttribute('webkit-playsinline','');
-  video.style.cssText='position:fixed;inset:0;width:100vw;height:100dvh;max-width:none;max-height:none;object-fit:cover;border-radius:0;background:#000;z-index:1';
+  video.style.cssText='position:fixed;inset:0;width:100%;height:100%;max-width:100vw;max-height:100dvh;object-fit:contain;object-position:center center;border-radius:0;background:#000;z-index:1';
   logo.hidden=true;name.hidden=true;holder.appendChild(video);el.hidden=false;document.body.classList.add('qr-intro');
   await new Promise(resolve=>{
    let finished=false;
