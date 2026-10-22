@@ -3,9 +3,10 @@
 const ROOT='/dijirehber/',BACKEND='https://otelbuddy-kiyi-demo.sillypine8.chatgpt.site',AUTH='https://trchdzdvacalsyrsllar.supabase.co',KEY='sb_publishable_m9eSYTu9phCdpTRycB56rA_5clJ3LyB';
 const nativeFetch=window.fetch.bind(window),nativeHistory={push:history.pushState.bind(history),replace:history.replaceState.bind(history)};
 const realOrigin=location.origin;
-let installPrompt=null;
+let installPrompt=window.DijiInstallEvent||null;
+window.addEventListener('diji-install-ready',()=>{installPrompt=window.DijiInstallEvent;showInstall();});
 window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;showInstall();});
-window.addEventListener('appinstalled',()=>{installPrompt=null;document.getElementById('dijiInstall')?.remove();});
+window.addEventListener('appinstalled',()=>{installPrompt=null;window.DijiInstallEvent=null;document.getElementById('dijiInstall')?.remove();});
 window.DijiReady=callback=>queueMicrotask(callback);
 let virtual=new URL(new URLSearchParams(location.search).get('r')||'/',realOrigin),installed=false;
 if(location.hash&&!location.hash.includes('access_token'))virtual.hash=location.hash;
