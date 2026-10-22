@@ -1,5 +1,6 @@
 import {client} from './supabase-client.js';
-import {documentHTML,printDocument,statusLabel,dateLabel} from './ledger-core.mjs';
+import {documentHTML,printDocument,statusLabel,dateLabel} from './ledger-core.mjs?v=2';
+import {downloadQuotePDF} from './ledger-pdf.mjs?v=2';
 const $=id=>document.getElementById(id),token=location.hash.slice(1);
 let db,version;
 async function load(){
@@ -11,6 +12,7 @@ async function load(){
  $('responsePanel').hidden=!!data.response||stale||expired;
  $('recipientStatus').textContent=stale?'Bu teklifin daha yeni bir sürümü var. Güncel teklif için işletmeyle iletişime geçin.':data.response?`Yanıtınız: ${statusLabel(data)} · ${dateLabel(data.responded_at)}${data.response_note?' · '+data.response_note:''}`:expired?'Teklifin geçerlilik süresi doldu. İşletmeden yeni teklif isteyebilirsiniz.':'';
 }
+$('recipientPDF').onclick=async()=>{const button=$('recipientPDF');button.disabled=true;try{await downloadQuotePDF(version,version.payments);}catch(error){$('recipientStatus').textContent=error.message;}finally{button.disabled=false;}};
 $('recipientPrint').onclick=()=>printDocument(documentHTML(version,version.payments));
 $('responseForm').addEventListener('submit',async event=>{
  event.preventDefault();const response=event.submitter?.value;if(!response)return;
