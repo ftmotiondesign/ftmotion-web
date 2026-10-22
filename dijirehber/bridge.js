@@ -3,10 +3,7 @@
 const ROOT='/dijirehber/',BACKEND='https://otelbuddy-kiyi-demo.sillypine8.chatgpt.site',AUTH='https://trchdzdvacalsyrsllar.supabase.co',KEY='sb_publishable_m9eSYTu9phCdpTRycB56rA_5clJ3LyB';
 const nativeFetch=window.fetch.bind(window),nativeHistory={push:history.pushState.bind(history),replace:history.replaceState.bind(history)};
 const realOrigin=location.origin;
-let installPrompt=window.DijiInstallEvent||null;
-window.addEventListener('diji-install-ready',()=>{installPrompt=window.DijiInstallEvent;showInstall();});
-window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;showInstall();});
-window.addEventListener('appinstalled',()=>{installPrompt=null;window.DijiInstallEvent=null;document.getElementById('dijiInstall')?.remove();});
+window.addEventListener('diji-pwa-state',()=>window.DijiPwa?.syncButton());
 window.DijiReady=callback=>queueMicrotask(callback);
 let virtual=new URL(new URLSearchParams(location.search).get('r')||'/',realOrigin),installed=false;
 if(location.hash&&!location.hash.includes('access_token'))virtual.hash=location.hash;
@@ -38,10 +35,7 @@ function install(){if(installed)return;installed=true;scan(document);new Mutatio
 function showInstall(){
  if(matchMedia('(display-mode:standalone)').matches||navigator.standalone){document.getElementById('dijiInstall')?.remove();return;}
  let button=document.getElementById('dijiInstall');if(!button){button=document.createElement('button');button.id='dijiInstall';button.type='button';button.style.cssText='position:fixed;right:16px;bottom:80px;z-index:60;padding:11px 16px;border:1px solid #d7e3d9;border-radius:24px;background:#244a40;color:#fff;box-shadow:0 4px 18px #0002;font:600 12px system-ui';document.body.append(button);}
- button.textContent='↓ DijiRehber’i yükle';
- button.onclick=async()=>{if(installPrompt){const prompt=installPrompt;installPrompt=null;await prompt.prompt();const choice=await prompt.userChoice;if(choice.outcome==='accepted')button.remove();return;}
- const old=document.getElementById('dijiInstallHelp');if(old){old.showModal();return;}
- const dialog=document.createElement('dialog');dialog.id='dijiInstallHelp';dialog.style.cssText='max-width:400px;border:0;border-radius:20px;padding:28px;color:#244a40;font:15px/1.7 system-ui';dialog.innerHTML='<img src="'+ROOT+'icons/dijirehber-192.png" alt="DijiRehber" width="64" height="64"><h2>DijiRehber’i yükle</h2><p>'+(/iPhone|iPad/.test(navigator.userAgent)?'Safari’de Paylaş düğmesine, ardından Ana Ekrana Ekle seçeneğine dokun.':'Chrome menüsünde Uygulamayı yükle seçeneğini kullan. Yükle yerine yalnızca kısayol ekleme seçeneği görünüyorsa sayfayı yenileyip yükleme düğmesini tekrar dene.')+'</p><p>Önceden eklediğin Chrome simgeli kısayolu kaldırıp DijiRehber’i yeniden yükleyebilirsin.</p><button type="button" style="padding:12px 20px;border:0;border-radius:10px;background:#244a40;color:white">Tamam</button>';dialog.querySelector('button').onclick=()=>dialog.close();document.body.append(dialog);dialog.showModal();};
+ button.textContent='↓ DijiRehber’i yükle';button.onclick=()=>{if(window.DijiPwa)return window.DijiPwa.requestInstall();alert('Yükleme bileşeni yüklenemedi. İnternet bağlantını kontrol edip sayfayı yeniden aç.');};window.DijiPwa?.syncButton(button);
 }
 function message(error){const t=error?.message||'';if(/invalid login|invalid credentials/i.test(t))return 'E-posta veya şifre hatalı.';if(/email not confirmed/i.test(t))return 'Önce e-posta adresinizi doğrulayın.';if(/rate limit|too many/i.test(t))return 'Çok fazla deneme yapıldı. Biraz sonra tekrar deneyin.';return 'İşlem tamamlanamadı. Bilgilerinizi ve bağlantınızı kontrol edin.';}
 async function authPage(view='login'){const signup=view==='signup',reset=view==='reset',recovery=view==='recovery';document.title='DijiRehber · E-posta ile giriş';document.body.innerHTML='<main class="auth-card"><a class="auth-brand" href="'+ROOT+'?v=2">DijiRehber ↗</a><p class="auth-kicker">BİRLİKTE KEŞFEDELİM</p><h1>'+(signup?'Keşfe katıl.':reset?'Şifreni yenile.':recovery?'Yeni şifreni belirle.':'Yeniden hoş geldin.')+'</h1><p>Gezdiğin yerleri paylaş, sevdiklerini kaydet. Otel ve uygulama yönetimi için yetkili hesabını kullan.</p><form id="dijiAuth">'+(!recovery?'<label>E-posta adresi<input name="email" type="email" required autocomplete="email" maxlength="254"></label>':'')+(!reset?'<label>Şifre<input name="password" type="password" required autocomplete="'+(signup||recovery?'new-password':'current-password')+'" '+(signup||recovery?'minlength="8"':'')+' maxlength="128"></label>':'')+'<p id="authMessage" role="status"></p><button class="auth-submit">'+(signup?'Yeni hesap oluştur':reset?'Yenileme bağlantısı gönder':recovery?'Yeni şifreyi kaydet':'Giriş yap')+'</button></form><div class="auth-actions"><button id="changeAuth">'+(signup||reset?'Girişe dön':'Yeni üye kaydı')+'</button>'+(!recovery&&!reset?'<button id="resetAuth">Şifremi unuttum</button>':'')+'</div><a href="'+ROOT+'?v=2">← Rehbere dön</a></main>';
@@ -64,7 +58,7 @@ async function load(){try{await client.auth.getSession();if(virtual.pathname==='
  document.body.replaceChildren(...doc.body.childNodes);
  for(const inert of [...document.body.querySelectorAll('script')]){const script=document.createElement('script');script.textContent=inert.textContent;inert.replaceWith(script);}
  }catch(error){document.body.innerHTML='<main class="auth-card"><a class="auth-brand" href="'+ROOT+'?v=2">DijiRehber</a><h1>Bağlantı kurulamadı.</h1><p>Rehberi yükleyemedik. Bağlantını kontrol edip tekrar dene.</p><button class="auth-submit" id="retryDiji">Yeniden dene</button></main>';document.getElementById('retryDiji').onclick=()=>location.reload();console.error(error)}}
-if('serviceWorker' in navigator)navigator.serviceWorker.register(ROOT+'sw.js?v=4',{scope:ROOT,updateViaCache:'none'}).catch(()=>{});
+
 client.auth.onAuthStateChange(event=>{if(event==='PASSWORD_RECOVERY')setTimeout(()=>authPage('recovery'),0)});
 load();
 })();
