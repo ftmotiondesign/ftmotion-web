@@ -50,3 +50,14 @@ Doğrulama: 8 Node testi (Türkçe tutar çözümleme, iptal edilmiş tahsilatla
 - Sunucu bilinmeyen alanları, geçersiz aşamaları ve biçimleri reddeder. Müşteri güncelleme RPC’si yalnız seçili sektör JSON yolunu değiştirir. Sahiplik RLS ile doğrulanır; anonim erişim yoktur.
 
 Bu sürüm taksit planlama, ders/sınav programı, stok veya sevkiyat yönetimi içermez. Kontroller: 10 Node testi, canlı şemada rollback edilen sektör/veri koruma/özel alan/paylaşım/sahiplik testleri ve mobilde sektör seçme, kursiyer ekleme, aşama filtresi ve teklif alanları.
+
+## Ana yönetimde tüm teklifler
+
+Merkezi Yönetim → Tüm Teklifler (`yonetim.html#allquotes`) veya `admin-teklifler.html` üzerinden erişilir. Ortak yönetici menüsüne de bağlantı eklenmiştir. Sayfa mevcut `admin_users` doğrulamasını ve tablo RLS kurallarını kullanır; yeni yetki veya şema değişikliği yoktur.
+
+- İşletme, son sürüm tarihi, yanıt durumu ve müşteri/başlık/numara araması birlikte filtrelenir. Liste 25 kayıtlık sayfalara ayrılır; kaynak veriler sabit sıralama ile 1000 kayıtlık aralıklar halinde tamamlanır. Yükleme hatasında eksik toplam gösterilmez.
+- Her teklif yalnızca `current_revision` sürümüyle listelenir. Önceki sürümler toplamı şişirmez; iptal edilmiş tahsilatlar dışlanır. Kalan alacak yalnız onaylanmış veya ödeme alınmış tekliflerden hesaplanır. Kartlar filtrelenen listenin tamamını kapsar.
+- Ayrıntı penceresinde sürüm geçmişi ve belge açılır; yazdır/PDF ve işletmenin defterine geçiş bulunur. Tahsilatlar sözleşmenin tamamına aittir; eski sürümde güncel toplam uyarısı gösterilir. Bu ekran kayıtları değiştirmez.
+- Durumlar mevcut veri modeline uygundur: Yanıt bekliyor, Onaylandı, Değişiklik istendi, Süresi doldu. Oluşturulmuş form listelenir; müşteriye fiilen iletildiğine dair gönderim takibi bulunmaz. Taslaklar listeye dahil edilmez.
+
+Doğrulama: `node --test tests/admin-quotes.test.mjs tests/ledger-*.test.mjs` (12 test); `tests/admin-quotes-security.sql` ile gerçek şemada rollback edilen yönetici/işletme sahipliği, son sürüm ve aktif tahsilat testleri; masaüstü ve 390px mobilde filtreler, sayfalama, belge ve geçmiş sürüm kontrolü.

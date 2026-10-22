@@ -1,0 +1,26 @@
+-- Temporary records only; the entire transaction is rolled back.
+begin;
+create function pg_temp.assert_true(ok boolean,description text) returns void language plpgsql as $$begin if ok is distinct from true then raise exception 'FAIL: %',description; end if; end$$;
+select set_config('test.admin',(select user_id::text from public.admin_users limit 1),true);
+select set_config('test.owner',(select owner_id::text from public.businesses where owner_id is not null and owner_id not in (select user_id from public.admin_users) limit 1),true);
+select pg_temp.assert_true(current_setting('test.admin')<>'' and current_setting('test.owner')<>'','admin and regular owner available');
+select set_config('test.b1',gen_random_uuid()::text,true),set_config('test.b2',gen_random_uuid()::text,true),set_config('test.c1',gen_random_uuid()::text,true),set_config('test.c2',gen_random_uuid()::text,true),set_config('test.q1',gen_random_uuid()::text,true),set_config('test.q2',gen_random_uuid()::text,true);
+insert into public.businesses(id,owner_id,name,slug,active) values(current_setting('test.b1')::uuid,current_setting('test.owner')::uuid,'Admin quote test A','test-'||current_setting('test.b1'),false),(current_setting('test.b2')::uuid,current_setting('test.admin')::uuid,'Admin quote test B','test-'||current_setting('test.b2'),false);
+insert into public.crm_customers(id,business_id,name) values(current_setting('test.c1')::uuid,current_setting('test.b1')::uuid,'Test A'),(current_setting('test.c2')::uuid,current_setting('test.b2')::uuid,'Test B');
+insert into public.crm_quotes(id,business_id,customer_id,current_revision) values(current_setting('test.q1')::uuid,current_setting('test.b1')::uuid,current_setting('test.c1')::uuid,2),(current_setting('test.q2')::uuid,current_setting('test.b2')::uuid,current_setting('test.c2')::uuid,1);
+insert into public.crm_quote_versions(quote_id,business_id,revision,document,total_cents,valid_until) values(current_setting('test.q1')::uuid,current_setting('test.b1')::uuid,1,'{"title":"Old"}',10000,current_date+10),(current_setting('test.q1')::uuid,current_setting('test.b1')::uuid,2,'{"title":"Current A","customer":{"name":"Test A"}}',20000,current_date+10),(current_setting('test.q2')::uuid,current_setting('test.b2')::uuid,1,'{"title":"Current B","customer":{"name":"Test B"}}',30000,current_date+10);
+insert into public.crm_payments(business_id,quote_id,amount_cents,voided_at,void_reason) values(current_setting('test.b1')::uuid,current_setting('test.q1')::uuid,5000,null,null),(current_setting('test.b2')::uuid,current_setting('test.q2')::uuid,1000,now(),'Test void');
+set local role authenticated;
+select set_config('request.jwt.claims',json_build_object('sub',current_setting('test.admin'),'role','authenticated')::text,true);
+select pg_temp.assert_true((select count(*)=2 from public.crm_quotes where id in (current_setting('test.q1')::uuid,current_setting('test.q2')::uuid)),'admin reads quotes across owners');
+select pg_temp.assert_true((select sum(v.total_cents)=50000 from public.crm_quotes q join public.crm_quote_versions v on v.quote_id=q.id and v.revision=q.current_revision where q.id in (current_setting('test.q1')::uuid,current_setting('test.q2')::uuid)),'current revisions total without duplicate history');
+select pg_temp.assert_true((select sum(amount_cents)=5000 from public.crm_payments where quote_id in (current_setting('test.q1')::uuid,current_setting('test.q2')::uuid) and voided_at is null),'active receipts only');
+select pg_temp.assert_true((select count(*)=2 from public.businesses where id in (current_setting('test.b1')::uuid,current_setting('test.b2')::uuid)),'admin reads business filter names');
+select set_config('request.jwt.claims',json_build_object('sub',current_setting('test.owner'),'role','authenticated')::text,true);
+select pg_temp.assert_true((select count(*)=1 from public.crm_quotes where id in (current_setting('test.q1')::uuid,current_setting('test.q2')::uuid)),'ordinary owner sees only own quote');
+select pg_temp.assert_true((select count(*)=0 from public.crm_quote_versions where quote_id=current_setting('test.q2')::uuid),'other owner cannot read document details');
+select pg_temp.assert_true((select count(*)=0 from public.crm_payments where quote_id=current_setting('test.q2')::uuid),'other owner cannot read receipts');
+set local role anon;
+select pg_temp.assert_true(not has_table_privilege('anon','public.crm_quotes','SELECT'),'anonymous quote listing denied');
+rollback;
+select 'PASS: admin cross-business listing, latest version totals, active receipts and owner isolation. Fixtures rolled back.' as result;
