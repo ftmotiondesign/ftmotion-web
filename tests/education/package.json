@@ -1,0 +1,1 @@
+{"private":true,"type":"module","scripts":{"test":"cd ../.. && node tests/education/api.integration.mjs && node --test tests/education/auth.test.mjs"},"devDependencies":{"typescript":"5.9.3"}}
