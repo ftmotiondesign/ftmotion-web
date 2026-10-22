@@ -1,4 +1,8 @@
-// Protected data and authenticated pages are always fetched live, never cached.
-self.addEventListener('install',()=>self.skipWaiting());
-self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
-self.addEventListener('fetch',event=>{if(event.request.method==='GET'&&event.request.mode==='navigate')event.respondWith(fetch(event.request,{cache:'reload'}).catch(()=>new Response('<!doctype html><html lang="tr"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>DijiRehber</title><body style="font:16px system-ui;padding:40px;color:#244a40"><h1>İnternet bağlantısı gerekli.</h1><p>Bağlantınız geldiğinde DijiRehber’i yeniden açın.</p><button onclick="location.reload()">Yeniden dene</button></body></html>',{headers:{'Content-Type':'text/html;charset=utf-8'}})))});
+const CACHE='dijirehber-public-v4';
+const ASSETS=['/dijirehber/offline.html','/dijirehber/icons/dijirehber-192.png','/dijirehber/icons/dijirehber-512.png','/dijirehber/icons/dijirehber-maskable-512.png'];
+self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',event=>event.waitUntil((async()=>{for(const key of await caches.keys())if(key.startsWith('dijirehber-public-')&&key!==CACHE)await caches.delete(key);await self.clients.claim()})()));
+// Authentication, private media, API responses and protected screens are never cached.
+self.addEventListener('fetch',event=>{const request=event.request,url=new URL(request.url);if(request.method!=='GET'||url.origin!==self.location.origin)return;
+if(request.mode==='navigate'&&url.pathname.startsWith('/dijirehber/')){event.respondWith(fetch(request,{cache:'reload'}).catch(()=>caches.match('/dijirehber/offline.html')));return;}
+if(ASSETS.includes(url.pathname))event.respondWith(caches.match(url.pathname).then(cached=>cached||fetch(request)));});
