@@ -1,0 +1,34 @@
+begin;
+do $$
+declare a uuid; s uuid; t text; r jsonb; old_revision integer; denied boolean;
+begin
+ if has_function_privilege('anon','public.education_platform_admin(text,text,jsonb)','execute') then raise exception 'Anonymous RPC exposed';end if;
+ if has_table_privilege('authenticated','education.platform_tracking','select') then raise exception 'Tracking table exposed';end if;
+ if has_table_privilege('authenticated','education.platform_audit','insert') then raise exception 'Audit table exposed';end if;
+ perform set_config('request.jwt.claims','{}',true);
+ denied:=false;begin perform public.education_platform_admin();exception when insufficient_privilege then denied:=true;end;
+ if not denied then raise exception 'Missing user accepted';end if;
+ select x.user_id,y.id into a,s from public.admin_users x join auth.sessions y on y.user_id=x.user_id limit 1;
+ if a is null then raise exception 'Requires an existing admin session for authorized test';end if;
+ perform set_config('request.jwt.claims',jsonb_build_object('sub',a,'session_id',gen_random_uuid())::text,true);
+ denied:=false;begin perform public.education_platform_admin();exception when insufficient_privilege then denied:=true;end;
+ if not denied then raise exception 'Revoked session accepted';end if;
+ perform set_config('request.jwt.claims',jsonb_build_object('sub',gen_random_uuid(),'session_id',s)::text,true);
+ denied:=false;begin perform public.education_platform_admin();exception when insufficient_privilege then denied:=true;end;
+ if not denied then raise exception 'Non admin accepted';end if;
+ perform set_config('request.jwt.claims',jsonb_build_object('sub',a,'session_id',s)::text,true);
+ r:=public.education_platform_admin();
+ if jsonb_typeof(r->'institutions')<>'array' then raise exception 'Overview failed';end if;
+ select id into t from education.institutions limit 1;
+ if t is null then raise exception 'Needs existing institution';end if;
+ r:=public.education_platform_admin('detail',t);old_revision:=(r->'tracking'->>'revision')::integer;
+ r:=public.education_platform_admin('save',t,jsonb_build_object('status','trial','plan','TEST','notes','Rolled back test','renewal_date','2027-01-01','revision',old_revision));
+ if r->'tracking'->>'notes'<>'Rolled back test' or (r->'tracking'->>'revision')::integer<>old_revision+1 then raise exception 'Save failed';end if;
+ if jsonb_array_length(r->'activity')<1 then raise exception 'Missing audit';end if;
+ denied:=false;begin perform public.education_platform_admin('save',t,jsonb_build_object('status','active','revision',old_revision));exception when serialization_failure then denied:=true;end;
+ if not denied then raise exception 'Stale overwrite accepted';end if;
+ denied:=false;begin perform public.education_platform_admin('save',t,jsonb_build_object('status','superadmin','revision',old_revision+1));exception when raise_exception then denied:=true;end;
+ if not denied then raise exception 'Invalid state accepted';end if;
+end $$;
+rollback;
+select 'PASS: anonymous/table isolation, missing user, revoked session, non-admin denial, overview, detail, save, audit, concurrency, validation. Test writes rolled back.' as result;
