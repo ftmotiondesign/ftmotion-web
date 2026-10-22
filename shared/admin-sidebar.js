@@ -2,7 +2,7 @@
 const pathname=location.pathname.split('/').pop();
 const inMenu=/\/menu\//.test(location.pathname);
 const rootPrefix=inMenu?'../':'';
-const navigation=[['PANEL',null],['▦','Genel Bakış','panel.html'],['♙','İşletme Bilgileri','isletme-yonetimi.html'],['▣','QR / NFC Kart Yönetimi','qr-yonetimi.html'],['☷','Dijital Menü (Demo)','menu/index.html'],['📒','Müşteri ve Teklif Defterim','musteri-defterim.html'],['KISAYOLLAR',null],['⚙','Merkezi Yönetim','yonetim.html'],['▤','Tüm İşletmeler','admin-isletmeler.html'],['📢','Duyuruları Yönet','admin-duyurular.html']];
+const navigation=[['PANEL',null],['▦','Genel Bakış','panel.html'],['♙','İşletme Bilgileri','isletme-yonetimi.html'],['▣','QR / NFC Kart Yönetimi','qr-yonetimi.html'],['☷','Dijital Menü (Demo)','menu/index.html'],['📒','Müşteri ve Teklif Defterim','musteri-defterim.html'],['KISAYOLLAR',null],['⚙','Merkezi Yönetim','yonetim.html'],['▤','Tüm İşletmeler','admin-isletmeler.html'],['▧','Tüm Teklifler','admin-teklifler.html'],['📢','Duyuruları Yönet','admin-duyurular.html']];
 const sidebar=document.createElement('aside');sidebar.className='ft-sidebar';sidebar.id='ftSidebar';
 const brand=document.createElement('div');brand.className='ft-brand';brand.innerHTML='FT<span>Motion</span><small>İŞLETME KONTROL MERKEZİ</small>';sidebar.append(brand);
 const nav=document.createElement('nav');nav.className='ft-nav';
