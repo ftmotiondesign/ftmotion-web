@@ -37,3 +37,16 @@ Teklif ve ödeme toplamı sunucuda kuruş cinsinden hesaplanır. Yeni sürüm ve
 - PDF, yerel olarak sunulan sabit sürümlü pdf-lib 1.17.1 / fontkit 1.1.1 ve Türkçe destekli DejaVu Sans yazı tipiyle tarayıcıda oluşturulur. Metin seçilebilir, uzun belgeler sayfalanır. Desteklenen cihazlarda dosya paylaşılır; diğerlerinde indirilebilir. Otomatik indirme engellenirse görünür “PDF hazır — indir” bağlantısı kalır.
 
 Doğrulama: 8 Node testi (Türkçe tutar çözümleme, iptal edilmiş tahsilatların dışlanması, taslak birleştirme ve çok sayfalı PDF dahil); gerçek şemada rollback edilen kapsam/ürün/taslak/düzeltme/iptal testleri; mobil genişlikte müşteri geçişi, katalogdan ekleme, yenileme sonrası taslak açma, takvim ve ödeme düzeltme arayüz kontrolü. PDF üretimi ve Türkçe karakterler test edilip render edildi. Bulut tarayıcısının indirme olayı yakalanamadı; oluşturulan dosyanın görünür indirme bağlantısı doğrulandı.
+
+## Sektör profilleri
+
+`sql/customer-ledger-sectors.sql`, iş akışı şemasından sonra uygulanır. İşletme sahibi üstteki sektör seçimiyle Genel İşletme, Sürücü Kursu, Eğitim Kurumu veya Toptancı / Bayi alanını açar. Seçim işletme bazında hesapta saklanır.
+
+- Sürücü kursu: ehliyet sınıfı, dönem, ders tercihi, adaydan kesin kayda takip aşamaları; kurs ücret teklifi.
+- Eğitim kurumu: veli, sınıf/seviye, program ve dönem; eğitim ücret teklifi. Veli adı özel müşteri dosyasında kalır.
+- Toptancı: yetkili, il/ilçe, teslimat adresi ve ödeme şartları; teklif üzerinde teslim şekli, tarih ve ödeme şartları; sipariş/teslim aşamaları.
+- Müşteri aşamaları listeden filtrelenir; düzenleme formundan değiştirilir. Alanlar sektör başına ayrı saklanır; sektör değiştirmek mevcut müşteri, katalog, not, ödeme veya teklifleri silmez.
+- Teklif şablonu ve paylaşılacak sektör alanları yayınlandığı sürümde saklanır. Sektör ayarının değişmesi eski belgeleri değiştirmez. Eski bir taslak açılırsa kendi sektör şablonuyla devam eder. HTML ve PDF aynı izinli alanları gösterir.
+- Sunucu bilinmeyen alanları, geçersiz aşamaları ve biçimleri reddeder. Müşteri güncelleme RPC’si yalnız seçili sektör JSON yolunu değiştirir. Sahiplik RLS ile doğrulanır; anonim erişim yoktur.
+
+Bu sürüm taksit planlama, ders/sınav programı, stok veya sevkiyat yönetimi içermez. Kontroller: 10 Node testi, canlı şemada rollback edilen sektör/veri koruma/özel alan/paylaşım/sahiplik testleri ve mobilde sektör seçme, kursiyer ekleme, aşama filtresi ve teklif alanları.

@@ -74,5 +74,33 @@ select set_config('request.jwt.claims',json_build_object('sub',gen_random_uuid()
 select pg_temp.assert_true((select count(*)=0 from public.crm_products where business_id=current_setting('test.business')::uuid),'catalog isolated between owners');
 select pg_temp.assert_true((select count(*)=0 from public.crm_quote_drafts where business_id=current_setting('test.business')::uuid),'drafts isolated between owners');
 select pg_temp.assert_denied('insert into public.crm_quote_drafts(business_id,user_id,draft_key,payload) values('''||current_setting('test.business')||''','''||current_setting('test.owner')||''',''intruder'',''{}'')');
+
+-- Sector profiles retain private data and immutable public template snapshots.
+select set_config('request.jwt.claims',json_build_object('sub',current_setting('test.owner'),'role','authenticated')::text,true);
+insert into public.crm_ledger_settings(business_id,sector) values(current_setting('test.business')::uuid,'education');
+select public.crm_save_sector_customer(current_setting('test.business')::uuid,current_setting('test.customer')::uuid,'{"name":"Test Student"}','driving_school','{"stage":"followup","license_class":"B"}');
+select public.crm_save_sector_customer(current_setting('test.business')::uuid,current_setting('test.customer')::uuid,'{"name":"Test Student"}','education','{"stage":"registered","guardian_name":"PRIVATE_GUARDIAN","grade":"8","program":"LGS","term":"2026"}');
+select pg_temp.assert_true((select sector_data->'driving_school'->>'license_class'='B' and sector_data->'education'->>'stage'='registered' from public.crm_customers where id=current_setting('test.customer')::uuid),'sector changes preserve other sector fields');
+select set_config('test.sector_version',public.crm_issue_quote(current_setting('test.business')::uuid,current_setting('test.customer')::uuid,null,jsonb_build_object('title','Education quote','valid_until',current_date+15,'sector_details','{"grade":"8","program":"LGS","term":"2026"}'::jsonb,'items',jsonb_build_array(jsonb_build_object('name','Course','quantity',1,'unit_price_cents',10000))),0)::text,true);
+select set_config('test.sector_token',share_token::text,true) from public.crm_quote_versions where id=current_setting('test.sector_version')::uuid;
+update public.crm_ledger_settings set sector='wholesale' where business_id=current_setting('test.business')::uuid;
+select pg_temp.assert_true((select document->>'sector'='education' and document->'sector_details'->>'program'='LGS' from public.crm_quote_versions where id=current_setting('test.sector_version')::uuid),'published sector stays unchanged');
+do $$begin
+ begin perform public.crm_save_sector_customer(current_setting('test.business')::uuid,current_setting('test.customer')::uuid,'{"name":"Test"}','education','{"stage":"ordered"}');raise exception 'FAIL: invalid stage allowed';exception when raise_exception then if sqlerrm like 'FAIL:%' then raise;end if;end;
+ begin perform public.crm_save_sector_customer(current_setting('test.business')::uuid,current_setting('test.customer')::uuid,'{"name":"Test"}','education','{"unknown":"private"}');raise exception 'FAIL: unknown field allowed';exception when raise_exception then if sqlerrm like 'FAIL:%' then raise;end if;end;
+end$$;
+set local role anon;
+select set_config('request.jwt.claims','{}',true);
+select pg_temp.assert_denied('select * from public.crm_ledger_settings');
+select pg_temp.assert_true(public.crm_shared_quote(current_setting('test.sector_token')::uuid)->'document'->'sector_details'->>'program'='LGS','sector details shared with recipient');
+select pg_temp.assert_true(public.crm_shared_quote(current_setting('test.sector_token')::uuid)::text not like '%PRIVATE_%','guardian and notes remain private');
+set local role authenticated;
+select set_config('request.jwt.claims',json_build_object('sub',gen_random_uuid(),'role','authenticated')::text,true);
+select pg_temp.assert_true((select count(*)=0 from public.crm_ledger_settings where business_id=current_setting('test.business')::uuid),'sector settings isolated by owner');
+select pg_temp.assert_denied('insert into public.crm_ledger_settings(business_id,sector) values('''||current_setting('test.business')||''',''general'')');
+do $$begin
+ begin perform public.crm_save_sector_customer(current_setting('test.business')::uuid,current_setting('test.customer')::uuid,'{"name":"Intruder"}','education','{}');raise exception 'FAIL: unauthorized sector update allowed';exception when raise_exception then if sqlerrm like 'FAIL:%' then raise;end if;end;
+end$$;
+
 rollback;
 select 'PASS: ownership, immutable revisions, bearer sharing, customer response, payment retry and overpayment checks. Fixtures rolled back.' as result;
