@@ -63,3 +63,7 @@ dialog .modalbody>form{min-width:0}
 @media(max-width:800px){.topbar{min-height:68px;gap:8px;padding-block:10px;padding-top:calc(10px + env(safe-area-inset-top))}}
 
 .institution-eyebrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.heading-institution-logo{width:32px;height:32px;object-fit:contain;border-radius:6px;background:#fff;padding:2px}
+
+/* Compact role-specific entrance. Staff entry is shared through a direct link. */
+.portal-family-grid .portal-card{min-height:106px;padding:16px;gap:5px}.portal-family-grid .portal-card.selected{padding:15px}.portal-family-grid .portal-card>span{font-size:22px}.portal-family-grid .portal-card>b{font-size:15px}.portal-family-grid .portal-card>small{font-size:12px;line-height:1.5}.portal-entry-card{display:flex;align-items:center;gap:14px;background:#f1f5ec;border:1px solid #dce5d4;border-radius:12px;padding:16px}.portal-entry-card>span{font-size:27px;color:#69835b}.portal-entry-card b{display:block;font-size:16px}.portal-entry-card small{display:block;margin-top:4px;font-size:12px;color:#77816d}
+@media(max-width:500px){.portal-family-grid{gap:10px}.portal-family-grid .portal-card{padding:13px;min-height:108px}.portal-family-grid .portal-card.selected{padding:12px}.welcome-card h1{font-size:25px;line-height:1.25}.welcome-card .subtitle{font-size:14px;line-height:1.65}}
