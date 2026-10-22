@@ -164,6 +164,21 @@ html body main .foldHead::after{color:#ed7000!important}
 <main><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><h1>İşletme Kartım</h1><button id="openOrder" type="button" style="background:#ff7900;color:#171717">🛒 Siparişlerim / Yeni Sipariş</button></div><p class="muted">Dijital kartınızda görünen bilgileri buradan düzenleyin.</p>
 <p id="notice" role="status">Hesabınız kontrol ediliyor...</p><section id="adminBusinessSwitch" class="card" hidden style="border:2px solid #ff7900;margin-bottom:18px">
 <h2 style="margin-top:0">Ana Yönetim · İşletme Değiştir</h2>
+<button id="openCustomerRegistration" type="button" aria-expanded="false" aria-controls="customerRegistration" style="margin-bottom:14px">＋ E-posta ile Yeni Müşteri Kaydı</button>
+<div id="customerRegistration" hidden>
+<h3>Hızlı Müşteri Kaydı</h3>
+<form id="customerRegistrationForm">
+<label for="customerBusinessName">İşletme adı<input id="customerBusinessName" required maxlength="150" autocomplete="organization" placeholder="İşletmenin adı"></label>
+<label for="customerEmail">Müşteri e-posta adresi<input id="customerEmail" type="email" required maxlength="254" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="ornek@firma.com"></label>
+<label for="customerPassword">Müşteri şifresi<input id="customerPassword" type="password" required minlength="8" autocomplete="new-password" placeholder="En az 8 karakter"></label>
+<button id="showCustomerPassword" type="button" class="secondary" aria-pressed="false">Şifreyi Göster</button>
+<p class="muted">Müşteriye ait e-posta adresini kullanın. E-posta doğrulaması gerekiyorsa müşteri gelen bağlantıyı açarak hesabını doğrular.</p>
+<div class="actions"><button id="saveCustomerRegistration" type="submit">Müşteri ve Kart Oluştur</button><button id="closeCustomerRegistration" type="button" class="secondary">Kapat</button></div>
+</form>
+<p id="customerRegistrationStatus" role="status" aria-live="polite" style="overflow-wrap:anywhere"></p>
+<a id="editRegisteredCustomer" class="btn" hidden>Kartı Düzenle →</a>
+<hr style="margin:20px 0">
+</div>
 <label for="adminBusinessSearch">İşletme ara<input id="adminBusinessSearch" type="search" placeholder="İşletme adıyla ara" autocomplete="off"></label>
 <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px">
 <button id="adminBusinessPrev" type="button" class="secondary">← Önceki</button>
@@ -233,9 +248,51 @@ html body main .foldHead::after{color:#ed7000!important}
 <div id="photoModal" class="photoModal" hidden role="dialog" aria-modal="true" aria-labelledby="photoModalTitle"><div class="photoDialog"><header class="top"><h2 id="photoModalTitle">Fotoğraf</h2><button id="closePhotoModal" class="secondary" type="button">✕ Kapat</button></header><div id="photoModalContent"></div></div></div>
 <script type="module">
 import {client,currentUser} from './shared/supabase-client.js';
+import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 const $=id=>document.getElementById(id), notice=(s,bad=false)=>{$('notice').textContent=s;$('notice').classList.toggle('error',bad)};
 let db,user,record,pages=[],editingPage=null,adminMode=false,adminBusinesses=[];
 const selectedOwner=()=>adminMode&&record?record.owner_id:user.id;
+let customerSignupClient,pendingCustomer=null,customerRegistrationBusy=false;
+const customerFields=()=>['customerBusinessName','customerEmail','customerPassword'].map($);
+function toggleCustomerRegistration(open){$('customerRegistration').hidden=!open;$('openCustomerRegistration').setAttribute('aria-expanded',String(open));if(open)$('customerBusinessName').focus();else $('openCustomerRegistration').focus()}
+$('openCustomerRegistration').onclick=()=>toggleCustomerRegistration($('customerRegistration').hidden);
+$('closeCustomerRegistration').onclick=()=>{if(customerRegistrationBusy)return;toggleCustomerRegistration(false)};
+$('showCustomerPassword').onclick=()=>{const input=$('customerPassword'),show=input.type==='password';input.type=show?'text':'password';$('showCustomerPassword').textContent=show?'Şifreyi Gizle':'Şifreyi Göster';$('showCustomerPassword').setAttribute('aria-pressed',String(show))};
+async function registerCustomer(e){
+ e.preventDefault();if(customerRegistrationBusy)return;
+ const form=$('customerRegistrationForm'),status=$('customerRegistrationStatus'),submit=$('saveCustomerRegistration');
+ if(!adminMode||!db||!user){status.textContent='Bu işlem yalnızca ana yöneticiye açıktır.';return}
+ if(!pendingCustomer&&!form.reportValidity())return;
+ const name=$('customerBusinessName').value.trim(),email=$('customerEmail').value.trim();
+ if(!pendingCustomer&&!name){status.textContent='İşletme adını girin.';return}
+ customerRegistrationBusy=true;submit.disabled=true;$('closeCustomerRegistration').disabled=true;status.textContent='Müşteri kaydı oluşturuluyor…';
+ try{
+  const current=await currentUser(db);if(!current||current.id!==user.id)throw Error('Yönetici oturumu değişti. Sayfayı yenileyip tekrar giriş yapın.');
+  const admin=await db.from('admin_users').select('user_id').eq('user_id',current.id).maybeSingle();if(admin.error)throw admin.error;if(!admin.data)throw Error('Ana yönetici yetkisi bulunamadı.');
+  if(!pendingCustomer){
+   if(!customerSignupClient){
+    const response=await fetch(new URL('supabase-config.json',location.href),{cache:'no-store'});if(!response.ok)throw Error('Üyelik ayarları okunamadı.');const cfg=await response.json();
+    if(!/^https:\/\//.test(cfg.url||'')||!cfg.anonKey)throw Error('Üyelik ayarları eksik.');
+    customerSignupClient=createClient(cfg.url,cfg.anonKey,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false,storageKey:'ftmotion-customer-registration'}});
+   }
+   const {data,error}=await customerSignupClient.auth.signUp({email,password:$('customerPassword').value,options:{emailRedirectTo:new URL('giris.html',location.href).href}});
+   if(error)throw error;
+   if(!data?.user?.id||!Array.isArray(data.user.identities)||!data.user.identities.length)throw Error('Bu e-posta ile yeni hesap oluşturulamadı. Adres zaten kayıtlı olabilir; mevcut hesabı kullanın.');
+   pendingCustomer={ownerId:data.user.id,businessId:crypto.randomUUID(),name,email,needsConfirmation:!data.session,slug:(slugify(name)||'isletme')+'-'+crypto.randomUUID().slice(0,8)};
+   $('customerPassword').value='';$('customerPassword').required=false;customerFields().forEach(input=>input.readOnly=true);$('showCustomerPassword').disabled=true;
+  }
+  const p=pendingCustomer;status.textContent='Müşteri hesabı oluşturuldu. İşletme kartı hazırlanıyor…';
+  const existing=await db.from('businesses').select('id,name,owner_id').eq('owner_id',p.ownerId).limit(1);if(existing.error)throw existing.error;
+  let business=existing.data?.[0];
+  if(!business){const saved=await db.from('businesses').insert({id:p.businessId,name:p.name,slug:p.slug,owner_id:p.ownerId,active:true}).select('id,name,owner_id').single();if(saved.error)throw saved.error;if(!saved.data)throw Error('İşletme kartı kaydı doğrulanamadı.');business=saved.data;}
+  if(!adminBusinesses.some(item=>item.id===business.id)){adminBusinesses.push(business);const opt=document.createElement('option');opt.value=business.id;opt.textContent=business.name;$('adminBusinessSelect').add(opt);const i=adminBusinesses.findIndex(item=>item.id===$('adminBusinessSelect').value);$('adminBusinessCount').textContent=i<0?adminBusinesses.length+' işletme':(i+1)+' / '+adminBusinesses.length+' işletme';$('adminBusinessNext').disabled=i<0||i===adminBusinesses.length-1;}
+  const link=$('editRegisteredCustomer'),target=new URL(location.href);target.searchParams.set('business_id',business.id);link.href=target.href;link.hidden=false;
+  status.textContent=p.name+' için müşteri hesabı ve işletme kartı hazır.'+(p.needsConfirmation?' Müşteri, '+p.email+' adresine gelen doğrulama bağlantısını açmalı.':' Müşteri e-posta ve şifresiyle giriş yapabilir.');
+  pendingCustomer=null;form.reset();customerFields().forEach(input=>input.readOnly=false);$('customerPassword').required=true;$('customerPassword').type='password';$('showCustomerPassword').disabled=false;$('showCustomerPassword').textContent='Şifreyi Göster';$('showCustomerPassword').setAttribute('aria-pressed','false');submit.textContent='Müşteri ve Kart Oluştur';
+ }catch(err){status.textContent=pendingCustomer?'Müşteri hesabı oluşturuldu ancak işletme kartı tamamlanamadı: '+(err.message||err)+'. Kart Oluşturmayı Tekrar Dene düğmesine basın.':'Kayıt oluşturulamadı: '+(err.message||err);if(pendingCustomer)submit.textContent='Kart Oluşturmayı Tekrar Dene';}
+ finally{customerRegistrationBusy=false;submit.disabled=false;$('closeCustomerRegistration').disabled=false;}
+}
+$('customerRegistrationForm').onsubmit=registerCustomer;
 $('activateStockForm').onsubmit=async e=>{e.preventDefault();const status=$('activateStockMessage');if(!record){status.textContent='Önce işletmenizi oluşturun.';return}const btn=e.currentTarget.querySelector('button');btn.disabled=true;status.textContent='Kart doğrulanıyor...';try{const {data,error}=await db.rpc('ft_member_stock_activate',{p_business_id:record.id,p_code:$('activateStockCode').value.trim().toUpperCase(),p_secret:$('activateStockSecret').value.trim()});if(error)throw error;status.textContent=data+' işletmenize bağlandı.';$('activateStockForm').reset();await loadPhysicalCards()}catch(err){status.textContent='Aktivasyon başarısız: '+(err.message||err)}finally{btn.disabled=false}};
 async function loadPhysicalCards(){const host=$('physicalCardList');if(!host||!record)return;host.replaceChildren();try{const {data,error}=await db.rpc('ft_member_stock_list',{p_business_id:record.id});if(error)throw error;const cards=data||[];const primary=cards[0];$('qrMainPhysical').style.display=primary?'block':'none';$('qrMainPhysicalName').textContent=primary?primary.code+' · Ana fiziksel QR kartım':'';$('qrCardStatus').textContent=primary?'Ana kartınız fiziksel '+primary.code+' olarak gösteriliyor. Diğer kartlarınız ve ücretsiz dijital QR aşağıdadır.':'Fiziksel kartınız henüz yok. Ücretsiz dijital QR kodunuz aşağıda kullanılabilir.';if(!cards.length){const p=document.createElement('p');p.className='muted';p.textContent='Henüz işletmenize atanmış fiziksel QR / NFC kart bulunmuyor.';host.append(p);return}for(const item of cards){const box=document.createElement('div');box.style.cssText='display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;border:1px solid #444;background:#222;border-radius:12px;padding:14px';const info=document.createElement('div');const name=document.createElement('strong');name.textContent=item.code;const detail=document.createElement('div');detail.className='muted';detail.textContent=item.product_type+' · İşletmenize tanımlandı';info.append(name,detail);const badge=document.createElement('span');badge.textContent='Aktif atama';badge.style.cssText='color:#9ef2bc;font-size:12px';const actions=document.createElement('div');actions.style.cssText='display:flex;gap:8px;flex-wrap:wrap;align-items:center';const view=document.createElement('button');view.type='button';view.textContent='QR Görüntüle';const download=document.createElement('button');download.type='button';download.textContent='QR SVG İndir';download.className='secondary';const preview=document.createElement('div');preview.style.cssText='width:100%;display:none;background:#fff;border:1px solid #e2e5e9;border-radius:12px;padding:14px';const link=document.createElement('a');const fixed='https://ftmotion.com/k/'+encodeURIComponent(item.code);link.href=fixed;link.target='_blank';link.rel='noopener noreferrer';link.textContent=fixed;link.style.cssText='display:block;overflow-wrap:anywhere;margin-top:8px';let svg='';async function makeQr(){if(svg)return svg;const lib=await import('https://cdn.jsdelivr.net/npm/qrcode@1.5.4/+esm');svg=await (lib.default||lib).toString(fixed,{type:'svg',errorCorrectionLevel:'H',margin:4,width:800,color:{dark:'#000000',light:'#ffffff'}});return svg}view.onclick=async()=>{if(preview.style.display!=='none'){preview.style.display='none';return}try{const data=await makeQr();preview.replaceChildren();const img=document.createElement('img');img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(data);img.alt=item.code+' fiziksel QR kodu';img.style.cssText='width:210px;max-width:100%;display:block';preview.append(img,link);preview.style.display='block'}catch(e){alert('QR oluşturulamadı: '+e.message)}};download.onclick=async()=>{try{const data=await makeQr();const blob=new Blob([data],{type:'image/svg+xml'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=item.code+'.svg';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)}catch(e){alert('QR indirilemedi: '+e.message)}};actions.append(view,download);box.append(info,badge,actions,preview);host.append(box)}}catch(e){const p=document.createElement('p');p.className='muted';p.textContent='Kartlar görüntülenemedi: '+e.message;host.append(p)}}
 async function loadDiscoverSettings(){
