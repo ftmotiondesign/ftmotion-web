@@ -1,6 +1,6 @@
 import {client} from './supabase-client.js';
-import {documentHTML,printDocument,statusLabel,dateLabel} from './ledger-core.mjs?v=2';
-import {downloadQuotePDF} from './ledger-pdf.mjs?v=2';
+import {documentHTML,printDocument,statusLabel,dateLabel} from './ledger-core.mjs?v=3';
+import {downloadQuotePDF} from './ledger-pdf.mjs?v=3';
 const $=id=>document.getElementById(id),token=location.hash.slice(1);
 let db,version;
 async function load(){

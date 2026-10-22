@@ -1,5 +1,6 @@
-import {money,dateLabel} from './ledger-core.mjs';
-import {activePayments} from './ledger-workflow.mjs';
+import {sectorProfile,quoteSectorRows} from './ledger-sectors.mjs?v=3';
+import {money,dateLabel} from './ledger-core.mjs?v=3';
+import {activePayments} from './ledger-workflow.mjs?v=3';
 const asset=path=>new URL('../assets/ledger/'+path,import.meta.url).href;
 let dependencyPromise;
 function script(src){return new Promise((resolve,reject)=>{const tag=document.createElement('script');tag.src=src;tag.onload=resolve;tag.onerror=()=>{tag.remove();reject(Error('PDF bileşeni yüklenemedi. Tekrar deneyin.'));};document.head.append(tag);});}
@@ -26,8 +27,8 @@ export async function createQuotePDF(version,paymentRows=[],injected){
  if(logo){const scaled=logo.scale(Math.min(80/logo.width,52/logo.height));page.drawImage(logo,{x:left+width-scaled.width,y:805-scaled.height,width:scaled.width,height:scaled.height});}
  text(d.business.name,{size:20,max:logo?width-95:width});text([d.business.phone,d.business.email,d.business.address].filter(Boolean).join(' · '),{size:9,color:gray});
  space(35);y-=8;page.drawLine({start:{x:left,y},end:{x:left+width,y},thickness:2,color:orange});y-=24;
- text('TEKLİF FORMU',{size:14,color:orange});text(`#${version.quote_id.slice(0,8).toUpperCase()} / Sürüm ${version.revision} · ${dateLabel(version.created_at)}`,{size:9,color:gray});y-=14;
- text('SAYIN',{size:8,color:gray});text(d.customer.name,{size:13});text([d.customer.phone,d.customer.email,d.customer.address].filter(Boolean).join(' · '),{size:9});y-=14;text(d.title,{size:14});y-=8;
+ text(sectorProfile(d.sector).documentTitle,{size:14,color:orange});text(`#${version.quote_id.slice(0,8).toUpperCase()} / Sürüm ${version.revision} · ${dateLabel(version.created_at)}`,{size:9,color:gray});y-=14;
+ text('SAYIN',{size:8,color:gray});text(d.customer.name,{size:13});text([d.customer.phone,d.customer.email,d.customer.address].filter(Boolean).join(' · '),{size:9});y-=14;text(d.title,{size:14});for(const row of quoteSectorRows(d))text(row.label+': '+row.value,{size:10});y-=8;
  const xs=[left,left+270,left+320,left+416],cols=[260,45,90,95];
  function tableHead(){space(34);page.drawRectangle({x:left,y:y-7,width,height:23,color:rgb(.96,.96,.97)});['Ürün / Hizmet','Miktar','Birim fiyat','Tutar'].forEach((label,i)=>page.drawText(label,{x:xs[i],y,size:8,font,color:gray}));y-=26;}
  tableHead();
