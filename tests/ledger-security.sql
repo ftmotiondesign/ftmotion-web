@@ -53,5 +53,26 @@ do $$begin
 end$$;
 update public.crm_quotes set share_enabled=false where id=current_setting('test.quote')::uuid;
 select pg_temp.assert_true(public.crm_shared_quote(current_setting('test.token')::uuid) is null,'revoked token returns no document');
+-- Workflow v2: private catalog/drafts and reversible payment corrections.
+insert into public.crm_products(business_id,name,unit_price_cents) values(current_setting('test.business')::uuid,'Test product',400000);
+insert into public.crm_quote_drafts(business_id,user_id,draft_key,payload) values(current_setting('test.business')::uuid,current_setting('test.owner')::uuid,'new','{"title":"Private draft"}')
+on conflict(business_id,user_id,draft_key) do update set payload=excluded.payload;
+select pg_temp.assert_true((select count(*)=1 from public.crm_quote_drafts where business_id=current_setting('test.business')::uuid),'owner can upsert draft');
+select set_config('test.replacement',gen_random_uuid()::text,true);
+select public.crm_correct_payment(current_setting('test.payment')::uuid,'Tutar yanlış girildi',300000,current_date,'Nakit','Corrected memo',current_setting('test.replacement')::uuid);
+select public.crm_correct_payment(current_setting('test.payment')::uuid,'Tutar yanlış girildi',300000,current_date,'Nakit','Corrected memo',current_setting('test.replacement')::uuid);
+select pg_temp.assert_true((select count(*)=2 and sum(amount_cents) filter(where voided_at is null)=300000 from public.crm_payments where quote_id=current_setting('test.quote')::uuid),'correction is atomic and idempotent; original preserved');
+update public.crm_quotes set share_enabled=true where id=current_setting('test.quote')::uuid;
+select pg_temp.assert_true(jsonb_array_length(public.crm_shared_quote(current_setting('test.token')::uuid)->'payments')=1,'recipient sees active payments only');
+select pg_temp.assert_true(public.crm_shared_quote(current_setting('test.token')::uuid)::text not like '%Tutar yanlış%','private correction reason is never shared');
+select public.crm_correct_payment(current_setting('test.replacement')::uuid,'Ödeme iptal edildi',null,null,null,null,null);
+select pg_temp.assert_true((select count(*)=2 and count(*) filter(where voided_at is null)=0 from public.crm_payments where quote_id=current_setting('test.quote')::uuid),'cancellation preserves both audit rows');
+select pg_temp.assert_true(jsonb_array_length(public.crm_shared_quote(current_setting('test.token')::uuid)->'payments')=0,'cancellation reflected in shared summary');
+select public.crm_record_payment(current_setting('test.quote')::uuid,2200000,current_date,'Havale','After void',gen_random_uuid());
+select pg_temp.assert_true((select sum(amount_cents)=2200000 from public.crm_payments where quote_id=current_setting('test.quote')::uuid and voided_at is null),'voided rows do not reduce available payment balance');
+select set_config('request.jwt.claims',json_build_object('sub',gen_random_uuid(),'role','authenticated')::text,true);
+select pg_temp.assert_true((select count(*)=0 from public.crm_products where business_id=current_setting('test.business')::uuid),'catalog isolated between owners');
+select pg_temp.assert_true((select count(*)=0 from public.crm_quote_drafts where business_id=current_setting('test.business')::uuid),'drafts isolated between owners');
+select pg_temp.assert_denied('insert into public.crm_quote_drafts(business_id,user_id,draft_key,payload) values('''||current_setting('test.business')||''','''||current_setting('test.owner')||''',''intruder'',''{}'')');
 rollback;
 select 'PASS: ownership, immutable revisions, bearer sharing, customer response, payment retry and overpayment checks. Fixtures rolled back.' as result;

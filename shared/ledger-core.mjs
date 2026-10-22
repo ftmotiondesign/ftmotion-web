@@ -1,3 +1,4 @@
+import {activePayments} from './ledger-workflow.mjs?v=2';
 export const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const money = cents => new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY'}).format(Number(cents||0)/100);
 export const dateLabel = value => value ? new Date(value.length===10 ? value+'T12:00:00' : value).toLocaleDateString('tr-TR') : '—';
@@ -30,7 +31,7 @@ export function whatsappPhone(phone){
 }
 export function statusLabel(version){return version?.response==='accepted'?'Onaylandı':version?.response==='changes'?'Değişiklik istendi':version?.valid_until<new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Istanbul'})?'Süresi doldu':'Yanıt bekliyor';}
 export function documentHTML(v,payments=[]){
- const d=v.document,e=escapeHTML,paid=payments.reduce((s,p)=>s+Number(p.amount_cents),0);
+ payments=activePayments(payments);const d=v.document,e=escapeHTML,paid=payments.reduce((s,p)=>s+Number(p.amount_cents),0);
  const logo=/^https:\/\//i.test(d.business.logo_url||'')?`<img class="doc-logo" src="${e(d.business.logo_url)}" alt="${e(d.business.name)} logosu" referrerpolicy="no-referrer">`:'';
  return `<article class="quote-document"><div class="doc-head"><div>${logo}<h2>${e(d.business.name)}</h2><p>${e(d.business.phone)} ${e(d.business.email)}</p><p>${e(d.business.address)}</p></div><div class="doc-number"><b>TEKLİF FORMU</b><p>#${e(v.quote_id.slice(0,8).toUpperCase())} · Sürüm ${v.revision}</p><p>${dateLabel(v.created_at)}</p></div></div><div class="doc-customer"><small>SAYIN</small><h3>${e(d.customer.name)}</h3><p>${e(d.customer.phone)} ${e(d.customer.email)}</p><p>${e(d.customer.address)}</p></div><h2>${e(d.title)}</h2><div class="table-scroll"><table><thead><tr><th>Ürün / Hizmet</th><th>Miktar</th><th>Birim fiyat</th><th>Tutar</th></tr></thead><tbody>${d.items.map(r=>`<tr><td>${e(r.name)}</td><td>${e(r.quantity)}</td><td>${money(r.unit_price_cents)}</td><td>${money(r.line_cents)}</td></tr>`).join('')}</tbody></table></div><div class="doc-totals"><p><span>Ara toplam</span><b>${money(d.subtotal_cents)}</b></p><p><span>İndirim</span><b>${money(d.discount_cents)}</b></p><p><span>KDV (%${e(d.vat_percent)})</span><b>${money(d.vat_cents)}</b></p><p class="grand"><span>Genel toplam</span><b>${money(d.total_cents)}</b></p></div><div class="doc-terms"><b>Şartlar ve iş kapsamı</b><p>${e(d.terms||'Ek şart belirtilmedi.')}</p><p><b>Teklif geçerlilik tarihi:</b> ${dateLabel(v.valid_until)}</p></div><div class="doc-payment"><h3>${v.current_revision&&v.revision!==v.current_revision?'Güncel işin ödeme özeti':'Ödeme özeti'}</h3>${payments.map(p=>`<p>${dateLabel(p.paid_on)} <b>${money(p.amount_cents)}</b></p>`).join('')||'<p>Henüz ödeme kaydedilmedi.</p>'}<p>Alınan ödeme <b>${money(paid)}</b></p><p>Kalan tutar <b>${money((v.current_total_cents??d.total_cents)-paid)}</b></p><small>Ödeme kaydı fatura veya resmî makbuz yerine geçmez.</small></div><footer class="doc-footer">${e(d.business.name)} · Teklif #${e(v.quote_id.slice(0,8).toUpperCase())} / ${v.revision}</footer></article>`;
 }
@@ -38,3 +39,5 @@ export function printDocument(html){
  let target=document.getElementById('ledgerPrint');if(!target){target=document.createElement('div');target.id='ledgerPrint';document.body.append(target);}target.innerHTML=html;
  window.print();
 }
+
+export function recordId(){if(crypto.randomUUID)return crypto.randomUUID();const bytes=crypto.getRandomValues(new Uint8Array(16));bytes[6]=(bytes[6]&15)|64;bytes[8]=(bytes[8]&63)|128;const hex=[...bytes].map(b=>b.toString(16).padStart(2,'0')).join('');return [hex.slice(0,8),hex.slice(8,12),hex.slice(12,16),hex.slice(16,20),hex.slice(20)].join('-');}
