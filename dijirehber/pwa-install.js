@@ -1,6 +1,7 @@
 (()=>{'use strict';
 const ROOT='/dijirehber/',nativeFetch=window.fetch.bind(window);
 let deferred=null,phase='checking',detail='',dialog=null,checking=null,waitTimer=null;
+const health={secure:window.isSecureContext===true,manifest:false,worker:false};
 const standalone=()=>matchMedia('(display-mode:standalone)').matches||navigator.standalone===true;
 const messages={checking:'Uygulama yüklemeye hazırlanıyor…',waiting:'Chrome’un uygulama yüklemesini etkinleştirmesi bekleniyor. Bu sayfayı açık tut.',ready:'Hazır. DijiRehber’i uygulama olarak yükleyebilirsin.',prompting:'Chrome’un yükleme penceresini onayla.',installing:'Yükleme isteği Chrome’a iletildi. İşlemin tamamlanması bekleniyor.',installed:'DijiRehber uygulama olarak yüklendi.',dismissed:'Yükleme iptal edildi.',error:'Yükleme hazırlanamadı.'};
 function syncButton(button=document.getElementById('dijiInstall')){if(!button)return;if(standalone()||phase==='installed'){button.remove();return;}button.dataset.installState=phase;button.textContent=phase==='installing'?'DijiRehber yükleniyor…':'↓ DijiRehber’i yükle';button.disabled=phase==='installing'||phase==='prompting';}
@@ -23,12 +24,12 @@ async function check(){if(checking)return checking;if(deferred){state('ready');r
  if(!window.isSecureContext)throw Error('Uygulama yalnızca güvenli HTTPS bağlantısında yüklenebilir.');
  if(!('serviceWorker' in navigator))throw Error('Bu tarayıcı uygulama yüklemesini desteklemiyor. Bağlantıyı Chrome’da aç.');
  if(!deferred)state('checking');
- const registration=await navigator.serviceWorker.register(ROOT+'sw.js?v=4',{scope:ROOT,updateViaCache:'none'});await navigator.serviceWorker.ready;
+ const registration=await navigator.serviceWorker.register(ROOT+'sw.js?v=4',{scope:ROOT,updateViaCache:'none'});await Promise.race([navigator.serviceWorker.ready,new Promise((_,reject)=>setTimeout(()=>reject(Error('Uygulama altyapısı zamanında hazırlanamadı. İnternet bağlantını kontrol edip tekrar dene.')),15000))]);health.worker=true;
  const response=await nativeFetch(ROOT+'manifest.webmanifest?v=4',{cache:'reload'});if(!response.ok)throw Error('Uygulama bilgileri yüklenemedi. İnternet bağlantını kontrol et.');const manifest=await response.json();
  if(manifest.display!=='standalone'||!manifest.name||!manifest.icons?.some(i=>i.sizes==='512x512'&&i.type==='image/png'))throw Error('Uygulama yükleme bilgileri doğrulanamadı.');
- if(deferred){state('ready');return;}if(phase==='installed'||phase==='installing'||phase==='prompting')return;
+ health.manifest=true;if(deferred){state('ready');return;}if(phase==='installed'||phase==='installing'||phase==='prompting')return;
  state('waiting');clearTimeout(waitTimer);waitTimer=setTimeout(()=>{if(phase==='waiting')state('waiting','Chrome bu sayfa için uygulama yükleme penceresini henüz açmadı. Chrome’un ⋮ menüsündeki Yükle seçeneğini kontrol et. Sayfayı yenilemen gerekmiyor.');},40000);
  }catch(error){if(!deferred)state('error',error.message||'Uygulama yüklenemedi. Tekrar dene.');}finally{checking=null;}})();return checking;}
-window.DijiPwa={requestInstall,syncButton,check};
+window.DijiPwa={requestInstall,syncButton,check,getStatus:()=>({phase,ready:!!deferred,message:detail||messages[phase],checks:{...health,native:!!deferred||phase==='prompting'||phase==='installing'||phase==='installed'}})};
 check();
 })();
