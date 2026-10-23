@@ -1,0 +1,18 @@
+import {addContact,recordConsent,listContacts,eligible} from './demo-core.js';
+import assert from 'node:assert/strict';
+let db=[];
+db=addContact(db,'a',{name:'Test A',phone:'05551112233',email:'a@example.com'});
+db=addContact(db,'b',{name:'Test B',phone:'05551112233',email:'a@example.com'});
+assert.equal(listContacts(db,'a').length,1);
+assert.equal(listContacts(db,'b').length,1);
+assert.equal(eligible(db,'a','whatsapp').length,0);
+assert.throws(()=>addContact(db,'a',{name:'Tekrar',email:'a@example.com'}));
+assert.throws(()=>recordConsent(db,'b','demo-1','email',true));
+db=recordConsent(db,'a','demo-1','whatsapp',true);
+assert.equal(eligible(db,'a','whatsapp').length,1);
+assert.equal(eligible(db,'b','whatsapp').length,0);
+db=recordConsent(db,'a','demo-1','whatsapp',false);
+assert.equal(eligible(db,'a','whatsapp').length,0);
+assert.equal(db[0].history.length,2);
+assert.throws(()=>recordConsent(db,'a','demo-1','sms',true));
+console.log('8 ücretsiz demo güvenlik/izin kontrolü başarılı');
