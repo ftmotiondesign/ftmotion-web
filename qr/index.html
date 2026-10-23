@@ -254,12 +254,13 @@ google:'<span class="google-mark"><span class="google-g">G</span><span class="go
 function tile(icon,title,sub,url,color){if(!url)return;const a=el('a','tile'),i=el('span','ico'),txt=el('span');const brand=title==='WhatsApp'?'whatsapp':(title==='Instagram'||title==='Instagram 2')?'instagram':title==='Konum'?'konum':title==='Google Yorum'?'google':null;if(brand){i.classList.add('brand-'+brand);i.innerHTML=brandIcons[brand]}else{i.textContent=icon;if(color)i.style.background=color}a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.onclick=()=>{window.FTMAnalytics?.track(window.ftmAnalyticsDB,{businessKey:window.ftmAnalyticsBusinessId,source:'qr',eventType:'click',target:title})};a.target=/^(tel:|sms:|mailto:)/i.test(url)?'_self':'_blank';let b=el('b'),s=el('small');b.textContent=title;s.textContent=sub;txt.append(b,s);a.append(i,txt);$('tiles').append(a)}
 function streetViewEmbed(url){try{
 const u=new URL(url,location.origin);
-if(!/(^|\.)google\.(com|com\.tr)$/.test(u.hostname))return null;
+const host=u.hostname.toLowerCase();
+if(!/(^|\\.)google\\.(com|com\\.tr)$/.test(host))return null;
 if(u.pathname.startsWith('/maps/embed'))return u.href;
-const raw=decodeURIComponent(u.href);
-const pano=u.searchParams.get('pano')||u.searchParams.get('panoid')||raw.match(/!1s([A-Za-z0-9_-]+)!2e0/)?.[1]||raw.match(/[?&]panoid=([A-Za-z0-9_-]+)/)?.[1];
+let raw=u.href;try{raw=decodeURIComponent(raw)}catch(e){}
+const pano=u.searchParams.get('pano')||u.searchParams.get('panoid')||raw.match(/!1s([A-Za-z0-9_-]{10,})(?=!|%21|[&?#]|$)/)?.[1]||raw.match(/[?&]panoid=([A-Za-z0-9_-]+)/)?.[1];
 if(pano)return 'https://www.google.com/maps/embed?pb=!4v1!6m8!1m7!1s'+encodeURIComponent(pano)+'!2m2!1d0!2d0!3f0!4f0!5f0';
-const coord=raw.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+const coord=raw.match(/@(-?\\d+(?:\\.\\d+)?),(-?\\d+(?:\\.\\d+)?)/)||raw.match(/[?&](?:cbll|ll)=(-?\\d+(?:\\.\\d+)?),(-?\\d+(?:\\.\\d+)?)/);
 if(coord)return 'https://www.google.com/maps?output=svembed&cbll='+encodeURIComponent(coord[1]+','+coord[2])+'&cbp=12,0,0,0,0';
 return null;
 }catch{return null}}
