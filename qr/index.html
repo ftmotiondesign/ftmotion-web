@@ -132,6 +132,15 @@ body.template-gold{background:#080808;color:#f6e8c8}body.template-gold .wrap{bac
 body.template-minimal{background:#f0f1f3;color:#20252b}body.template-minimal .wrap{background:#fff;color:#20252b}body.template-minimal .shade{background:linear-gradient(transparent,#fff)}body.template-minimal .tile{background:#f8f9fb;color:#20252b;border:1px solid #dce1e6;border-radius:13px}body.template-minimal .tile small,body.template-minimal .identity p{color:#596674}body.template-minimal .logo{border-radius:50%}body.template-minimal .save{background:#20252b;color:white}
 body.template-glass{background:#0d1025;color:white}body.template-glass .wrap{background:linear-gradient(145deg,#14152d,#242046 65%,#101527)}body.template-glass .shade{background:linear-gradient(transparent,#14152d)}body.template-glass .tile{background:#ffffff13;border:1px solid #a5b6ff5c;backdrop-filter:blur(14px);border-radius:22px}body.template-glass .logo{border:3px solid #a6a3ff;border-radius:24px}body.template-glass .save{background:linear-gradient(110deg,#6755d9,#3d8de4);color:white}
 body.template-personal{background:#050d1c;color:#f4f9ff}body.template-personal .wrap{background:radial-gradient(ellipse at 50% 18%,#133a67,#081629 55%,#050d1c)}body.template-personal .hero{height:clamp(130px,30vw,190px)}body.template-personal .shade{background:linear-gradient(transparent,#081629)}body.template-personal .identity{text-align:center;margin-top:-65px;position:relative}body.template-personal .logo{width:118px;height:118px;border-radius:50%;border:4px solid #39b8ff;box-shadow:0 0 23px #12b5ff8c;object-fit:cover}body.template-personal .identity h1{font-size:30px}body.template-personal .tiles{grid-template-columns:1fr}body.template-personal .tile{background:#17314d;border:1px solid #328ac0;border-radius:17px;box-shadow:0 0 12px #1a8fe52a}body.template-personal .save{background:#168ee8;color:#fff}body.template-personal .identity p{color:#c5e0f5}
+
+/* Unified responsive business-card layout: desktop and mobile share the same composition */
+@media(min-width:601px){
+ body:not(.template-premium) .wrap:not(.subpage){width:100%;max-width:560px;margin:0 auto;display:block;}
+ body:not(.template-premium) .wrap:not(.subpage)>.hero{width:100%;}
+ body:not(.template-premium) .wrap:not(.subpage)>.identity{text-align:center;}
+ body:not(.template-premium) .wrap:not(.subpage)>.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}
+ body:not(.template-premium) .wrap:not(.subpage)>.ftm-card-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}
+}
 </style><style>
 #photosBlock{margin-top:12px;margin-bottom:14px}
 .ftm-saved-panel{margin:12px 17px 14px;padding:17px;background:#1b1b1e;border:1px solid #39393e;border-radius:17px}
