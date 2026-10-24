@@ -448,7 +448,7 @@ $('uploadButton').onclick=async()=>{
  if(!input)return notice(isVideo?'Önce MP4 video seçin.':'Önce bir fotoğraf seçin.',true);
  if(type==='gallery'&&(record.gallery||[]).length>=FTM_MEDIA.galleryMax)return notice('Galeri için 15 fotoğraf sınırına ulaştınız.',true);
  if(isVideo&&(input.size>15*1024*1024||input.size===0))return notice('Video boş olmamalı ve 15 MB sınırını aşmamalıdır.',true);
- if(isVideo&&!(/\\.mp4$/i.test(input.name)&&['video/mp4','application/octet-stream',''].includes(input.type)))return notice('Yalnızca MP4 formatında video yüklenebilir.',true);
+ if(isVideo&&!(/\.mp4$/i.test(input.name)&&['video/mp4','application/octet-stream',''].includes(input.type)))return notice('Yalnızca MP4 formatında video yüklenebilir.',true);
  button.disabled=true;notice(isVideo?'Video yükleniyor...':'Fotoğraf optimize ediliyor...');
  let uploadedPath=null;
  try{
