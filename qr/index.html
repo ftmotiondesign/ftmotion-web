@@ -380,6 +380,7 @@ try{
   if(iconUrl)manifest.icons=[{src:iconUrl,sizes:'any',purpose:'any'}];
   const previous=document.querySelector('link[rel="manifest"]');if(previous)previous.remove();
   const link=document.createElement('link');link.rel='manifest';link.href='data:application/manifest+json,'+encodeURIComponent(JSON.stringify(manifest));document.head.appendChild(link);
+  if(iconUrl&&b.id)fetch('/business-manifests/'+encodeURIComponent(b.id)+'-card.webmanifest',{method:'HEAD'}).then(r=>{if(r.ok)link.href='/business-manifests/'+encodeURIComponent(b.id)+'-card.webmanifest'}).catch(()=>{});
  }
 }catch(e){console.warn('İşletme manifesti hazırlanamadı',e);}
 

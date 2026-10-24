@@ -1,0 +1,18 @@
+{
+  "id": "/qr/elfa-hediyelik-429ac76c",
+  "name": "Elfa Hediyelik | İşletme Kartı",
+  "short_name": "Elfa Hediyelik",
+  "lang": "tr",
+  "start_url": "/qr/elfa-hediyelik-429ac76c",
+  "scope": "/qr/",
+  "display": "standalone",
+  "background_color": "#0b0b0b",
+  "theme_color": "#ff7900",
+  "icons": [
+    {
+      "src": "https://trchdzdvacalsyrsllar.supabase.co/storage/v1/object/public/ftm-qr/4db8c01a-85d2-4dbc-93fc-a656d1eb1b50/2a009310-8799-42af-9e32-0a45418cab49-1000348847.jpg",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ]
+}

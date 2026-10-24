@@ -1,0 +1,18 @@
+{
+  "id": "/kartim.html?business_id=f9969d70-f63f-47b4-aaca-65d8ce97447a",
+  "name": "fatih topçu | Kart Yönetimi",
+  "short_name": "fatih topçu",
+  "lang": "tr",
+  "start_url": "/kartim.html?business_id=f9969d70-f63f-47b4-aaca-65d8ce97447a",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b0b0b",
+  "theme_color": "#ff7900",
+  "icons": [
+    {
+      "src": "https://trchdzdvacalsyrsllar.supabase.co/storage/v1/object/public/ftm-qr/f9969d70-f63f-47b4-aaca-65d8ce97447a/7e74e428-c751-4805-81a2-96fece19bb3d-logo.png",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ]
+}
