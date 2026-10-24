@@ -232,7 +232,7 @@ html body main .foldHead::after{color:#ed7000!important}
 <section class="card" id="pwa-media"><h2>Logo, Kapak ve Galeri</h2><p class="muted">Bu alanda yalnızca kendi kartınıza ait medya dosyalarını düzenleyebilirsiniz.</p>
 <div class="fields"><label>Logo URL<input name="logo_url" form="mediaForm" type="url"></label><label>Kapak URL<input name="cover_url" form="mediaForm" type="url"></label><label style="grid-column:1/-1">Konum videosu URL<input name="location_video_url" form="mediaForm" type="url"></label></div>
 <form id="mediaForm"><div class="actions" style="margin-top:14px"><button type="submit">Medya Bağlantılarını Kaydet</button></div></form>
-<div style="margin-top:18px"><h2>Dosya Yükle</h2><label>Dosya türü<select id="uploadType"><option value="logo_url">Logo</option><option value="cover_url">Kapak fotoğrafı</option><option value="gallery">Galeri görseli</option><option value="location_video_url">Video (MP4)</option></select></label><label>Bilgisayardan seç<input type="file" id="uploadFile" accept="image/jpeg,image/png,image/webp"></label><p class="hint">JPG, PNG veya WEBP · Görseller otomatik WebP formatında küçültülür. Galeri: en fazla 15 fotoğraf. Video: MP4, en fazla 15 MB. Video yüklemek için dosya türünden Video (MP4) seçin.</p><div class="actions" style="margin:10px 0"><button id="takePhoto" class="secondary" type="button">📷 Fotoğraf Çek</button><span id="photoSelection" class="hint" role="status"></span></div><input id="cameraInput" type="file" accept="image/*" capture="environment" hidden><button id="uploadButton" type="button">Dosyayı Yükle</button><div id="mediaList"></div></div>
+<div style="margin-top:18px"><h2>Dosya Yükle</h2><label>Dosya türü<select id="uploadType"><option value="logo_url">Logo</option><option value="cover_url">Kapak fotoğrafı</option><option value="gallery">Galeri görseli</option><option value="location_video_url">Video (MP4)</option></select></label><label>Bilgisayardan seç<input type="file" id="uploadFile" accept="image/jpeg,image/png,image/webp"></label><p class="hint">JPG, PNG veya WEBP · Görseller otomatik WebP formatında küçültülür. Galeri: en fazla 15 fotoğraf. Video: MP4, en fazla 15 MB. Video yüklemek için dosya türünden Video (MP4) seçin.</p><div class="actions" style="margin:10px 0"><button id="takePhoto" class="secondary" type="button">📷 Fotoğraf Çek</button><span id="photoSelection" class="hint" role="status"></span></div><input id="cameraInput" type="file" accept="image/*" capture="environment" hidden><button id="uploadButton" type="button">Dosyayı Yükle</button><p id="uploadStatus" role="status" aria-live="polite" class="hint" style="padding:10px 0;font-weight:600"></p><div id="uploadedVideoPreview" style="margin:10px 0"></div><div id="mediaList"></div></div>
 </section>
 <section class="card" id="pwa-pages"><div class="top"><h2>Ek Sayfalarım</h2><button id="newPage" type="button" class="secondary">+ Sayfa Ekle</button></div><p class="muted">IBAN, ödeme bilgisi veya açıklama sayfası oluşturabilirsiniz.</p><div id="pageList"></div>
 <form id="pageForm" hidden><h2 id="pageFormHeading">Yeni Sayfa</h2><div class="fields">
@@ -440,32 +440,34 @@ async function ftmOptimizeImage(input,type){
 let capturedPhoto=null;
 $('takePhoto').onclick=()=>$('cameraInput').click();
 $('cameraInput').onchange=()=>{capturedPhoto=$('cameraInput').files[0]||null;if(capturedPhoto){$('uploadFile').value='';$('photoSelection').textContent='Çekilen fotoğraf hazır: '+capturedPhoto.name;notice('Fotoğraf hazır. Kaydetmek için Dosyayı Yükle butonuna basın.')}};
-$('uploadFile').onchange=()=>{capturedPhoto=null;$('cameraInput').value='';$('photoSelection').textContent=''};
-$('uploadType').onchange=()=>{capturedPhoto=null;$('cameraInput').value='';$('uploadFile').value='';$('uploadFile').accept=$('uploadType').value==='location_video_url'?'video/mp4':'image/jpeg,image/png,image/webp';$('takePhoto').style.display=$('uploadType').value==='location_video_url'?'none':'';$('photoSelection').textContent=''};
+const uploadStatus=(message,error=false)=>{const e=$('uploadStatus');e.textContent=message;e.style.color=error?'#ba2222':'#176c3b';notice(message,error);};
+function showUploadedVideo(){const container=$('uploadedVideoPreview');container.replaceChildren();if(!record?.location_video_url)return;const h=document.createElement('strong');h.textContent='Kayıtlı video';const video=document.createElement('video');video.controls=true;video.preload='metadata';video.playsInline=true;video.src=record.location_video_url;video.style.cssText='width:100%;max-width:480px;display:block;margin-top:8px;border-radius:10px;background:#111';container.append(h,video);}
+$('uploadFile').onchange=()=>{capturedPhoto=null;$('cameraInput').value='';const file=$('uploadFile').files?.[0];$('photoSelection').textContent=file?file.name:'';$('uploadStatus').textContent=file?'Seçilen dosya: '+file.name+' ('+(file.size/1048576).toFixed(1)+' MB)':'';};
+$('uploadType').onchange=()=>{capturedPhoto=null;$('cameraInput').value='';$('uploadFile').value='';$('uploadFile').accept=$('uploadType').value==='location_video_url'?'video/mp4,.mp4':'image/jpeg,image/png,image/webp';$('takePhoto').style.display=$('uploadType').value==='location_video_url'?'none':'';$('photoSelection').textContent='';$('uploadStatus').textContent='';};
 $('uploadButton').onclick=async()=>{
- const type=$('uploadType').value,isVideo=type==='location_video_url',input=isVideo?$('uploadFile').files[0]:(capturedPhoto||$('uploadFile').files[0]),button=$('uploadButton');
- if(!record||!user)return notice('Önce işletme hesabınıza giriş yapın.',true);
- if(!input)return notice(isVideo?'Önce MP4 video seçin.':'Önce bir fotoğraf seçin.',true);
- if(type==='gallery'&&(record.gallery||[]).length>=FTM_MEDIA.galleryMax)return notice('Galeri için 15 fotoğraf sınırına ulaştınız.',true);
- if(isVideo&&(input.size>15*1024*1024||input.size===0))return notice('Video boş olmamalı ve 15 MB sınırını aşmamalıdır.',true);
- if(isVideo&&!(/\.mp4$/i.test(input.name)&&['video/mp4','application/octet-stream',''].includes(input.type)))return notice('Yalnızca MP4 formatında video yüklenebilir.',true);
- button.disabled=true;notice(isVideo?'Video yükleniyor...':'Fotoğraf optimize ediliyor...');
+ const type=$('uploadType').value,isVideo=type==='location_video_url',input=isVideo?$('uploadFile').files?.[0]:(capturedPhoto||$('uploadFile').files?.[0]),button=$('uploadButton');
+ if(!record||!user)return uploadStatus('Önce işletme hesabınıza giriş yapın.',true);
+ if(!input)return uploadStatus(isVideo?'Önce MP4 video seçin.':'Önce fotoğraf seçin.',true);
+ if(type==='gallery'&&(record.gallery||[]).length>=FTM_MEDIA.galleryMax)return uploadStatus('Galeri için 15 fotoğraf sınırına ulaştınız.',true);
+ if(isVideo&&(input.size>15*1024*1024||input.size===0))return uploadStatus('Video 15 MB sınırını aşmamalıdır ve boş olamaz.',true);
+ if(isVideo&&!/\.mp4$/i.test(input.name))return uploadStatus('Yalnızca MP4 video dosyası yükleyin.',true);
+ button.disabled=true;button.textContent='Yükleniyor...';uploadStatus(isVideo?'Video sunucuya yükleniyor, pencereyi kapatmayın...':'Fotoğraf optimize edilip yükleniyor...');
  let uploadedPath=null;
  try{
   const file=isVideo?input:await ftmOptimizeImage(input,type);
   const path=record.id+'/'+crypto.randomUUID()+(isVideo?'.mp4':'.webp');
-  const {error}=await db.storage.from('ftm-qr').upload(path,file,{upsert:false,contentType:isVideo?'video/mp4':'image/webp'});
+  const {error}=await db.storage.from('ftm-qr').upload(path,file,{upsert:false,contentType:isVideo?'video/mp4':'image/webp',cacheControl:'3600'});
   if(error)throw error;uploadedPath=path;
   const {data}=db.storage.from('ftm-qr').getPublicUrl(path);
   const update=type==='gallery'?{gallery:[...(record.gallery||[]),data.publicUrl]}:{[type]:data.publicUrl};
   const saved=await db.from('businesses').update(update).eq('id',record.id).eq('owner_id',selectedOwner()).select('id').maybeSingle();
-  if(saved.error)throw saved.error;if(!saved.data)throw Error('İşletme güncellenemedi.');
-  Object.assign(record,update);fill();drawMedia();$('uploadFile').value='';$('cameraInput').value='';capturedPhoto=null;$('photoSelection').textContent='';
-  notice(isVideo?'Video karta kaydedildi.':'Fotoğraf optimize edilip karta kaydedildi ('+Math.ceil(file.size/1024)+' KB).');
+  if(saved.error)throw saved.error;if(!saved.data)throw Error('İşletme kaydı güncellenemedi. Yetkinizi kontrol edin.');
+  Object.assign(record,update);fill();drawMedia();showUploadedVideo();$('uploadFile').value='';$('cameraInput').value='';capturedPhoto=null;$('photoSelection').textContent='';
+  uploadStatus(isVideo?'✓ Video başarıyla yüklendi ve işletme kartına kaydedildi.':'✓ Fotoğraf başarıyla yüklendi.');
  }catch(e){
   if(uploadedPath)await db.storage.from('ftm-qr').remove([uploadedPath]).catch(()=>{});
-  notice('Yükleme tamamlanamadı: '+e.message+(isVideo?' (Depolama alanının MP4 izni ve dosya boyutu ayarlarını kontrol edin.)':''),true);
- }finally{button.disabled=false}
+  uploadStatus('Yükleme başarısız: '+(e.message||String(e)),true);
+ }finally{button.disabled=false;button.textContent='Dosyayı Yükle';}
 };
 function toggleIban(){const show=$('pType').value==='iban';$('ibanBox').hidden=!show;$('recipientBox').hidden=!show}
 $('pType').onchange=toggleIban;
