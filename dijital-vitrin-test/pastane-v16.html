@@ -306,9 +306,9 @@ const cats=Array.isArray(settings.productCategories)?settings.productCategories:
 const images=settings.categoryImages||{};
 const dock=q('#menuCategoryDock .categories');if(!dock)return;
 const defaultImages={Pasta:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=350&q=80',Tatlı:'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=350&q=80',Kurabiye:'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=350&q=80',Fırın:'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=350&q=80'};
-const names={Pasta:'Pastalar',Tatlı:'Tatlılar',Kurabiye:'Unlu Mamuller',Fırın:'Fırından'};
+const names={Pasta:'Pastalar',Tatlı:'Tatlılar',Kurabiye:'Kurabiyeler',Fırın:'Fırından'};
 dock.replaceChildren();
-cats.forEach(cat=>{const button=document.createElement('button');button.type='button';button.className='category';button.dataset.category=cat;const img=document.createElement('img');img.alt='';img.loading='lazy';img.src=validImage(images[cat])||defaultImages[cat]||'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=350&q=80';button.append(img,document.createTextNode(names[cat]||cat));button.addEventListener('click',()=>selectCategory(cat,true));dock.append(button)});
+const seen=new Set();cats.forEach(cat=>{const key=String(cat||'').trim().toLocaleLowerCase('tr');if(!key||seen.has(key))return;seen.add(key);const button=document.createElement('button');button.type='button';button.className='category';button.dataset.category=cat;const img=document.createElement('img');img.alt='';img.loading='lazy';img.src=validImage(images[cat])||defaultImages[cat]||'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=350&q=80';button.append(img,document.createTextNode(names[cat]||cat));button.addEventListener('click',()=>selectCategory(cat,true));dock.append(button)});
 
 }
 syncCategories();
