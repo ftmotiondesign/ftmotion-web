@@ -199,4 +199,41 @@ function resetAdmin(){if(!confirm('Bu cihazdaki demo ürün düzenlemeleri sıf�
 function refreshProductViews(){renderCatalog();renderProducts(activeCategory);document.getElementById('featured').innerHTML=products.filter(p=>p.available!==false).slice(0,4).map(p=>'<article class="product"><button class="product-photo" onclick="openProduct('+products.indexOf(p)+')"><img loading="lazy" src="'+escapeHtml(img(p))+'" alt=""></button><div class="details"><b>'+escapeHtml(p.name)+'</b><span>'+escapeHtml(p.desc)+'</span><button onclick="openProduct('+products.indexOf(p)+')">Ürün Detayı →</button></div></article>').join('')}
 refreshProductViews();
 if(new URLSearchParams(location.search).get('view')==='admin'){setTimeout(function(){if(typeof toggleAdmin==='function')toggleAdmin()},400)}
+</script><script>
+(function(){
+'use strict';
+const KEY='ftmotion-vitrin-v16-management-test';
+let settings={};try{settings=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){}
+const q=(sel,root=document)=>root.querySelector(sel);
+const validImage=v=>/^https:\/\//i.test(v||'')?v:null;
+const setText=(sel,val)=>{const el=q(sel);if(el&&val)el.textContent=val};
+const setImage=(sel,url)=>{const el=q(sel);if(el&&validImage(url))el.src=url};
+function apply(){
+const h=settings.home||{},c=settings.catalog||{},o=settings.orders||{},co=settings.contact||{};
+setText('.header .brand',h.business||'Maison Pâtisserie');
+const brand=q('.header .brand');if(brand){const sm=document.createElement('small');sm.textContent=h.subtitle||'BUTİK PASTANE · DEMO';brand.append(sm)}
+const hero=q('#hero .heroText');
+if(hero){if(h.headline){const title=document.createElement('h1');title.textContent=h.headline;hero.insertBefore(title,hero.firstChild)}
+if(h.welcome){const p=document.createElement('p');p.textContent=h.welcome;hero.insertBefore(p,hero.querySelector('button'))}}
+[h.hero,h.hero2,h.hero3].forEach((url,i)=>setImage('#hero .slide:nth-child('+(i+1)+') img',url));
+if(c.active==='no'){const btn=q('#hero .heroText button');if(btn)btn.hidden=true;const guide=q('#menu .menu-guide-card');if(guide)guide.hidden=true}
+else{setText('#menu .menu-guide-card strong',c.title);setText('#menu .menu-guide-card em',c.description);setText('#catalogOverlay .catalog-head strong',c.title)}
+if(o.active==='no'){const nav=q('.nav [data-page="order"]');if(nav)nav.hidden=true;const form=q('#orderForm');if(form)form.hidden=true}
+setText('#order h1',o.title);setText('#order > p.hint',o.description);
+if(Array.isArray(settings.offers)){
+const target=q('#offers .feature');if(target){const visible=settings.offers.filter(x=>x.active!=='no');if(visible.length){target.replaceChildren();const wrap=document.createElement('div');visible.forEach((it,i)=>{const article=document.createElement('article');article.style.marginBottom='16px';const title=document.createElement('h3');title.textContent=it.title||'Fırsat';const desc=document.createElement('p');desc.textContent=it.description||'';article.append(title,desc);if(validImage(it.image)){const img=document.createElement('img');img.src=it.image;img.alt=it.title||'Fırsat';img.style.cssText='width:100%;border-radius:12px;max-height:240px;object-fit:cover';article.append(img)}wrap.append(article)});target.append(wrap)}else{target.textContent='Şu anda aktif fırsat bulunmuyor.'}}}
+if(co.phone||co.whatsapp||co.address||co.map||co.instagram||co.hours){
+const list=q('#contact .list');if(list){list.replaceChildren();const add=(label,value,href)=>{if(!value)return;const row=document.createElement('div');row.className='item';const content=document.createElement('div');const heading=document.createElement('h3');heading.textContent=label;const text=document.createElement('p');if(href){const a=document.createElement('a');a.href=href;a.target='_blank';a.rel='noopener noreferrer';a.textContent=value;text.append(a)}else text.textContent=value;content.append(heading,text);row.append(content);list.append(row)};
+add('Telefon',co.phone,co.phone?'tel:'+co.phone.replace(/[^+0-9]/g,''):null);
+add('WhatsApp',co.whatsapp,co.whatsapp?'https://wa.me/'+co.whatsapp.replace(/[^0-9]/g,''):null);
+add('Adres',co.address);
+add('Harita',co.map,/^https:\/\//i.test(co.map||'')?co.map:null);
+add('Instagram',co.instagram,/^https:\/\//i.test(co.instagram||'')?co.instagram:null);
+add('Çalışma Saatleri',co.hours);
+}const hint=q('#contact > p.hint');if(hint)hint.hidden=true}
+if(Array.isArray(settings.categories)){const cats=settings.categories;const buttons=document.querySelectorAll('#menu .menuCategoryDock .category');const mapping={'Pastalar':'Pasta','Tatlılar':'Tatlı','Kurabiyeler':'Kurabiye','Unlu Mamuller':'Fırın'};cats.forEach((item,i)=>{const btn=buttons[i];if(!btn)return;const img=q('img',btn);if(img&&validImage(item.image))img.src=item.image;if(item.name){const name=item.name;btn.lastChild.textContent=name;const cat=mapping[name];if(cat)btn.setAttribute('onclick',"selectCategory('"+cat+"')")}})}
+}
+apply();
+window.addEventListener('storage',e=>{if(e.key===KEY)location.reload()});
+})();
 </script></body></html>
