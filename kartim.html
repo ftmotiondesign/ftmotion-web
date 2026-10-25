@@ -656,22 +656,7 @@ const galleryResult=await db.from('businesses').select('gallery').eq('id',record
     if(!names[id])return null;
     return [...document.querySelectorAll('#work details.foldPanel')].find(d=>(d.querySelector('summary')?.textContent||'').includes(names[id]))||null;
   }
-  document.addEventListener('click',function(event){
-    const a=event.target.closest('a.ft-home-action, nav.ft-quick a');
-    if(!a)return;
-    const id=(a.getAttribute('href')||'').replace(/^#/,'');
-    if(!(id in names))return;
-    const fold=resolveFold(id);
-    const target=fold||document.getElementById(id);
-    if(!target)return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    if(fold)fold.open=true;
-    requestAnimationFrame(()=>setTimeout(()=>{
-      target.scrollIntoView({behavior:'smooth',block:'start'});
-      if(history.replaceState)history.replaceState(null,'','#'+id);
-    },100));
-  },true);
+  /* Legacy capture handler removed: it intercepted card navigation and prevented opening the selected editor. */
 })();
 </script><style id="ft-preview-back-style">
 #ftCardPreview{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;background:#0b0b0b;color:white}
