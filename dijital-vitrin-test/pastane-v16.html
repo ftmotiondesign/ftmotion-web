@@ -214,8 +214,9 @@ let activeCategory='';function selectCategory(filter,showResults=false){
  if(showResults){
    const dock=document.getElementById('menuCategoryDock');
    dock.classList.remove('compact');
-   window.scrollTo(0,0);
-   requestAnimationFrame(()=>{window.scrollTo({top:0,left:0,behavior:'instant'});if(selected){const rail=dock.querySelector('.categories');rail.scrollLeft=Math.max(0,selected.offsetLeft-rail.offsetLeft-20)}});
+   const rail=dock.querySelector('.categories');
+   if(selected&&rail)rail.scrollLeft=Math.max(0,selected.offsetLeft-rail.offsetLeft-20);
+   requestAnimationFrame(()=>window.scrollTo({top:0,left:0,behavior:'instant'}));
  }
 }
 function renderProducts(filter){document.getElementById('productList').innerHTML=products.filter(p=>p.available!==false&&(!filter||p.cat===filter)&&((p.name+' '+p.desc+' '+(p.ingredients||'')).toLocaleLowerCase('tr').includes((document.getElementById('productSearch')?.value||'').toLocaleLowerCase('tr')))).map(p=>`<article class="item"><button class="item-photo" aria-label="${p.name} detayını aç" onclick="openProduct(${products.indexOf(p)})"><img loading="lazy" src="${img(p)}" alt="${p.name}"></button><div><h3>${p.name}</h3><p>${p.desc}</p><button onclick="openProduct(${products.indexOf(p)})">Detayları Gör →</button></div></article>`).join('')||'<p class="hint">Bu aramada ürün bulunamadı.</p>'}
@@ -282,9 +283,8 @@ const dock=q('#menuCategoryDock .categories');if(!dock)return;
 const defaultImages={Pasta:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=350&q=80',Tatlı:'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=350&q=80',Kurabiye:'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=350&q=80',Fırın:'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=350&q=80'};
 const names={Pasta:'Pastalar',Tatlı:'Tatlılar',Kurabiye:'Unlu Mamuller',Fırın:'Fırından'};
 dock.replaceChildren();
-cats.forEach(cat=>{const button=document.createElement('button');button.type='button';button.className='category';button.dataset.category=cat;const img=document.createElement('img');img.alt='';img.loading='lazy';img.src=validImage(images[cat])||defaultImages[cat]||'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=350&q=80';button.append(img,document.createTextNode(names[cat]||cat));button.addEventListener('click',()=>selectCategory(cat,true));dock.append(button)});
-const oldSelect=window.selectCategory;
-window.selectCategory=function(cat){oldSelect(cat);dock.querySelectorAll('.category').forEach((button,i)=>button.classList.toggle('selected',cats[i]===cat))};
+cats.forEach(cat=>{const button=document.createElement('button');button.type='button';button.className='category';button.dataset.category=cat;const img=document.createElement('img');img.alt='';img.loading='lazy';img.src=validImage(images[cat])||defaultImages[cat]||'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=350&q=80';button.append(img,document.createTextNode(names[cat]||cat));button.setAttribute('onclick','selectCategory('+JSON.stringify(cat)+',true)');dock.append(button)});
+
 }
 syncCategories();
 apply();
