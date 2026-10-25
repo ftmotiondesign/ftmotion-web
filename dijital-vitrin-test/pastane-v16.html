@@ -119,19 +119,13 @@
 @media(min-width:650px){.menu-list-items{max-width:720px;width:100%;margin:0 auto}.menu-list-photo{width:165px;height:125px}.menu-list-banner{padding-left:max(20px,calc((100vw - 700px)/2))}}
 @media(max-width:360px){.menu-list-item{gap:9px;padding:8px}.menu-list-photo{width:104px;height:106px}.menu-list-info h3{font-size:13px}.menu-list-info p{font-size:10px}}
 </style><style>
-/* Single predictable inline category-results state. */
-#menu.category-results-mode{min-height:100dvh;padding-top:14px}
-#menu.category-results-mode>h1,
-#menu.category-results-mode>.menu-guide-card,
-#menu.category-results-mode>p.hint,
-#menu.category-results-mode>#productSearch{display:none!important}
-#menu.category-results-mode>.back{display:block;margin:0 0 12px}
-#menu.category-results-mode #menuCategoryDock{position:sticky;top:0;z-index:15;background:var(--cream);margin:0 -20px 10px;padding:10px 20px;box-shadow:0 3px 12px #00000012}
-#menu.category-results-mode #menuCategoryDock .categories{display:flex;flex-wrap:nowrap;gap:10px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
-#menu.category-results-mode #menuCategoryDock .category{flex:0 0 72px;width:72px;min-width:72px;font-size:11px}
-#menu.category-results-mode #menuCategoryDock .category img{width:48px;height:48px;max-width:48px;margin:0 auto 5px;transform:none;border-width:2px}
-#menu.category-results-mode .menuResultsHeading{margin:12px 0}
-#menu.category-results-mode #productList{display:grid;gap:12px}
+/* Keep original layout. On category tap scroll to products and pin compact category rail. */
+#menu.category-results-mode #menuCategoryDock{position:sticky!important;top:0!important;z-index:15!important;background:var(--cream)!important;padding:7px 20px!important;margin:8px -20px!important;box-shadow:0 3px 12px #0001!important}
+#menu.category-results-mode #menuCategoryDock .categories{display:flex!important;flex-wrap:nowrap!important;gap:10px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important}
+#menu.category-results-mode #menuCategoryDock .category{flex:0 0 72px!important;width:72px!important;min-width:72px!important;font-size:11px!important}
+#menu.category-results-mode #menuCategoryDock .category img{width:46px!important;height:46px!important;max-width:46px!important;margin:0 auto 4px!important;transform:none!important;transition:none!important}
+#menu.category-results-mode .menuResultsHeading{scroll-margin-top:94px!important}
+#menu.category-results-mode #productList{min-height:calc(100dvh - 180px)}
 </style><style>.detail-gallery{display:flex;gap:8px;overflow-x:auto;padding:8px 0}.detail-gallery button{border:1px solid #e2d1bd;border-radius:9px;padding:2px;background:white;flex:none}.detail-gallery img{width:66px;height:60px;object-fit:cover;border-radius:7px}.admin-toggle{position:fixed;bottom:90px;right:12px;z-index:21}.admin-toggle button{border:1px solid #d3bfa9;background:#fffaf2e8;color:#62432c;border-radius:20px;padding:8px 12px;font-size:11px;box-shadow:0 3px 12px #0002}.admin-overlay{display:none;position:fixed;inset:0;background:#0008;z-index:110;justify-content:center;align-items:center}.admin-overlay.open{display:flex}.admin-panel{background:#fffaf3;color:#392a1f;width:min(100%,560px);height:min(94dvh,900px);overflow-y:auto;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:12px}.admin-panel label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:650}.admin-panel .field{width:100%;font-weight:400}.admin-head{display:flex;justify-content:space-between;align-items:center}.admin-head button,.admin-buttons button:not(.primary){border:1px solid #cbb59e;background:white;border-radius:9px;padding:10px}.admin-check{flex-direction:row!important;align-items:center}.admin-buttons{display:flex;gap:8px;flex-wrap:wrap;padding-bottom:30px}.admin-buttons button{flex:1;min-width:110px}body.ft-customer-mode .admin-toggle,body.ft-customer-mode #adminOverlay{display:none!important}</style><style id="ft-pastane-clean-hero">#hero .heroText h1,#hero .heroText p,#hero .heroText .eyebrow{display:none!important}#hero .heroText{bottom:88px!important;text-align:center!important}#hero .heroText>button{display:inline-flex!important;align-items:center!important;justify-content:center!important;position:relative!important;z-index:4!important}/* Ana vitrin görselinde yalnızca eski konumundaki Menü Rehberi düğmesi görünür. */
 #hero .heroText{position:absolute!important;bottom:88px!important;left:24px!important;right:24px!important;display:flex!important;justify-content:center!important;align-items:center!important;pointer-events:none!important}
 #hero .heroText > :not(button){display:none!important}
@@ -216,7 +210,14 @@ let activeCategory='';function selectCategory(filter,showResults=false){
    dock.classList.remove('compact');
    const rail=dock.querySelector('.categories');
    if(selected&&rail)rail.scrollLeft=Math.max(0,selected.offsetLeft-rail.offsetLeft-20);
-   requestAnimationFrame(()=>window.scrollTo({top:0,left:0,behavior:'instant'}));
+   requestAnimationFrame(()=>{
+     requestAnimationFrame(()=>{
+       const heading=menu.querySelector('.menuResultsHeading');
+       if(!heading)return;
+       const target=window.scrollY+heading.getBoundingClientRect().top-dock.getBoundingClientRect().height-8;
+       window.scrollTo({top:Math.max(0,target),behavior:'smooth'});
+     });
+   });
  }
 }
 function renderProducts(filter){document.getElementById('productList').innerHTML=products.filter(p=>p.available!==false&&(!filter||p.cat===filter)&&((p.name+' '+p.desc+' '+(p.ingredients||'')).toLocaleLowerCase('tr').includes((document.getElementById('productSearch')?.value||'').toLocaleLowerCase('tr')))).map(p=>`<article class="item"><button class="item-photo" aria-label="${p.name} detayını aç" onclick="openProduct(${products.indexOf(p)})"><img loading="lazy" src="${img(p)}" alt="${p.name}"></button><div><h3>${p.name}</h3><p>${p.desc}</p><button onclick="openProduct(${products.indexOf(p)})">Detayları Gör →</button></div></article>`).join('')||'<p class="hint">Bu aramada ürün bulunamadı.</p>'}
