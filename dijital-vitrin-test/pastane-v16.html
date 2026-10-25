@@ -147,9 +147,13 @@ let hotspots=structuredClone(defaultHotspots),editPage=-1;
 try{const stored=JSON.parse(localStorage.getItem(hotspotStorageKey));if(stored&&typeof stored==='object')hotspots=stored;}catch(e){}
 function saveHotspots(){try{localStorage.setItem(hotspotStorageKey,JSON.stringify(hotspots))}catch(e){}}
 function renderCatalog(){
- const categories=catalogData.slice(1);
+ const config=(()=>{try{return JSON.parse(localStorage.getItem('ftmotion-vitrin-v16-management-test'))||{}}catch(e){return {}}})();
+ const names=Array.isArray(config.productCategories)&&config.productCategories.length?config.productCategories:['Pasta','Tatlı','Kurabiye','Fırın'];
+ const defaultNames={Pasta:'Pastalar',Tatlı:'Tatlılar',Kurabiye:'Kurabiyeler',Fırın:'Fırından'};
+ const defaultImages={Pasta:'photo-1535141192574-5d4897c12636',Tatlı:'photo-1488477181946-6428a0291777',Kurabiye:'photo-1499636136210-6f4ee915583e',Fırın:'photo-1509440159596-0249088772ff'};
+ const categories=names.filter(name=>products.some(p=>p.cat===name&&p.available!==false)).map(name=>({title:defaultNames[name]||name,category:name,photo:defaultImages[name]||'photo-1509440159596-0249088772ff',image:(config.categoryImages||{})[name]}));
  catalogPages.innerHTML=categories.map((p,i)=>`<section class="catalog-page menu-list-page" aria-label="${p.title}">
-  <div class="menu-list-banner" style="background-image:linear-gradient(90deg,rgba(30,19,13,.77),rgba(30,19,13,.05)),url('https://images.unsplash.com/${p.photo}?w=1000&q=80')"><span>${String(i+1).padStart(2,'0')} / MENÜ</span><h2>${p.title}</h2></div>
+  <div class="menu-list-banner" style="background-image:linear-gradient(90deg,rgba(30,19,13,.77),rgba(30,19,13,.05)),url('${p.image&&/^(https:\/\/|data:image\/)/.test(p.image)?p.image:'https://images.unsplash.com/'+p.photo+'?w=1000&q=80'}')"><span>${String(i+1).padStart(2,'0')} / MENÜ</span><h2>${p.title}</h2></div>
   <div class="menu-list-items">${products.map((pr,j)=>({pr,j})).filter(o=>o.pr.cat===p.category&&o.pr.available!==false).map(({pr,j})=>`<article class="menu-list-item"><button class="menu-list-photo" onclick="openProduct(${j})" aria-label="${pr.name} detaylarını aç"><img loading="lazy" src="${img(pr)}" alt="${pr.name}"></button><div class="menu-list-info"><h3>${escapeHtml(pr.name)}</h3><p>${escapeHtml(pr.ingredients||pr.desc)}</p><strong>${pr.price?escapeHtml(pr.price):'Fiyat sorunuz'}</strong></div><button class="menu-list-plus" onclick="openProduct(${j})" aria-label="${pr.name} ürün detayları">+</button></article>`).join('')}</div>
  </section>`).join('');
 }
