@@ -203,7 +203,7 @@ body.ft-inline-editor #ftCardActions{display:block!important;position:sticky;top
 body.ft-inline-editor #ftCardActions .ft-home-grid{display:flex!important;overflow-x:auto;gap:8px}
 body.ft-inline-editor #ftCardActions .ft-home-action{display:flex!important;flex:0 0 auto;min-height:0!important;padding:8px 10px!important;white-space:nowrap}
 body.ft-inline-editor #ftCardActions .ft-home-action small{display:none!important}
-body.ft-inline-editor.ft-nav-compact #ftCardActions h3{display:none!important}
+body.ft-inline-editor.ft-nav-compact #ftCardActions{position:fixed!important;top:0;left:0;right:0;z-index:9999;border-radius:0 0 12px 12px;margin:0 auto;max-width:960px;padding:6px!important;box-sizing:border-box}body.ft-inline-editor.ft-nav-compact #work>.ft-inline-target{scroll-margin-top:110px}body.ft-inline-editor.ft-nav-compact #ftCardActions h3{display:none!important}body.ft-inline-editor #ftCardActions .ft-back-home{display:inline-flex;align-items:center;justify-content:center;background:#ff7900;color:#171717;border:0;border-radius:9px;padding:9px 12px;font-size:13px;font-weight:750;cursor:pointer;margin:0 0 7px}body.ft-inline-editor.ft-nav-compact #ftCardActions .ft-back-home{margin:0 7px 0 0;padding:6px 10px}body.ft-inline-editor.ft-nav-compact #ftCardActions .ft-menu-top{display:flex;align-items:center;gap:6px}body.ft-inline-editor.ft-nav-compact #ftCardActions .ft-home-grid{flex:1;min-width:0}
 body.ft-inline-editor.ft-nav-compact #ftCardActions .ft-home-action{padding:5px 8px!important}
 body.ft-inline-editor #work>.ft-inline-target{scroll-margin-top:100px}
 </style><script>(function(){
@@ -227,6 +227,8 @@ return true;
 }
 function setup(){
 document.body.classList.add('ft-simple-home');
+var menu=document.getElementById('ftCardActions');if(menu){var bar=document.createElement('div');bar.className='ft-menu-top';var back=document.createElement('button');back.type='button';back.className='ft-back-home';back.textContent='← Ana Sayfa';back.onclick=function(){document.body.classList.remove('ft-inline-editor','ft-nav-compact');document.body.classList.add('ft-simple-home');var work=document.getElementById('work');if(work)Array.from(work.children).forEach(function(el){el.classList.remove('ft-inline-target')});menu.hidden=true;var choices=document.getElementById('ftMainChoices');if(choices)choices.scrollIntoView({behavior:'smooth',block:'start'});};bar.appendChild(back);var grid=menu.querySelector('.ft-home-grid');if(grid){menu.insertBefore(bar,grid);bar.appendChild(grid)}else menu.insertBefore(bar,menu.firstChild);}
+
 document.querySelectorAll('#ftCardActions a[href^="#"]').forEach(function(a){
 var id=a.getAttribute('href').slice(1);
 if(!ids.includes(id))return;
