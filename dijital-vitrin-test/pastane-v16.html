@@ -175,7 +175,7 @@ try{const stored=JSON.parse(localStorage.getItem(hotspotStorageKey));if(stored&&
 function saveHotspots(){try{localStorage.setItem(hotspotStorageKey,JSON.stringify(hotspots))}catch(e){}}
 function renderCatalog(){
  const config=(()=>{try{return JSON.parse(localStorage.getItem('ftmotion-vitrin-v16-management-test'))||{}}catch(e){return {}}})();
- const names=Array.isArray(config.productCategories)&&config.productCategories.length?config.productCategories:['Pasta','Tatlı','Kurabiye','Fırın'];
+ const names=Array.isArray(config.productCategories)?config.productCategories:['Pasta','Tatlı','Kurabiye','Fırın'];
  const defaultNames={Pasta:'Pastalar',Tatlı:'Tatlılar',Kurabiye:'Kurabiyeler',Fırın:'Fırından'};
  const defaultImages={Pasta:'photo-1535141192574-5d4897c12636',Tatlı:'photo-1488477181946-6428a0291777',Kurabiye:'photo-1499636136210-6f4ee915583e',Fırın:'photo-1509440159596-0249088772ff'};
  const categories=names.filter(name=>products.some(p=>p.cat===name&&p.available!==false)).map(name=>({title:defaultNames[name]||name,category:name,photo:defaultImages[name]||'photo-1509440159596-0249088772ff',image:(config.categoryImages||{})[name]}));
@@ -302,7 +302,7 @@ add('Çalışma Saatleri',co.hours);
 if(Array.isArray(settings.categories)){const cats=settings.categories;const buttons=document.querySelectorAll('#menu .menuCategoryDock .category');const mapping={'Pastalar':'Pasta','Tatlılar':'Tatlı','Kurabiyeler':'Kurabiye','Unlu Mamuller':'Fırın'};cats.forEach((item,i)=>{const btn=buttons[i];if(!btn)return;const img=q('img',btn);if(img&&validImage(item.image))img.src=item.image;if(item.name){const name=item.name;btn.lastChild.textContent=name;const cat=mapping[name];if(cat)btn.setAttribute('onclick',"selectCategory('"+cat+"')")}})}
 }
 function syncCategories(){
-const cats=Array.isArray(settings.productCategories)&&settings.productCategories.length?settings.productCategories:['Pasta','Tatlı','Kurabiye','Fırın'];
+const cats=Array.isArray(settings.productCategories)?settings.productCategories:['Pasta','Tatlı','Kurabiye','Fırın'];
 const images=settings.categoryImages||{};
 const dock=q('#menuCategoryDock .categories');if(!dock)return;
 const defaultImages={Pasta:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=350&q=80',Tatlı:'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=350&q=80',Kurabiye:'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=350&q=80',Fırın:'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=350&q=80'};
