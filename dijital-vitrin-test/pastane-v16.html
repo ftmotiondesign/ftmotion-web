@@ -299,7 +299,7 @@ add('Harita',co.map,/^https:\/\//i.test(co.map||'')?co.map:null);
 add('Instagram',co.instagram,/^https:\/\//i.test(co.instagram||'')?co.instagram:null);
 add('Çalışma Saatleri',co.hours);
 }const hint=q('#contact > p.hint');if(hint)hint.hidden=true}
-if(Array.isArray(settings.categories)){const cats=settings.categories;const buttons=document.querySelectorAll('#menu .menuCategoryDock .category');const mapping={'Pastalar':'Pasta','Tatlılar':'Tatlı','Kurabiyeler':'Kurabiye','Unlu Mamuller':'Fırın'};cats.forEach((item,i)=>{const btn=buttons[i];if(!btn)return;const img=q('img',btn);if(img&&validImage(item.image))img.src=item.image;if(item.name){const name=item.name;btn.lastChild.textContent=name;const cat=mapping[name];if(cat)btn.setAttribute('onclick',"selectCategory('"+cat+"')")}})}
+// Legacy settings.categories is intentionally ignored: only productCategories controls the visible category rail.
 }
 function syncCategories(){
 const cats=Array.isArray(settings.productCategories)?settings.productCategories:['Pasta','Tatlı','Kurabiye','Fırın'];
@@ -311,8 +311,8 @@ dock.replaceChildren();
 const seen=new Set();cats.forEach(cat=>{const key=String(cat||'').trim().toLocaleLowerCase('tr');if(!key||seen.has(key))return;seen.add(key);const button=document.createElement('button');button.type='button';button.className='category';button.dataset.category=cat;const img=document.createElement('img');img.alt='';img.loading='lazy';img.src=validImage(images[cat])||defaultImages[cat]||'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=350&q=80';button.append(img,document.createTextNode(names[cat]||cat));button.addEventListener('click',()=>selectCategory(cat,true));dock.append(button)});
 
 }
-syncCategories();
 apply();
+syncCategories();
 window.addEventListener('storage',e=>{if(e.key===KEY)location.reload()});
 })();
 </script></body></html>
