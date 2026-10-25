@@ -194,6 +194,16 @@ body.ft-simple-home #work>.ft-mobile-home{display:block!important}
 body.ft-simple-home #pwaInstallBox{display:block!important;margin:18px 0!important;visibility:visible!important}
 body.ft-inline-editor #pwaInstallBox{display:none!important}
 body.ft-simple-home #ftWebsiteActions[hidden],body.ft-simple-home #ftCardActions[hidden]{display:none!important}
+body.ft-simple-home.ft-card-category-home #ftMainChoices,body.ft-simple-home.ft-card-category-home .ft-mobile-home>h2,body.ft-simple-home.ft-card-category-home .ft-mobile-home>p{display:none!important}
+body.ft-simple-home.ft-card-category-home #ftCardActions{display:block!important;margin:10px 0 16px!important}
+body.ft-simple-home.ft-card-category-home #ftCardActions>.ft-home-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;overflow:visible!important}
+body.ft-simple-home.ft-card-category-home #ftCardActions .ft-home-action{min-width:0!important;min-height:148px!important;padding:18px 15px!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;white-space:normal!important}
+body.ft-simple-home.ft-card-category-home #ftCardActions .ft-home-action span{font-size:28px!important}
+body.ft-simple-home.ft-card-category-home #ftCardActions .ft-home-action strong{font-size:17px!important}
+body.ft-simple-home.ft-card-category-home #ftCardActions .ft-home-action small{display:block!important;font-size:13px!important}
+body.ft-simple-home.ft-card-category-home #ftCategoryBack{display:inline-flex!important;margin-bottom:12px!important}
+#ftCategoryBack{display:none;background:#f2f3f5;color:#222;border:1px solid #d4d7dd;border-radius:10px;padding:10px 15px;font-weight:750}
+
 body.ft-simple-home .ft-home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 body.ft-inline-editor #work>.ft-mobile-home{display:block!important}
 body.ft-inline-editor #work> :not(.ft-mobile-home):not(.ft-inline-target){display:none!important}
@@ -256,7 +266,7 @@ return true;
 }
 function setup(){
 document.body.classList.add('ft-simple-home');
-var installBox=document.getElementById('pwaInstallBox');var homePanel=document.querySelector('#work>.ft-mobile-home');if(installBox&&homePanel){homePanel.appendChild(installBox);installBox.hidden=false;installBox.style.setProperty('display','block','important');}var menu=document.getElementById('ftCardActions');if(menu){var bar=document.createElement('div');bar.className='ft-menu-top';var back=document.createElement('button');back.type='button';back.className='ft-back-home';back.textContent='← Ana Sayfa';back.onclick=function(){document.body.classList.remove('ft-inline-editor','ft-nav-compact');document.body.classList.add('ft-simple-home');var work=document.getElementById('work');if(work)Array.from(work.children).forEach(function(el){el.classList.remove('ft-inline-target')});menu.hidden=true;var choices=document.getElementById('ftMainChoices');if(choices)choices.scrollIntoView({behavior:'smooth',block:'start'});};bar.appendChild(back);var grid=menu.querySelector('.ft-home-grid');if(grid){menu.insertBefore(bar,grid);bar.appendChild(grid)}else menu.insertBefore(bar,menu.firstChild);}
+var category=document.getElementById('ftCardActions');if(category&&!document.getElementById('ftCategoryBack')){var categoryBack=document.createElement('button');categoryBack.type='button';categoryBack.id='ftCategoryBack';categoryBack.textContent='← Yönetim Ana Sayfası';categoryBack.onclick=function(){document.body.classList.remove('ft-card-category-home');category.hidden=true;var main=document.getElementById('ftMainChoices');if(main)main.scrollIntoView({behavior:'smooth',block:'start'});};category.insertBefore(categoryBack,category.firstChild);}var installBox=document.getElementById('pwaInstallBox');var homePanel=document.querySelector('#work>.ft-mobile-home');if(installBox&&homePanel){homePanel.appendChild(installBox);installBox.hidden=false;installBox.style.setProperty('display','block','important');}var menu=document.getElementById('ftCardActions');if(menu){var bar=document.createElement('div');bar.className='ft-menu-top';var back=document.createElement('button');back.type='button';back.className='ft-back-home';back.textContent='← Ana Sayfa';back.onclick=function(){document.body.classList.remove('ft-inline-editor','ft-nav-compact');document.body.classList.add('ft-simple-home');var work=document.getElementById('work');if(work)Array.from(work.children).forEach(function(el){el.classList.remove('ft-inline-target')});menu.hidden=true;var choices=document.getElementById('ftMainChoices');if(choices)choices.scrollIntoView({behavior:'smooth',block:'start'});};bar.appendChild(back);var grid=menu.querySelector('.ft-home-grid');if(grid){menu.insertBefore(bar,grid);bar.appendChild(grid)}else menu.insertBefore(bar,menu.firstChild);}
 
 document.querySelectorAll('#ftCardActions a[href^="#"]').forEach(function(a){
 var id=a.getAttribute('href').slice(1);
