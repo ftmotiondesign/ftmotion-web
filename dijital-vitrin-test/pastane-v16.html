@@ -145,6 +145,9 @@
 #menu #productList .item>div>button{width:auto;min-height:36px;margin:0;padding:8px 12px;font-weight:700}
 #menu #productList>.hint{background:white;padding:18px;border-radius:14px;border:1px solid #eee5da}
 @media(max-width:370px){#menu #productList .item{gap:10px;padding:9px}#menu #productList .item-photo{flex-basis:82px;width:82px;height:82px}#menu.category-results-mode #menuCategoryDock .category{flex-basis:68px;width:68px;min-width:68px}}
+/* Keep enough document scroll range even when a category has only one product.
+   The spacer is outside the product grid, so cards never stretch. */
+#menu.category-results-mode::after{content:"";display:block;height:max(0px,calc(100dvh - 175px));pointer-events:none}
 /* Final mobile product layout. Override earlier !important card rules. */
 #menu.category-results-mode #menuCategoryDock{margin-bottom:12px!important}
 #menu.category-results-mode #menuCategoryDock .category{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;min-height:94px!important;height:94px!important;line-height:1.25!important;overflow-wrap:anywhere}
