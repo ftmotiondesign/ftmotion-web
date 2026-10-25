@@ -217,7 +217,7 @@ body.ft-inline-editor #ftCardActions .ft-home-action{display:flex!important;flex
 body.ft-inline-editor #ftCardActions .ft-home-action span{font-size:16px!important}
 body.ft-inline-editor #ftCardActions .ft-home-action strong{font-size:12px!important}
 body.ft-inline-editor #ftCardActions .ft-home-action small{display:none!important}
-body.ft-inline-editor #work>.ft-inline-target{scroll-margin-top:160px!important}
+body.ft-inline-editor #work>.ft-inline-target{scroll-margin-top:175px!important}
 @media(max-width:600px){body.ft-inline-editor #ftCardActions{top:calc(env(safe-area-inset-top, 0px) + 58px)!important;left:5px!important;right:5px!important}body.ft-inline-editor #ftCardActions .ft-back-home{font-size:12px!important;padding:8px!important}}
 </style><script>(function(){
 var ids=['profile','pwa-media','pwa-links','pwa-pages','pwa-top','qr-section'];
@@ -235,7 +235,7 @@ direct.querySelectorAll('details.foldPanel').forEach(function(d){d.open=true});
 document.body.classList.remove('ft-simple-home','ft-card-edit-page','ft-card-frame-open');
 document.body.classList.add('ft-inline-editor');
 var menu=document.getElementById('ftCardActions');if(menu)menu.hidden=false;
-setTimeout(function(){direct.scrollIntoView({behavior:'smooth',block:'start'})},70);
+function scrollToEditor(){var toolbar=document.getElementById('ftCardActions');var reserved=toolbar?toolbar.getBoundingClientRect().bottom+14:140;var y=Math.max(0,window.scrollY+direct.getBoundingClientRect().top-reserved);window.scrollTo({top:y,behavior:'smooth'});}requestAnimationFrame(function(){requestAnimationFrame(scrollToEditor)});setTimeout(scrollToEditor,280);
 return true;
 }
 function setup(){
