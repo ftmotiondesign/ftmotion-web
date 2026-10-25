@@ -120,22 +120,31 @@
 @media(max-width:360px){.menu-list-item{gap:9px;padding:8px}.menu-list-photo{width:104px;height:106px}.menu-list-info h3{font-size:13px}.menu-list-info p{font-size:10px}}
 </style><style>
 /* Single-page product browsing: compact sticky categories with stable heights. */
-#menu.category-results-mode #menuCategoryDock{position:sticky!important;top:0!important;z-index:15!important;background:var(--cream)!important;padding:8px 20px!important;margin:8px -20px!important;box-shadow:0 3px 12px #0001!important}
-#menu.category-results-mode #menuCategoryDock .categories{display:flex!important;flex-wrap:nowrap!important;gap:10px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important}
-#menu.category-results-mode #menuCategoryDock .category{flex:0 0 74px!important;width:74px!important;min-width:74px!important;font-size:11px!important;line-height:1.25!important}
-#menu.category-results-mode #menuCategoryDock .category img{width:48px!important;height:48px!important;max-width:48px!important;margin:0 auto 5px!important;transform:none!important;transition:none!important;border-width:2px!important}
-#menu.category-results-mode #menuCategoryDock .category.selected img{border-color:var(--gold)!important;box-shadow:0 0 0 2px #a6794933!important}
-#menu.category-results-mode .menuResultsHeading{scroll-margin-top:105px!important}
-/* Product rows must never stretch to fill the viewport: this caused giant blank cards. */
-#menu #productList{min-height:0!important;align-content:start!important;grid-auto-rows:max-content!important}
-#menu #productList .item{min-height:0!important;height:auto!important;align-self:start!important;align-items:center!important;padding:10px!important}
-#menu #productList .item>div{min-width:0!important}
-#menu #productList .item-photo{flex:0 0 92px!important;width:92px!important;height:90px!important}
-#menu #productList .item-photo img{width:92px!important;height:90px!important;object-fit:cover!important}
-#menu.category-results-mode #menuCategoryDock{scroll-margin-top:0}
-#menu.category-results-mode .menuResultsHeading{margin-top:10px!important;margin-bottom:10px!important}
-#menu.category-results-mode #menuCategoryDock .category{cursor:pointer;touch-action:manipulation}
+/* Polished, single-source product/category layout (mobile-first). */
+#menu{overflow:visible}
+#menu #menuCategoryDock{background:var(--cream);border-bottom:1px solid #e8dfd4}
+#menu #menuCategoryDock .category{cursor:pointer;touch-action:manipulation;min-width:0}
+#menu #menuCategoryDock .category:focus-visible{outline:2px solid #a67949;outline-offset:4px;border-radius:12px}
+#menu #menuCategoryDock .category.selected img{border-color:#a67949;box-shadow:0 0 0 2px #a6794933}
+#menu.category-results-mode #menuCategoryDock{position:sticky;top:0;z-index:15;padding:9px 20px 10px;margin:8px -20px 12px;box-shadow:0 4px 14px #30251f12}
+#menu.category-results-mode #menuCategoryDock .categories{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain}
+#menu.category-results-mode #menuCategoryDock .categories::-webkit-scrollbar{display:none}
+#menu.category-results-mode #menuCategoryDock .category{flex:0 0 76px;width:76px;min-width:76px;font-size:11px;line-height:1.3;text-align:center}
+#menu.category-results-mode #menuCategoryDock .category img{display:block;width:48px;height:48px;max-width:48px;aspect-ratio:1;object-fit:cover;transform:none;margin:0 auto 5px;border-width:2px;transition:none}
 #menu.category-results-mode #menuCategoryDock .category.selected{color:#815026;font-weight:800}
+#menu .menuResultsHeading{align-items:center;gap:12px;margin:16px 0 12px}
+#menu .menuResultsHeading h2{font-size:23px;line-height:1.2;overflow-wrap:anywhere}
+#menu .menuResultsHeading .link{white-space:nowrap;min-height:36px;padding:7px 0}
+#menu #productList{display:grid;grid-template-columns:minmax(0,1fr);grid-auto-rows:max-content;align-content:start;gap:12px;min-height:0!important;padding-bottom:12px}
+#menu #productList .item{display:flex;align-items:center;gap:14px;padding:12px;min-height:0;height:auto;align-self:start;border:1px solid #eee5da;border-radius:16px;box-shadow:0 3px 12px #33251b09}
+#menu #productList .item>div{min-width:0;flex:1}
+#menu #productList .item-photo{display:block;flex:0 0 94px;width:94px;height:94px;padding:0;overflow:hidden;border-radius:12px;background:#f1e7da}
+#menu #productList .item-photo img{display:block;width:100%;height:100%;object-fit:cover}
+#menu #productList .item h3{font-size:15px;line-height:1.35;margin:0 0 5px}
+#menu #productList .item p{font-size:12px;line-height:1.45;margin:0 0 9px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#menu #productList .item>div>button{width:auto;min-height:36px;margin:0;padding:8px 12px;font-weight:700}
+#menu #productList>.hint{background:white;padding:18px;border-radius:14px;border:1px solid #eee5da}
+@media(max-width:370px){#menu #productList .item{gap:10px;padding:9px}#menu #productList .item-photo{flex-basis:82px;width:82px;height:82px}#menu.category-results-mode #menuCategoryDock .category{flex-basis:68px;width:68px;min-width:68px}}
 </style><style>.detail-gallery{display:flex;gap:8px;overflow-x:auto;padding:8px 0}.detail-gallery button{border:1px solid #e2d1bd;border-radius:9px;padding:2px;background:white;flex:none}.detail-gallery img{width:66px;height:60px;object-fit:cover;border-radius:7px}.admin-toggle{position:fixed;bottom:90px;right:12px;z-index:21}.admin-toggle button{border:1px solid #d3bfa9;background:#fffaf2e8;color:#62432c;border-radius:20px;padding:8px 12px;font-size:11px;box-shadow:0 3px 12px #0002}.admin-overlay{display:none;position:fixed;inset:0;background:#0008;z-index:110;justify-content:center;align-items:center}.admin-overlay.open{display:flex}.admin-panel{background:#fffaf3;color:#392a1f;width:min(100%,560px);height:min(94dvh,900px);overflow-y:auto;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:12px}.admin-panel label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:650}.admin-panel .field{width:100%;font-weight:400}.admin-head{display:flex;justify-content:space-between;align-items:center}.admin-head button,.admin-buttons button:not(.primary){border:1px solid #cbb59e;background:white;border-radius:9px;padding:10px}.admin-check{flex-direction:row!important;align-items:center}.admin-buttons{display:flex;gap:8px;flex-wrap:wrap;padding-bottom:30px}.admin-buttons button{flex:1;min-width:110px}body.ft-customer-mode .admin-toggle,body.ft-customer-mode #adminOverlay{display:none!important}</style><style id="ft-pastane-clean-hero">#hero .heroText h1,#hero .heroText p,#hero .heroText .eyebrow{display:none!important}#hero .heroText{bottom:88px!important;text-align:center!important}#hero .heroText>button{display:inline-flex!important;align-items:center!important;justify-content:center!important;position:relative!important;z-index:4!important}/* Ana vitrin görselinde yalnızca eski konumundaki Menü Rehberi düğmesi görünür. */
 #hero .heroText{position:absolute!important;bottom:88px!important;left:24px!important;right:24px!important;display:flex!important;justify-content:center!important;align-items:center!important;pointer-events:none!important}
 #hero .heroText > :not(button){display:none!important}
