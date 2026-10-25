@@ -3,7 +3,7 @@
  .product-head{justify-content:space-between;gap:10px}.product-expand{border:0;background:transparent;padding:8px 0;display:flex;gap:9px;align-items:center;text-align:left;flex:1;min-width:0;cursor:pointer;font-size:15px}.product-expand strong{overflow-wrap:anywhere}.product-expand[aria-expanded=true] .arrow{transform:rotate(90deg)}.arrow{transition:transform .15s}.featured-head{margin:0;white-space:nowrap;background:#fff5e8;padding:8px;border-radius:10px}.product-details[hidden]{display:none!important}.product-details{border-top:1px solid #eee2d6;margin-top:12px;padding-top:12px} .dashboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:16px 0 22px}.dashboard-tile{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:9px;min-height:150px;text-align:left;padding:20px;border:1px solid #e6d7c7;border-radius:19px;background:#fff;box-shadow:0 5px 18px #33251b0b;cursor:pointer;color:#30251f;transition:transform .15s,box-shadow .15s}.dashboard-tile:active{transform:scale(.98)}.dashboard-tile:focus-visible{outline:3px solid #a66c3d;outline-offset:3px}.dashboard-tile .tile-icon{display:grid;place-items:center;width:46px;height:46px;border-radius:13px;background:#f4e9dc;font-size:24px}.dashboard-tile strong{font-size:19px;line-height:1.2}.dashboard-tile small{font-size:12px;color:#77695d;line-height:1.5}.dashboard-title{margin:12px 0 4px}.dashboard-subtitle{margin:0 0 10px}.dashboard-return{margin:0 0 14px}.dashboard-return button{background:#fff;border:1px solid #d7c7b7;padding:10px 14px;border-radius:11px;font-weight:700;color:#4b3527;cursor:pointer}.tabs{display:none!important}@media(max-width:540px){.dashboard-grid{gap:10px}.dashboard-tile{min-height:146px;padding:15px;border-radius:16px}.dashboard-tile strong{font-size:16px}.dashboard-tile .tile-icon{width:40px;height:40px;font-size:22px}}@media(max-width:360px){.dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-tile{min-height:140px;padding:12px}.dashboard-tile strong{font-size:14px}.dashboard-tile small{font-size:11px}}
 </style></head><body>
 <header><div class="top"><strong>🍰 Pastane V16 · Yönetim</strong><div class="row"><a class="btn" href="../kartim.html">← Yönetim Ana Sayfası</a><a class="primary btn" href="./pastane-v16.html?view=customer" target="_blank" rel="noopener">👁 Müşteri Görünümü</a></div></div><nav class="tabs" id="tabs"></nav></header>
-<main><div class="panel" id="cloudPanel"><h2>☁️ Merkezi Vitrin Bağlantısı</h2><p id="cloudStatus">Bağlantı kontrol ediliyor…</p><div class="row"><button type="button" class="btn primary" id="cloudSave" disabled>Mevcut Verileri Buluta Kaydet</button><button type="button" class="btn" id="cloudLoad" disabled>Buluttaki Verileri Yükle</button></div><p class="muted">İlk kurulum test amaçlıdır. İşletme kartına bağlı hesabınızla giriş yapmanız gerekir. Kaydetme işlemi mevcut cihazdaki verilerin bir kopyasını oluşturur; müşteri sitesinin görünümü değişmez.</p></div><div class="dashboard-return" id="dashboardReturn" hidden><button type="button" data-dashboard-home>← Yönetim Ana Sayfası</button></div><div class="panel" id="sectionIntro"><h1 id="heading">Ana Sayfa</h1><p id="intro"></p><div class="notice">Test sürümü: Değişiklikler yalnızca bu tarayıcıda saklanır. Görseller sıkıştırılarak kaydedilir. Video dosyaları için küçük dosya kullanın; kalıcı çok cihazlı yayın için sunucu depolaması gereklidir.</div></div><div id="content"></div></main><div class="status" id="status" role="status"></div>
+<main><div class="panel" id="cloudPanel"><h2>☁️ FTMotion Demo Pastane · Bulut Yedeği</h2><p id="cloudStatus">Bağlantı kontrol ediliyor…</p><div class="row"><button type="button" class="btn primary" id="cloudSave" disabled>Mevcut Verileri Buluta Kaydet</button><button type="button" class="btn" id="cloudLoad" disabled>Buluttaki Verileri Yükle</button></div><p class="muted">SİSTEM İSG ve diğer işletmeler etkilenmez. İlk kurulum test amaçlıdır. FTMotion hesabınızla giriş yapmanız gerekir. Gerçek işletme kartlarından ayrıdır. Kaydetme işlemi mevcut cihazdaki verilerin bir kopyasını oluşturur; müşteri sitesinin görünümü değişmez.</p></div><div class="dashboard-return" id="dashboardReturn" hidden><button type="button" data-dashboard-home>← Yönetim Ana Sayfası</button></div><div class="panel" id="sectionIntro"><h1 id="heading">Ana Sayfa</h1><p id="intro"></p><div class="notice">Test sürümü: Değişiklikler yalnızca bu tarayıcıda saklanır. Görseller sıkıştırılarak kaydedilir. Video dosyaları için küçük dosya kullanın; kalıcı çok cihazlı yayın için sunucu depolaması gereklidir.</div></div><div id="content"></div></main><div class="status" id="status" role="status"></div>
 <script>
 const SKEY='ftmotion-vitrin-v16-management-test',PKEY='ftmotion-pastane-v16-data';
 const defs=[['home','Ana Sayfa','Kapak görselleri ve karşılama alanı'],['categories','Kategoriler','Kategori ekle, görsel değiştir, düzenle ve sil'],['products','Ürünlerimiz','Ürün ekleme, düzenleme ve vitrine çıkarma'],['catalog','Menü Rehberi','Ürün detayları, fiyatlar ve menü ayarları'],['offers','Fırsatlar','Görsel veya video içeren kampanyalar'],['contact','İletişim','Telefon, adres ve çalışma saatleri']];
@@ -55,12 +55,12 @@ try{
  db=await client();
  const user=await currentUser(db);
  if(!user)throw Error('Oturum bulunamadı. Önce FTMotion işletme kartı hesabınıza giriş yapın.');
- const q=await db.from('businesses').select('id,name').eq('owner_id',user.id).order('created_at',{ascending:true}).limit(2);
+ const q=await db.from('digital_vitrin_sandboxes').select('id,label,updated_at').eq('owner_id',user.id).limit(1);
  if(q.error)throw q.error;
- if(!q.data?.length)throw Error('Hesabınıza bağlı işletme bulunamadı.');
- if(q.data.length!==1)throw Error('Hesabınızda birden fazla işletme var. Yanlış vitrini değiştirmemek için işletme seçimi tamamlanmalı.');
- business=q.data[0];
- const found=await db.from('digital_vitrin_sites').select('id,business_id,settings,products,published,updated_at').eq('business_id',business.id).maybeSingle();
+ 
+ 
+ business={id:user.id,name:'FTMotion Demo Pastane'};
+ const found=await db.from('digital_vitrin_sandboxes').select('id,settings,products,updated_at').eq('owner_id',user.id).maybeSingle();
  if(found.error)throw found.error;
  site=found.data;
  status.textContent=business.name+' · '+(site?'Bulut kaydı mevcut ('+new Date(site.updated_at).toLocaleString('tr-TR')+').':'Henüz bulut kaydı yok. Yerel verileri güvenle yedekleyebilirsiniz.');
@@ -74,9 +74,9 @@ save.addEventListener('click',async()=>{
  const settings=JSON.parse(localStorage.getItem(SKEY)||'{}');
  const data=JSON.parse(localStorage.getItem(PKEY)||'{}');
  const products=Array.isArray(data.products)?data.products:[];
- const payload={business_id:business.id,settings:{...settings,_vitrinPhone:data.phone||''},products,updated_at:new Date().toISOString(),published:false};
- if(site)delete payload.published;
- const res=site?await db.from('digital_vitrin_sites').update(payload).eq('id',site.id).select('id,updated_at').single():await db.from('digital_vitrin_sites').insert(payload).select('id,updated_at').single();
+ const payload={owner_id:business.id,label:'FTMotion Demo Pastane',settings:{...settings,_vitrinPhone:data.phone||''},products,updated_at:new Date().toISOString()};
+ 
+ const res=site?await db.from('digital_vitrin_sandboxes').update(payload).eq('id',site.id).select('id,updated_at').single():await db.from('digital_vitrin_sandboxes').insert(payload).select('id,updated_at').single();
  if(res.error)throw res.error;
  site={...payload,...res.data};load.disabled=false;
  status.textContent='Bulut yedeği kaydedildi: '+new Date(res.data.updated_at).toLocaleString('tr-TR')+'. Canlı müşteri sitesi değişmedi.';
@@ -87,7 +87,7 @@ load.addEventListener('click',async()=>{
  if(!confirm('Bulut yedeği bu cihazdaki vitrin ayarlarının ve ürünlerin üzerine yazılsın mı?'))return;
  load.disabled=true;
  try{
- const r=await db.from('digital_vitrin_sites').select('settings,products').eq('business_id',business.id).single();
+ const r=await db.from('digital_vitrin_sandboxes').select('settings,products').eq('owner_id',business.id).single();
  if(r.error)throw r.error;
  const settings={...(r.data.settings||{})};
  const phone=settings._vitrinPhone||'';delete settings._vitrinPhone;
