@@ -206,6 +206,19 @@ body.ft-inline-editor #ftCardActions .ft-home-action small{display:none!importan
 body.ft-inline-editor.ft-nav-compact #ftCardActions{position:fixed!important;top:0;left:0;right:0;z-index:9999;border-radius:0 0 12px 12px;margin:0 auto;max-width:960px;padding:6px!important;box-sizing:border-box}body.ft-inline-editor.ft-nav-compact #work>.ft-inline-target{scroll-margin-top:110px}body.ft-inline-editor.ft-nav-compact #ftCardActions h3{display:none!important}body.ft-inline-editor #ftCardActions .ft-back-home{display:inline-flex;align-items:center;justify-content:center;background:#ff7900;color:#171717;border:0;border-radius:9px;padding:9px 12px;font-size:13px;font-weight:750;cursor:pointer;margin:0 0 7px}body.ft-inline-editor.ft-nav-compact #ftCardActions .ft-back-home{margin:0 7px 0 0;padding:6px 10px}body.ft-inline-editor.ft-nav-compact #ftCardActions .ft-menu-top{display:flex;align-items:center;gap:6px}body.ft-inline-editor.ft-nav-compact #ftCardActions .ft-home-grid{flex:1;min-width:0}
 body.ft-inline-editor.ft-nav-compact #ftCardActions .ft-home-action{padding:5px 8px!important}
 body.ft-inline-editor #work>.ft-inline-target{scroll-margin-top:100px}
+
+/* Editor navigation remains visible below the phone/browser top bar. */
+body.ft-inline-editor #ftCardActions{position:fixed!important;top:calc(env(safe-area-inset-top, 0px) + 50px)!important;left:8px!important;right:8px!important;width:auto!important;max-width:960px!important;margin:0 auto!important;z-index:99999!important;padding:8px!important;background:#fff!important;border:2px solid #ff7900!important;box-shadow:0 5px 22px #0003!important;box-sizing:border-box!important}
+body.ft-inline-editor #ftCardActions h3{display:none!important}
+body.ft-inline-editor #ftCardActions .ft-menu-top{display:flex!important;align-items:center;gap:7px}
+body.ft-inline-editor #ftCardActions .ft-back-home{display:flex!important;flex:0 0 auto;margin:0!important;white-space:nowrap}
+body.ft-inline-editor #ftCardActions .ft-home-grid{display:flex!important;flex:1!important;min-width:0!important;overflow-x:auto!important;gap:7px!important}
+body.ft-inline-editor #ftCardActions .ft-home-action{display:flex!important;flex:0 0 auto!important;min-height:42px!important;padding:7px 9px!important;align-items:center!important;white-space:nowrap!important}
+body.ft-inline-editor #ftCardActions .ft-home-action span{font-size:16px!important}
+body.ft-inline-editor #ftCardActions .ft-home-action strong{font-size:12px!important}
+body.ft-inline-editor #ftCardActions .ft-home-action small{display:none!important}
+body.ft-inline-editor #work>.ft-inline-target{scroll-margin-top:160px!important}
+@media(max-width:600px){body.ft-inline-editor #ftCardActions{top:calc(env(safe-area-inset-top, 0px) + 58px)!important;left:5px!important;right:5px!important}body.ft-inline-editor #ftCardActions .ft-back-home{font-size:12px!important;padding:8px!important}}
 </style><script>(function(){
 var ids=['profile','pwa-media','pwa-links','pwa-pages','pwa-top','qr-section'];
 function openPart(id){
