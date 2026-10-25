@@ -236,6 +236,18 @@ add('Çalışma Saatleri',co.hours);
 }const hint=q('#contact > p.hint');if(hint)hint.hidden=true}
 if(Array.isArray(settings.categories)){const cats=settings.categories;const buttons=document.querySelectorAll('#menu .menuCategoryDock .category');const mapping={'Pastalar':'Pasta','Tatlılar':'Tatlı','Kurabiyeler':'Kurabiye','Unlu Mamuller':'Fırın'};cats.forEach((item,i)=>{const btn=buttons[i];if(!btn)return;const img=q('img',btn);if(img&&validImage(item.image))img.src=item.image;if(item.name){const name=item.name;btn.lastChild.textContent=name;const cat=mapping[name];if(cat)btn.setAttribute('onclick',"selectCategory('"+cat+"')")}})}
 }
+function syncCategories(){
+const cats=Array.isArray(settings.productCategories)&&settings.productCategories.length?settings.productCategories:['Pasta','Tatlı','Kurabiye','Fırın'];
+const images=settings.categoryImages||{};
+const dock=q('#menuCategoryDock .categories');if(!dock)return;
+const defaultImages={Pasta:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=350&q=80',Tatlı:'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=350&q=80',Kurabiye:'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=350&q=80',Fırın:'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=350&q=80'};
+const names={Pasta:'Pastalar',Tatlı:'Tatlılar',Kurabiye:'Unlu Mamuller',Fırın:'Fırından'};
+dock.replaceChildren();
+cats.forEach(cat=>{const button=document.createElement('button');button.type='button';button.className='category';const img=document.createElement('img');img.alt='';img.loading='lazy';img.src=validImage(images[cat])||defaultImages[cat]||'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=350&q=80';button.append(img,document.createTextNode(names[cat]||cat));button.addEventListener('click',()=>selectCategory(cat));dock.append(button)});
+const oldSelect=window.selectCategory;
+window.selectCategory=function(cat){oldSelect(cat);dock.querySelectorAll('.category').forEach((button,i)=>button.classList.toggle('selected',cats[i]===cat))};
+}
+syncCategories();
 apply();
 window.addEventListener('storage',e=>{if(e.key===KEY)location.reload()});
 })();
