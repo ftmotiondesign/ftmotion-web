@@ -160,6 +160,19 @@
 #categoryProducts .item{min-height:110px}
 #categoryProducts .item>div{flex:1;min-width:0}
 #categoryProducts .item p{margin:4px 0 8px}
+/* Stable inline product mode: category cards move to the top and products directly follow. */
+#menu.category-results-mode{padding-top:14px!important;min-height:100dvh!important}
+#menu.category-results-mode>.back{display:block!important;margin-bottom:12px!important}
+#menu.category-results-mode>h1,
+#menu.category-results-mode>.menu-guide-card,
+#menu.category-results-mode>p.hint,
+#menu.category-results-mode>#productSearch{display:none!important}
+#menu.category-results-mode #menuCategoryDock{position:sticky!important;top:0!important;z-index:10!important;margin:0 -20px 8px!important;padding:8px 20px!important;box-shadow:0 4px 12px #30251f16!important}
+#menu.category-results-mode #menuCategoryDock .categories{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;gap:10px!important;scrollbar-width:none!important}
+#menu.category-results-mode #menuCategoryDock .category{flex:0 0 72px!important;width:72px!important;min-width:72px!important;font-size:11px!important}
+#menu.category-results-mode #menuCategoryDock .category img{width:45px!important;height:45px!important;max-width:45px!important;transform:none!important;transition:none!important;margin:0 auto 4px!important}
+#menu.category-results-mode .menuResultsHeading{margin:12px 0!important}
+#menu.category-results-mode #productList{display:grid!important}
 </style><style>.detail-gallery{display:flex;gap:8px;overflow-x:auto;padding:8px 0}.detail-gallery button{border:1px solid #e2d1bd;border-radius:9px;padding:2px;background:white;flex:none}.detail-gallery img{width:66px;height:60px;object-fit:cover;border-radius:7px}.admin-toggle{position:fixed;bottom:90px;right:12px;z-index:21}.admin-toggle button{border:1px solid #d3bfa9;background:#fffaf2e8;color:#62432c;border-radius:20px;padding:8px 12px;font-size:11px;box-shadow:0 3px 12px #0002}.admin-overlay{display:none;position:fixed;inset:0;background:#0008;z-index:110;justify-content:center;align-items:center}.admin-overlay.open{display:flex}.admin-panel{background:#fffaf3;color:#392a1f;width:min(100%,560px);height:min(94dvh,900px);overflow-y:auto;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:12px}.admin-panel label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:650}.admin-panel .field{width:100%;font-weight:400}.admin-head{display:flex;justify-content:space-between;align-items:center}.admin-head button,.admin-buttons button:not(.primary){border:1px solid #cbb59e;background:white;border-radius:9px;padding:10px}.admin-check{flex-direction:row!important;align-items:center}.admin-buttons{display:flex;gap:8px;flex-wrap:wrap;padding-bottom:30px}.admin-buttons button{flex:1;min-width:110px}body.ft-customer-mode .admin-toggle,body.ft-customer-mode #adminOverlay{display:none!important}</style><style id="ft-pastane-clean-hero">#hero .heroText h1,#hero .heroText p,#hero .heroText .eyebrow{display:none!important}#hero .heroText{bottom:88px!important;text-align:center!important}#hero .heroText>button{display:inline-flex!important;align-items:center!important;justify-content:center!important;position:relative!important;z-index:4!important}/* Ana vitrin görselinde yalnızca eski konumundaki Menü Rehberi düğmesi görünür. */
 #hero .heroText{position:absolute!important;bottom:88px!important;left:24px!important;right:24px!important;display:flex!important;justify-content:center!important;align-items:center!important;pointer-events:none!important}
 #hero .heroText > :not(button){display:none!important}
@@ -225,46 +238,26 @@ function productPhoto(p){return p.photoUrl&&(/^(https:\/\/|data:image\/)/.test(p
 const img=productPhoto;
 renderCatalog();
 document.getElementById('featured').innerHTML=products.slice(0,4).map(p=>`<article class="product"><button class="product-photo" aria-label="${p.name} detayını aç" onclick="openProduct(${products.indexOf(p)})"><img loading="lazy" src="${img(p)}" alt="${p.name}"></button><div class="details"><b>${p.name}</b><span>${p.desc}</span><button onclick="openProduct(${products.indexOf(p)})">Ürün Detayı →</button></div></article>`).join('');
-let activeCategory='';function selectCategory(filter,scrollToResults=false){if(!filter)document.getElementById('menu').classList.remove('category-results-mode');activeCategory=filter||'';renderProducts(activeCategory);document.querySelectorAll('#menuCategoryDock .category').forEach(b=>b.classList.toggle('selected',(b.dataset.category||'')===activeCategory&&!!activeCategory));document.getElementById('menuResultTitle').textContent=activeCategory?({Pasta:'Pastalar',Tatlı:'Tatlılar',Kurabiye:'Kurabiyeler',Fırın:'Fırından'}[activeCategory]||activeCategory):'Tüm Ürünler';if(scrollToResults){const menu=document.getElementById('menu');menu.classList.add('category-results-mode');const dock=document.getElementById('menuCategoryDock');dock.classList.remove('compact');const search=document.getElementById('productSearch');if(search){search.value='';renderProducts(activeCategory)}window.scrollTo({top:0,left:0,behavior:'instant'});requestAnimationFrame(()=>window.scrollTo(0,0))}}
-function openCategoryProducts(category){
-  const menu=document.getElementById('menu');
-  const cat=String(category||'');
-  activeCategory=cat;
-  const heading=document.getElementById('categoryProductsTitle');
-  const list=document.getElementById('categoryProductsList');
-  const buttons=Array.from(document.querySelectorAll('#menuCategoryDock .category'));
-  const selected=buttons.find(b=>b.dataset.category===cat);
-  heading.textContent=selected?selected.textContent.trim():cat;
-  const items=products.filter(p=>p.available!==false&&p.cat===cat);
-  list.replaceChildren();
-  if(!items.length){
-    const empty=document.createElement('div');
-    empty.className='category-empty-state';
-    empty.textContent='Bu kategoride henüz ürün bulunmuyor.';
-    list.append(empty);
-  }else{
-    items.forEach(p=>{
-      const index=products.indexOf(p);
-      const card=document.createElement('article');
-      card.className='item';
-      const photo=document.createElement('button');
-      photo.type='button';photo.className='item-photo';
-      photo.setAttribute('aria-label',p.name+' detayını aç');
-      const image=document.createElement('img');image.src=img(p);image.alt=p.name;image.loading='lazy';
-      photo.append(image);photo.addEventListener('click',()=>openProduct(index));
-      const info=document.createElement('div');
-      const name=document.createElement('h3');name.textContent=p.name||'Ürün';
-      const desc=document.createElement('p');desc.textContent=p.desc||'';
-      const price=document.createElement('p');price.textContent=p.price||'Fiyat bilgisi için iletişime geçin';
-      const details=document.createElement('button');details.type='button';details.textContent='Detayları Gör →';
-      details.addEventListener('click',()=>openProduct(index));
-      info.append(name,desc,price,details);card.append(photo,info);list.append(card);
-    });
-  }
-  document.getElementById('home').style.display='none';
-  document.querySelectorAll('.screen').forEach(el=>el.classList.toggle('active',el.id==='categoryProducts'));
-  document.querySelectorAll('.nav button').forEach(el=>el.classList.toggle('active',el.dataset.page==='menu'));
-  window.scrollTo({top:0,left:0,behavior:'instant'});
+let activeCategory='';function selectCategory(filter,showResults=false){
+ const menu=document.getElementById('menu');
+ activeCategory=filter||'';
+ if(showResults){
+   menu.classList.add('category-results-mode');
+   const search=document.getElementById('productSearch');
+   if(search)search.value='';
+ }else if(!filter){
+   menu.classList.remove('category-results-mode');
+ }
+ renderProducts(activeCategory);
+ document.querySelectorAll('#menuCategoryDock .category').forEach(b=>b.classList.toggle('selected',b.dataset.category===activeCategory&&!!activeCategory));
+ const selected=document.querySelector('#menuCategoryDock .category.selected');
+ document.getElementById('menuResultTitle').textContent=activeCategory?(selected?selected.textContent.trim():activeCategory):'Tüm Ürünler';
+ if(showResults){
+   const dock=document.getElementById('menuCategoryDock');
+   dock.classList.remove('compact');
+   window.scrollTo(0,0);
+   requestAnimationFrame(()=>{window.scrollTo(0,0);if(selected)selected.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'})});
+ }
 }
 function renderProducts(filter){document.getElementById('productList').innerHTML=products.filter(p=>p.available!==false&&(!filter||p.cat===filter)&&((p.name+' '+p.desc+' '+(p.ingredients||'')).toLocaleLowerCase('tr').includes((document.getElementById('productSearch')?.value||'').toLocaleLowerCase('tr')))).map(p=>`<article class="item"><button class="item-photo" aria-label="${p.name} detayını aç" onclick="openProduct(${products.indexOf(p)})"><img loading="lazy" src="${img(p)}" alt="${p.name}"></button><div><h3>${p.name}</h3><p>${p.desc}</p><button onclick="openProduct(${products.indexOf(p)})">Detayları Gör →</button></div></article>`).join('')||'<p class="hint">Bu aramada ürün bulunamadı.</p>'}
 let selectedProduct=null,modalPreviousFocus=null;
@@ -275,28 +268,7 @@ function closeProduct(){const o=document.getElementById('detailOverlay');o.class
 function requestProduct(){if(!selectedProduct)return;const p=selectedProduct;const msg='Merhaba, '+p.name+' hakkında bilgi almak istiyorum.'+(p.price?'\nFiyat: '+p.price:'')+(p.portion?'\nÖlçü: '+p.portion:'');const digits=businessPhone.replace(/\D/g,'');if(digits.length>=10){window.open('https://wa.me/'+digits+'?text='+encodeURIComponent(msg),'_blank','noopener');return}closeProduct();if(catalogOverlay.classList.contains('open'))closeCatalog();go('order');const note=document.querySelector('[name="note"]');note.value='İlgilendiğim ürün: '+p.name+'\n'+note.value;note.focus();toast('WhatsApp numarası henüz ayarlanmadı; talep formu açıldı.');}
 document.addEventListener('keydown',e=>{const o=document.getElementById('detailOverlay');if(!o.classList.contains('open'))return;if(e.key==='Escape'){closeProduct();return}if(e.key==='Tab'){const buttons=[...o.querySelectorAll('button')];const first=buttons[0],last=buttons[buttons.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
 function go(page,filter){document.getElementById('home').style.display=page==='home'?'block':'none';document.querySelectorAll('.screen').forEach(el=>el.classList.toggle('active',el.id===page));document.querySelectorAll('.nav button').forEach(el=>el.classList.toggle('active',el.dataset.page===page));if(page==='menu'){document.getElementById('menu').classList.remove('category-results-mode');selectCategory(filter||'');document.getElementById('menuCategoryDock').classList.remove('compact')}window.scrollTo(0,0)}
-/* Collapse using a stable marker BEFORE the sticky dock, not a scrollY threshold.
-   This avoids the expand/shrink feedback loop on short product lists. */
-(function(){
- const dock=document.getElementById('menuCategoryDock');
- if(!dock)return;
- const marker=document.createElement('div');
- marker.setAttribute('aria-hidden','true');
- marker.style.cssText='height:1px;pointer-events:none';
- dock.parentNode.insertBefore(marker,dock);
- if('IntersectionObserver' in window){
-   const observer=new IntersectionObserver(entries=>{
-     if(!document.getElementById('menu').classList.contains('active')||document.getElementById('menu').classList.contains('category-results-mode'))return;
-     dock.classList.toggle('compact',!entries[0].isIntersecting);
-   },{threshold:0,rootMargin:'-8px 0px 0px 0px'});
-   observer.observe(marker);
- }else{
-   window.addEventListener('scroll',()=>{
-     if(document.getElementById('menu').classList.contains('active')&&!document.getElementById('menu').classList.contains('category-results-mode'))
-       dock.classList.toggle('compact',marker.getBoundingClientRect().top < -8);
-   },{passive:true});
- }
-})();
+/* Sticky category bar changes only in explicit selection mode, never at scroll thresholds. */
 let index=0;const slides=[...document.querySelectorAll('.slide')],dots=[...document.querySelectorAll('.dot')];function showSlide(n){index=(n+slides.length)%slides.length;slides.forEach((s,i)=>s.classList.toggle('active',i===index));dots.forEach((s,i)=>s.classList.toggle('active',i===index))}setInterval(()=>{if(document.visibilityState==='visible')showSlide(index+1)},5200);let x=0;document.getElementById('hero').addEventListener('touchstart',e=>x=e.touches[0].clientX,{passive:true});document.getElementById('hero').addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-x;if(Math.abs(d)>55)showSlide(index+(d<0?1:-1))},{passive:true});
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),4000)}
 document.getElementById('orderForm').addEventListener('submit',async e=>{e.preventDefault();const d=new FormData(e.target);const text=`Merhaba, özel pasta talebim var.\nAd: ${d.get('name')}\nTelefon: ${d.get('phone')}\nTarih: ${d.get('date')}\nKişi sayısı: ${d.get('people')||'Belirtilmedi'}\nNot: ${d.get('note')||'-'}`;try{await navigator.clipboard.writeText(text);toast('Talep metni kopyalandı. İşletmenin WhatsApp numarası eklendiğinde doğrudan gönderilebilir.')}catch{toast('Talep hazır. Canlı gönderim için işletme numarası tanımlanmalı.')}});
@@ -351,7 +323,7 @@ const dock=q('#menuCategoryDock .categories');if(!dock)return;
 const defaultImages={Pasta:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=350&q=80',Tatlı:'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=350&q=80',Kurabiye:'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=350&q=80',Fırın:'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=350&q=80'};
 const names={Pasta:'Pastalar',Tatlı:'Tatlılar',Kurabiye:'Unlu Mamuller',Fırın:'Fırından'};
 dock.replaceChildren();
-cats.forEach(cat=>{const button=document.createElement('button');button.type='button';button.className='category';button.dataset.category=cat;const img=document.createElement('img');img.alt='';img.loading='lazy';img.src=validImage(images[cat])||defaultImages[cat]||'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=350&q=80';button.append(img,document.createTextNode(names[cat]||cat));button.addEventListener('click',()=>openCategoryProducts(cat));dock.append(button)});
+cats.forEach(cat=>{const button=document.createElement('button');button.type='button';button.className='category';button.dataset.category=cat;const img=document.createElement('img');img.alt='';img.loading='lazy';img.src=validImage(images[cat])||defaultImages[cat]||'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=350&q=80';button.append(img,document.createTextNode(names[cat]||cat));button.addEventListener('click',()=>selectCategory(cat,true));dock.append(button)});
 const oldSelect=window.selectCategory;
 window.selectCategory=function(cat){oldSelect(cat);dock.querySelectorAll('.category').forEach((button,i)=>button.classList.toggle('selected',cats[i]===cat))};
 }
