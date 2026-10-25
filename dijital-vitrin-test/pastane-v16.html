@@ -145,6 +145,18 @@
 #menu #productList .item>div>button{width:auto;min-height:36px;margin:0;padding:8px 12px;font-weight:700}
 #menu #productList>.hint{background:white;padding:18px;border-radius:14px;border:1px solid #eee5da}
 @media(max-width:370px){#menu #productList .item{gap:10px;padding:9px}#menu #productList .item-photo{flex-basis:82px;width:82px;height:82px}#menu.category-results-mode #menuCategoryDock .category{flex-basis:68px;width:68px;min-width:68px}}
+/* Category changes keep the same geometry, regardless of item count. */
+#menu.category-results-mode #menuCategoryDock{margin-bottom:12px}
+#menu.category-results-mode #menuCategoryDock .category{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:91px;height:91px;line-height:1.25;overflow-wrap:anywhere}
+#menu.category-results-mode #menuCategoryDock .category img{flex:0 0 48px;margin-bottom:6px}
+#menu .menuResultsHeading{min-height:46px;margin-top:12px;margin-bottom:12px}
+#menu #productList{align-items:start;align-content:start;grid-auto-rows:max-content}
+#menu #productList .item{height:120px;min-height:120px;max-height:120px;overflow:hidden}
+#menu #productList .item>div{display:flex;flex-direction:column;justify-content:center;min-height:0;max-height:100%}
+#menu #productList .item h3{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+#menu #productList .item p{margin-bottom:6px;-webkit-line-clamp:1}
+#menu #productList .item>div>button{align-self:flex-start;min-height:34px;padding:6px 12px}
+@media(max-width:370px){#menu #productList .item{height:112px;min-height:112px;max-height:112px}}
 </style><style>.detail-gallery{display:flex;gap:8px;overflow-x:auto;padding:8px 0}.detail-gallery button{border:1px solid #e2d1bd;border-radius:9px;padding:2px;background:white;flex:none}.detail-gallery img{width:66px;height:60px;object-fit:cover;border-radius:7px}.admin-toggle{position:fixed;bottom:90px;right:12px;z-index:21}.admin-toggle button{border:1px solid #d3bfa9;background:#fffaf2e8;color:#62432c;border-radius:20px;padding:8px 12px;font-size:11px;box-shadow:0 3px 12px #0002}.admin-overlay{display:none;position:fixed;inset:0;background:#0008;z-index:110;justify-content:center;align-items:center}.admin-overlay.open{display:flex}.admin-panel{background:#fffaf3;color:#392a1f;width:min(100%,560px);height:min(94dvh,900px);overflow-y:auto;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:12px}.admin-panel label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:650}.admin-panel .field{width:100%;font-weight:400}.admin-head{display:flex;justify-content:space-between;align-items:center}.admin-head button,.admin-buttons button:not(.primary){border:1px solid #cbb59e;background:white;border-radius:9px;padding:10px}.admin-check{flex-direction:row!important;align-items:center}.admin-buttons{display:flex;gap:8px;flex-wrap:wrap;padding-bottom:30px}.admin-buttons button{flex:1;min-width:110px}body.ft-customer-mode .admin-toggle,body.ft-customer-mode #adminOverlay{display:none!important}</style><style id="ft-pastane-clean-hero">#hero .heroText h1,#hero .heroText p,#hero .heroText .eyebrow{display:none!important}#hero .heroText{bottom:88px!important;text-align:center!important}#hero .heroText>button{display:inline-flex!important;align-items:center!important;justify-content:center!important;position:relative!important;z-index:4!important}/* Ana vitrin görselinde yalnızca eski konumundaki Menü Rehberi düğmesi görünür. */
 #hero .heroText{position:absolute!important;bottom:88px!important;left:24px!important;right:24px!important;display:flex!important;justify-content:center!important;align-items:center!important;pointer-events:none!important}
 #hero .heroText > :not(button){display:none!important}
@@ -233,7 +245,9 @@ let activeCategory='';function selectCategory(filter,scrollToProducts=false){
    // Never use scrollIntoView on a category button: it also scrolls the whole document.
    requestAnimationFrame(()=>{
      const top=window.scrollY+dock.getBoundingClientRect().top;
-     window.scrollTo({top:Math.max(0,top),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+     const target=Math.max(0,top);
+     // Do not reanimate the entire page if the category rail is already pinned.
+     if(Math.abs(window.scrollY-target)>12)window.scrollTo({top:target,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
      if(selected){
        const rail=dock.querySelector('.categories');
        if(rail){
