@@ -332,4 +332,35 @@ apply();
 syncCategories();
 window.addEventListener('storage',e=>{if(e.key===KEY)location.reload()});
 })();
+</script><script type="module">
+/* Demo bulut onizlemesi: sadece oturum acmis kayit sahibi okuyabilir.
+   Varsayilan musteri sayfasi ve kategori kaydirma davranisi degismez. */
+if(new URLSearchParams(location.search).get('cloud')==='demo'){
+ const notice=document.createElement('div');
+ notice.style.cssText='position:fixed;left:12px;right:12px;bottom:12px;z-index:99999;background:#fff8e8;color:#3e3023;padding:12px 16px;border:1px solid #dfcba8;border-radius:12px;box-shadow:0 5px 25px #0002;font:14px system-ui';
+ notice.textContent='Demo bulut verileri kontrol ediliyor…';
+ document.body.append(notice);
+ try{
+  const {client,currentUser}=await import('../shared/supabase-client.js');
+  const db=await client(),user=await currentUser(db);
+  if(!user)throw Error('Bulut demosunu görmek için FTMotion hesabınızla giriş yapın.');
+  const result=await db.from('digital_vitrin_sandboxes').select('settings,products,updated_at').eq('owner_id',user.id).maybeSingle();
+  if(result.error)throw result.error;
+  if(!result.data)throw Error('Bulut yedeği bulunamadı. Önce yönetim panelinden kaydedin.');
+  const stamp=result.data.updated_at||'';
+  const key='ftmotion-demo-cloud-applied';
+  if(sessionStorage.getItem(key)!==stamp){
+   const settings={...(result.data.settings||{})};
+   const phone=settings._vitrinPhone||'';
+   delete settings._vitrinPhone;
+   localStorage.setItem('ftmotion-vitrin-v16-management-test',JSON.stringify(settings));
+   localStorage.setItem('ftmotion-pastane-v16-data',JSON.stringify({products:result.data.products||[],phone}));
+   sessionStorage.setItem(key,stamp);
+   location.reload();
+  }else{
+   notice.textContent='☁️ FTMotion Demo Pastane · Bulut yedeği görüntüleniyor ('+new Date(stamp).toLocaleString('tr-TR')+').';
+   setTimeout(()=>notice.remove(),6500);
+  }
+ }catch(error){notice.textContent='Bulut önizleme açılamadı: '+error.message}
+}
 </script></body></html>
