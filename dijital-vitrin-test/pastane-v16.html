@@ -118,61 +118,20 @@
 .menu-list-plus{position:absolute;right:12px;bottom:12px;width:32px;height:32px;border:0;border-radius:50%;color:white;background:#805736;font-size:23px;line-height:1;cursor:pointer;box-shadow:0 0 0 4px #e6c7a96b;animation:smallPulse 2s infinite}
 @media(min-width:650px){.menu-list-items{max-width:720px;width:100%;margin:0 auto}.menu-list-photo{width:165px;height:125px}.menu-list-banner{padding-left:max(20px,calc((100vw - 700px)/2))}}
 @media(max-width:360px){.menu-list-item{gap:9px;padding:8px}.menu-list-photo{width:104px;height:106px}.menu-list-info h3{font-size:13px}.menu-list-info p{font-size:10px}}
-</style><style>#menu.screen.active{min-height:calc(100dvh + 180px)}@media(max-width:600px){#menuCategoryDock{top:0;will-change:auto}} /* Compact without changing document height: avoids sticky oscillation on empty lists. */
-#menuCategoryDock,#menuCategoryDock.compact{padding:12px 20px 14px!important;transition:box-shadow .18s ease!important;min-height:0!important}
-#menuCategoryDock .categories,#menuCategoryDock.compact .categories{gap:10px!important}
-#menuCategoryDock .category,#menuCategoryDock.compact .category{font-size:12px!important}
-#menuCategoryDock .category img,#menuCategoryDock.compact .category img{width:min(19vw,95px)!important;max-width:95px!important;height:min(19vw,95px)!important;object-fit:cover!important;margin:0 auto 7px!important;border-width:3px!important;transform-origin:center center;transition:transform .18s ease!important}
-#menuCategoryDock.compact .category img{transform:scale(.58)!important}
-#menuCategoryDock.compact .category{line-height:1.2!important}
-#menu .menuResultsHeading{scroll-margin-top:160px}
-#menu.screen.active{min-height:calc(100dvh + 360px)!important}
-/* On category selection show a single-row sticky category rail and bring results into view. */
-#menu.category-results-mode #menuCategoryDock{position:sticky!important;top:0!important;z-index:15!important;margin-bottom:8px!important}
-#menu.category-results-mode #menuCategoryDock .categories{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;gap:10px!important;scrollbar-width:none!important;-webkit-overflow-scrolling:touch}
-#menu.category-results-mode #menuCategoryDock .categories::-webkit-scrollbar{display:none}
-#menu.category-results-mode #menuCategoryDock .category{flex:0 0 76px!important;width:76px!important;min-width:76px!important;font-size:11px!important;white-space:normal!important}
-#menu.category-results-mode #menuCategoryDock .category img{width:46px!important;height:46px!important;max-width:46px!important;transform:none!important;margin:0 auto 5px!important}
-#menu.category-results-mode .menuResultsHeading{scroll-margin-top:120px!important}
-/* Selected category: hide intro above products, show products directly after compact categories. */
-#menu.category-results-mode>.back,
-#menu.category-results-mode>h1,
-#menu.category-results-mode>.menu-guide-card,
-#menu.category-results-mode>.hint,
-#menu.category-results-mode>#productSearch{display:none!important}
-#menu.category-results-mode #menuCategoryDock{position:sticky!important;top:0!important}
-#menu.category-results-mode .menuResultsHeading{margin-top:8px!important}
-#menu.category-results-mode .menuResultsHeading h2{font-size:20px!important}
-/* Dedicated results state: remove intro and put category rail and products at screen top. */
-#menu.category-results-mode{padding-top:12px!important}
-#menu.category-results-mode > .back,
-#menu.category-results-mode > h1,
-#menu.category-results-mode > .menu-guide-card,
-#menu.category-results-mode > p.hint,
-#menu.category-results-mode > #productSearch{display:none!important}
-#menu.category-results-mode #menuCategoryDock{position:sticky!important;top:0!important;margin-top:0!important;transform:none!important}
-#menu.category-results-mode #menuCategoryDock .categories{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important}
-#menu.category-results-mode .menuResultsHeading{margin:12px 0!important}
-#menu.category-results-mode #productList{display:grid!important}
-#categoryProducts{padding-top:28px!important;min-height:100dvh!important}
-#categoryProducts h1{margin:22px 0!important}
-#categoryProducts .category-empty-state{padding:28px 18px;border-radius:16px;background:#fff;color:#89796d;text-align:center}
-#categoryProducts .item{min-height:110px}
-#categoryProducts .item>div{flex:1;min-width:0}
-#categoryProducts .item p{margin:4px 0 8px}
-/* Stable inline product mode: category cards move to the top and products directly follow. */
-#menu.category-results-mode{padding-top:14px!important;min-height:100dvh!important}
-#menu.category-results-mode>.back{display:block!important;margin-bottom:12px!important}
+</style><style>
+/* Single predictable inline category-results state. */
+#menu.category-results-mode{min-height:100dvh;padding-top:14px}
 #menu.category-results-mode>h1,
 #menu.category-results-mode>.menu-guide-card,
 #menu.category-results-mode>p.hint,
 #menu.category-results-mode>#productSearch{display:none!important}
-#menu.category-results-mode #menuCategoryDock{position:sticky!important;top:0!important;z-index:10!important;margin:0 -20px 8px!important;padding:8px 20px!important;box-shadow:0 4px 12px #30251f16!important}
-#menu.category-results-mode #menuCategoryDock .categories{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;gap:10px!important;scrollbar-width:none!important}
-#menu.category-results-mode #menuCategoryDock .category{flex:0 0 72px!important;width:72px!important;min-width:72px!important;font-size:11px!important}
-#menu.category-results-mode #menuCategoryDock .category img{width:45px!important;height:45px!important;max-width:45px!important;transform:none!important;transition:none!important;margin:0 auto 4px!important}
-#menu.category-results-mode .menuResultsHeading{margin:12px 0!important}
-#menu.category-results-mode #productList{display:grid!important}
+#menu.category-results-mode>.back{display:block;margin:0 0 12px}
+#menu.category-results-mode #menuCategoryDock{position:sticky;top:0;z-index:15;background:var(--cream);margin:0 -20px 10px;padding:10px 20px;box-shadow:0 3px 12px #00000012}
+#menu.category-results-mode #menuCategoryDock .categories{display:flex;flex-wrap:nowrap;gap:10px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+#menu.category-results-mode #menuCategoryDock .category{flex:0 0 72px;width:72px;min-width:72px;font-size:11px}
+#menu.category-results-mode #menuCategoryDock .category img{width:48px;height:48px;max-width:48px;margin:0 auto 5px;transform:none;border-width:2px}
+#menu.category-results-mode .menuResultsHeading{margin:12px 0}
+#menu.category-results-mode #productList{display:grid;gap:12px}
 </style><style>.detail-gallery{display:flex;gap:8px;overflow-x:auto;padding:8px 0}.detail-gallery button{border:1px solid #e2d1bd;border-radius:9px;padding:2px;background:white;flex:none}.detail-gallery img{width:66px;height:60px;object-fit:cover;border-radius:7px}.admin-toggle{position:fixed;bottom:90px;right:12px;z-index:21}.admin-toggle button{border:1px solid #d3bfa9;background:#fffaf2e8;color:#62432c;border-radius:20px;padding:8px 12px;font-size:11px;box-shadow:0 3px 12px #0002}.admin-overlay{display:none;position:fixed;inset:0;background:#0008;z-index:110;justify-content:center;align-items:center}.admin-overlay.open{display:flex}.admin-panel{background:#fffaf3;color:#392a1f;width:min(100%,560px);height:min(94dvh,900px);overflow-y:auto;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:12px}.admin-panel label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:650}.admin-panel .field{width:100%;font-weight:400}.admin-head{display:flex;justify-content:space-between;align-items:center}.admin-head button,.admin-buttons button:not(.primary){border:1px solid #cbb59e;background:white;border-radius:9px;padding:10px}.admin-check{flex-direction:row!important;align-items:center}.admin-buttons{display:flex;gap:8px;flex-wrap:wrap;padding-bottom:30px}.admin-buttons button{flex:1;min-width:110px}body.ft-customer-mode .admin-toggle,body.ft-customer-mode #adminOverlay{display:none!important}</style><style id="ft-pastane-clean-hero">#hero .heroText h1,#hero .heroText p,#hero .heroText .eyebrow{display:none!important}#hero .heroText{bottom:88px!important;text-align:center!important}#hero .heroText>button{display:inline-flex!important;align-items:center!important;justify-content:center!important;position:relative!important;z-index:4!important}/* Ana vitrin görselinde yalnızca eski konumundaki Menü Rehberi düğmesi görünür. */
 #hero .heroText{position:absolute!important;bottom:88px!important;left:24px!important;right:24px!important;display:flex!important;justify-content:center!important;align-items:center!important;pointer-events:none!important}
 #hero .heroText > :not(button){display:none!important}
@@ -256,7 +215,7 @@ let activeCategory='';function selectCategory(filter,showResults=false){
    const dock=document.getElementById('menuCategoryDock');
    dock.classList.remove('compact');
    window.scrollTo(0,0);
-   requestAnimationFrame(()=>{window.scrollTo(0,0);if(selected)selected.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'})});
+   requestAnimationFrame(()=>{window.scrollTo({top:0,left:0,behavior:'instant'});if(selected){const rail=dock.querySelector('.categories');rail.scrollLeft=Math.max(0,selected.offsetLeft-rail.offsetLeft-20)}});
  }
 }
 function renderProducts(filter){document.getElementById('productList').innerHTML=products.filter(p=>p.available!==false&&(!filter||p.cat===filter)&&((p.name+' '+p.desc+' '+(p.ingredients||'')).toLocaleLowerCase('tr').includes((document.getElementById('productSearch')?.value||'').toLocaleLowerCase('tr')))).map(p=>`<article class="item"><button class="item-photo" aria-label="${p.name} detayını aç" onclick="openProduct(${products.indexOf(p)})"><img loading="lazy" src="${img(p)}" alt="${p.name}"></button><div><h3>${p.name}</h3><p>${p.desc}</p><button onclick="openProduct(${products.indexOf(p)})">Detayları Gör →</button></div></article>`).join('')||'<p class="hint">Bu aramada ürün bulunamadı.</p>'}
