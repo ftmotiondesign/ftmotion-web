@@ -126,7 +126,12 @@
 #menu.category-results-mode #menuCategoryDock .category img{width:48px!important;height:48px!important;max-width:48px!important;margin:0 auto 5px!important;transform:none!important;transition:none!important;border-width:2px!important}
 #menu.category-results-mode #menuCategoryDock .category.selected img{border-color:var(--gold)!important;box-shadow:0 0 0 2px #a6794933!important}
 #menu.category-results-mode .menuResultsHeading{scroll-margin-top:105px!important}
-#menu.category-results-mode #productList{min-height:calc(100dvh - 150px)}
+/* Product rows must never stretch to fill the viewport: this caused giant blank cards. */
+#menu #productList{min-height:0!important;align-content:start!important;grid-auto-rows:max-content!important}
+#menu #productList .item{min-height:0!important;height:auto!important;align-self:start!important;align-items:center!important;padding:10px!important}
+#menu #productList .item>div{min-width:0!important}
+#menu #productList .item-photo{flex:0 0 92px!important;width:92px!important;height:90px!important}
+#menu #productList .item-photo img{width:92px!important;height:90px!important;object-fit:cover!important}
 #menu.category-results-mode #menuCategoryDock{scroll-margin-top:0}
 #menu.category-results-mode .menuResultsHeading{margin-top:10px!important;margin-bottom:10px!important}
 #menu.category-results-mode #menuCategoryDock .category{cursor:pointer;touch-action:manipulation}
