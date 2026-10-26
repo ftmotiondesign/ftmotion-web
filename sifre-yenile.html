@@ -2,12 +2,16 @@
 import {client} from './shared/supabase-client.js';
 const form=document.getElementById('form'),status=document.getElementById('status'),password=document.getElementById('password'),submit=form.querySelector('button');
 let db,verified=false,busy=false;
+const query=new URLSearchParams(location.search),fragment=new URLSearchParams(location.hash.slice(1));
+const recoveryLink=(query.get('type')==='recovery'&&!!query.get('token_hash'))||!!query.get('code')||(fragment.get('type')==='recovery'&&!!fragment.get('access_token'));
+
 form.hidden=true;submit.disabled=true;
-function ready(session){verified=!!session;form.hidden=!verified;submit.disabled=!verified;status.textContent=verified?'Bağlantı doğrulandı. Yeni şifrenizi belirleyebilirsiniz.':'Doğrulama oturumu bulunamadı. E-postadaki en son şifre yenileme bağlantısını bu tarayıcıda açın.';}
+function ready(session){verified=!!session&&recoveryLink;form.hidden=!verified;submit.disabled=!verified;status.textContent=verified?'Bağlantı doğrulandı. Yeni şifrenizi belirleyebilirsiniz.':'Doğrulama oturumu bulunamadı. E-postadaki en son şifre yenileme bağlantısını bu tarayıcıda açın.';}
 try {
  const q=new URLSearchParams(location.search),h=new URLSearchParams(location.hash.slice(1));
  const error=q.get('error_description')||h.get('error_description')||q.get('error')||h.get('error');
  if(error)throw Error(decodeURIComponent(error.replace(/\+/g,' ')));
+ if(!recoveryLink)throw Error('Şifre yenileme bağlantısı bulunamadı');
  db=await client();
  db.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'||event==='SIGNED_IN'||event==='INITIAL_SESSION')ready(session);});
  const tokenHash=q.get('token_hash');
