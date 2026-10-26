@@ -118,6 +118,71 @@
 .menu-list-plus{position:absolute;right:12px;bottom:12px;width:32px;height:32px;border:0;border-radius:50%;color:white;background:#805736;font-size:23px;line-height:1;cursor:pointer;box-shadow:0 0 0 4px #e6c7a96b;animation:smallPulse 2s infinite}
 @media(min-width:650px){.menu-list-items{max-width:720px;width:100%;margin:0 auto}.menu-list-photo{width:165px;height:125px}.menu-list-banner{padding-left:max(20px,calc((100vw - 700px)/2))}}
 @media(max-width:360px){.menu-list-item{gap:9px;padding:8px}.menu-list-photo{width:104px;height:106px}.menu-list-info h3{font-size:13px}.menu-list-info p{font-size:10px}}
+
+/* Masaustu tasarim: mobil gorunum ve kaydirma kurallari degistirilmez */
+@media(min-width:900px){
+ body{background:#f1ebe3}
+ main{max-width:100%;width:100%;padding-bottom:45px;background:var(--cream)}
+ .header{position:absolute;left:50%;width:min(100%,1440px);padding:27px 55px;transform:translateX(-50%)}
+ .header .brand{font-size:clamp(26px,2.2vw,37px)}
+ .header .brand small{font-size:11px;letter-spacing:3.5px;margin-top:6px}
+ .header .iconbtn{width:52px;height:52px;font-size:23px}
+ .hero{height:min(80vh,850px);min-height:590px}
+ .hero .slide img{object-position:center 48%}
+ .hero:after{background:linear-gradient(180deg,#211a1766 0%,transparent 40%,#25190e70 88%,var(--cream) 100%)}
+ .heroText{left:max(65px,calc((100vw - 1280px)/2));right:auto;bottom:135px;max-width:620px;text-align:left}
+ .heroText h1{font-size:clamp(52px,5vw,78px);line-height:1.07}
+ .heroText p{font-size:17px}
+ .heroText .primary{font-size:16px;padding:16px 28px}
+ .dots{bottom:75px}
+ .content{max-width:1320px;margin:-36px auto 0;padding:0 35px}
+ .section{margin:34px 0 48px}
+ .sectionTitle{margin-bottom:23px}
+ .sectionTitle h2{font-size:clamp(30px,3vw,43px)}
+ .sectionTitle .link{font-size:15px}
+ .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;overflow:visible;padding:3px 3px 18px}
+ .product{min-width:0;border-radius:21px;box-shadow:0 12px 30px #49351c13;transition:transform .2s,box-shadow .2s}
+ .product:hover{transform:translateY(-5px);box-shadow:0 17px 34px #49351c22}
+ .product img,.product-photo img{height:230px}
+ .product .details{padding:18px}
+ .product b{font-size:17px}
+ .product span{font-size:13px}
+ .product button{font-size:13px;padding:11px 13px}
+ .feature{min-height:310px;padding:35px 50px;border-radius:25px}
+ .feature h3{font-size:42px}
+ .feature p{font-size:16px}
+ .feature img{width:32%;height:275px;border-radius:140px 140px 22px 22px}
+ .nav{top:25px;bottom:auto;left:50%;right:auto;transform:translateX(-50%);width:max-content;max-width:calc(100% - 360px);border:1px solid #ffffff60;border-radius:99px;background:#fffef6ef;box-shadow:0 12px 36px #1b120e30;padding:10px 20px;z-index:10}
+ .navInner{max-width:none;gap:22px;width:auto}
+ .nav button{display:flex;align-items:center;gap:8px;min-width:0;font-size:13px;padding:5px 10px;white-space:nowrap}
+ .nav button i{font-size:19px}
+ .screen{max-width:1320px;width:calc(100% - 64px);min-height:100vh;margin:0 auto;padding:115px 42px 65px;background:var(--cream)}
+ .screen h1{font-size:46px}
+ .screen .list,#productList{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+ .screen .item{min-height:142px;padding:17px}
+ .screen .item img,.screen .item-photo img{width:118px;height:108px}
+ .screen .item-photo{flex-basis:118px}
+ .screen .item h3{font-size:18px}
+ .screen .item p{font-size:14px}
+ .menuCategoryDock{top:82px;margin-left:0;margin-right:0;padding:18px 22px;background:#f8f3ebf5;border:1px solid #e9ded1;border-radius:22px}
+ .menuCategoryDock .categories{display:flex;justify-content:center;gap:32px}
+ .menuCategoryDock .category{width:140px;font-size:15px}
+ .menuCategoryDock .category img{max-width:112px}
+ .menuCategoryDock.compact .categories{gap:24px}
+ .menuCategoryDock.compact .category{width:110px;font-size:13px}
+ .menuCategoryDock.compact .category img{width:58px;max-width:58px}
+ #menu.category-results-mode::after{height:max(0px,calc(100dvh - 270px))}
+ #menu #productList .item{height:142px!important;min-height:142px!important;max-height:142px!important}
+ .detail-overlay{align-items:center}
+ .detail-sheet{max-width:760px;max-height:88dvh;border-radius:25px}
+}
+@media(min-width:900px) and (max-width:1150px){
+ .header{padding-left:32px;padding-right:32px}
+ .nav{top:95px;max-width:calc(100% - 80px)}
+ .heroText{left:55px}
+ .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .screen{width:calc(100% - 36px);padding-left:25px;padding-right:25px}
+}
 </style><style>
 /* Single-page product browsing: compact sticky categories with stable heights. */
 /* Polished, single-source product/category layout (mobile-first). */
