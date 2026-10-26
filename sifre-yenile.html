@@ -1,1 +1,42 @@
-<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Şifre Yenile | FTMotion</title><style>body{margin:0;background:#090e19;color:#edf6ff;font:15px/1.6 system-ui}main{max-width:460px;margin:10vh auto;padding:25px;background:#152233;border:1px solid #304257;border-radius:18px}input,button{font:inherit;padding:12px;border-radius:10px}input{width:100%;box-sizing:border-box;background:#0b1624;color:white;border:1px solid #435771;margin:10px 0}button{background:#58e0c4;color:#062527;border:0;font-weight:800;cursor:pointer}a{color:#58e0c4}</style></head><body><main><a href="giris.html">← Üye girişine dön</a><h1>Yeni şifre oluştur</h1><p>Güvenli e-posta bağlantınızla geldiyseniz yeni şifrenizi belirleyin.</p><form id="form"><label>Yeni şifre<input id="password" type="password" autocomplete="new-password" minlength="8" required></label><button type="submit">Şifreyi Güncelle</button></form><p id="status" role="status">Bağlantı kontrol ediliyor...</p></main><script type="module">import {client} from './shared/supabase-client.js';const form=document.getElementById('form'),status=document.getElementById('status'),password=document.getElementById('password');let db;try{db=await client();const {data}=await db.auth.getSession();status.textContent=data.session?'Yeni şifrenizi yazabilirsiniz.':'E-posta bağlantısının doğrulanması bekleniyor.';db.auth.onAuthStateChange((event)=>{if(event==='PASSWORD_RECOVERY')status.textContent='Bağlantı doğrulandı. Yeni şifrenizi yazabilirsiniz.'})}catch(e){status.textContent='Bağlantı hatası: '+e.message;form.hidden=true}form.onsubmit=async e=>{e.preventDefault();if(!db)return;const {error}=await db.auth.updateUser({password:password.value});if(error){status.textContent='Şifre değiştirilemedi: '+error.message;return}status.textContent='Şifreniz güncellendi. Giriş sayfasından oturum açabilirsiniz.';form.hidden=true};</script></body></html>
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Şifre Yenile | FTMotion</title><style>body{margin:0;background:#090e19;color:#edf6ff;font:15px/1.6 system-ui}main{max-width:460px;margin:10vh auto;padding:25px;background:#152233;border:1px solid #304257;border-radius:18px}input,button{font:inherit;padding:12px;border-radius:10px}input{width:100%;box-sizing:border-box;background:#0b1624;color:white;border:1px solid #435771;margin:10px 0}button{background:#58e0c4;color:#062527;border:0;font-weight:800;cursor:pointer}a{color:#58e0c4}</style></head><body><main><a href="giris.html">← Üye girişine dön</a><h1>Yeni şifre oluştur</h1><p>Güvenli e-posta bağlantınızla geldiyseniz yeni şifrenizi belirleyin.</p><form id="form"><label>Yeni şifre<input id="password" type="password" autocomplete="new-password" minlength="8" required></label><button type="submit">Şifreyi Güncelle</button></form><p id="status" role="status">Bağlantı kontrol ediliyor...</p></main><script type="module">
+import {client} from './shared/supabase-client.js';
+const form=document.getElementById('form'),status=document.getElementById('status'),password=document.getElementById('password'),submit=form.querySelector('button');
+let db,verified=false,busy=false;
+form.hidden=true;submit.disabled=true;
+function ready(session){verified=!!session;form.hidden=!verified;submit.disabled=!verified;status.textContent=verified?'Bağlantı doğrulandı. Yeni şifrenizi belirleyebilirsiniz.':'Doğrulama oturumu bulunamadı. E-postadaki en son şifre yenileme bağlantısını bu tarayıcıda açın.';}
+try {
+ const q=new URLSearchParams(location.search),h=new URLSearchParams(location.hash.slice(1));
+ const error=q.get('error_description')||h.get('error_description')||q.get('error')||h.get('error');
+ if(error)throw Error(decodeURIComponent(error.replace(/\+/g,' ')));
+ db=await client();
+ db.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'||event==='SIGNED_IN'||event==='INITIAL_SESSION')ready(session);});
+ const tokenHash=q.get('token_hash');
+ if(tokenHash&&q.get('type')==='recovery'){
+  const result=await db.auth.verifyOtp({token_hash:tokenHash,type:'recovery'});
+  if(result.error)throw result.error;
+ }
+ // Supabase automatically processes implicit recovery URL tokens and PKCE code
+ // when initializing the client; wait for that process via getSession.
+ const {data,error:sessionError}=await db.auth.getSession();
+ if(sessionError)throw sessionError;
+ ready(data.session);
+ if(!data.session&&q.has('code')){
+  // Some older clients do not finish the code exchange automatically.
+  const check=await db.auth.getSession();
+  ready(check.data?.session);
+ }
+}catch(e){verified=false;form.hidden=true;submit.disabled=true;status.textContent='Doğrulama başarısız: '+(e.message||String(e))+'. Yeni şifre bağlantısı isteyip en güncel e-postayı açın.';}
+form.addEventListener('submit',async e=>{
+ e.preventDefault();if(busy||!db||!verified)return;
+ busy=true;submit.disabled=true;status.textContent='Şifre kaydediliyor…';
+ try{
+  const {data:session,error:sessionError}=await db.auth.getSession();
+  if(sessionError||!session.session)throw Error('Oturum doğrulanamadı. E-postadaki bağlantıyı yeniden açın.');
+  const {error}=await db.auth.updateUser({password:password.value});
+  if(error)throw error;
+  password.value='';form.hidden=true;verified=false;
+  status.textContent='Şifreniz güncellendi. Üye Girişi sayfasından yeni belirlediğiniz şifreyle giriş yapın.';
+ }catch(err){status.textContent='Şifre değiştirilemedi: '+(err.message||String(err));}
+ finally{busy=false;submit.disabled=!verified;}
+});
+</script></body></html>
