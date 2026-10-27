@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { newVisitToken, tokenHash, safeQrPayload, parseQrPayload } from './qr-token.mjs';
+test('token uses 32 bytes of randomness', () => assert.equal(newVisitToken().length,43));
+test('tokens are unique', () => assert.notEqual(newVisitToken(),newVisitToken()));
+test('hash is lowercase SHA256 hex', () => assert.match(tokenHash(newVisitToken()),/^[0-9a-f]{64}$/));
+test('payload roundtrip', () => { const t=newVisitToken(); assert.equal(parseQrPayload(safeQrPayload(t)),t); });
+test('invalid payload is rejected', () => assert.throws(()=>parseQrPayload('{')));
+test('invalid token is rejected', () => assert.throws(()=>tokenHash('bad')));
+test('wrong payload kind is rejected', () => assert.throws(()=>parseQrPayload(JSON.stringify({version:1,kind:'other',token:newVisitToken()}))));
