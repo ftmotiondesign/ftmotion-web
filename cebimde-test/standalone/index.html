@@ -23,13 +23,15 @@ async function initialize(){
 }
 function render(s){login.classList.toggle('hidden',!!s);app.classList.toggle('hidden',!s);$('identity').textContent=s?.user?.email||'';if(s)msg('Oturum doğrulandı.')}
 $('loginForm').onsubmit=async e=>{e.preventDefault();if(!supabase)return;msg('Giriş yapılıyor...');const{error}=await supabase.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});msg(error?'Giriş başarısız: '+error.message:'Giriş başarılı');$('password').value=''};
-$('logout').onclick=async()=>{await supabase?.auth.signOut();msg('Çıkış yapıldı')};
+$('logout').onclick=async()=>{stopCamera();clearQr();await supabase?.auth.signOut();msg('Çıkış yapıldı')};
 async function call(action,payload){if(!supabase)return msg('Bağlantı yapılandırılmadı');const{data:{session}}=await supabase.auth.getSession();if(!session)return msg('Önce giriş yapın');msg('İşlem gönderiliyor...');try{const response=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','apikey':window.CEBIMDE_PUBLIC_ANON_KEY,'Authorization':'Bearer '+session.access_token},body:JSON.stringify({action,...payload})});const data=await response.json();if(!response.ok)throw Error(data.error||'İşlem reddedildi');msg('İşlem başarılı');return data}catch(e){msg('İşlem yapılamadı: '+e.message);return null}}
 $('enroll').onclick=async()=>{const d=await call('enroll',{business_id:$('business').value.trim()});if(d){$('membership').value=d.result;msg('Üyelik oluşturuldu: '+d.result)}};
-$('issue').onclick=async()=>{const d=await call('issue',{membership_id:$('membership').value.trim()});if(d){const payload={version:d.version,kind:d.kind,token:d.token};$('qrdata').textContent=JSON.stringify(payload,null,2)+'\nSon geçerlilik: '+d.expires_at;$('qrdata').classList.remove('hidden');await QRCode.toCanvas($('qrcanvas'),JSON.stringify(payload),{width:260,margin:2});$('qrvisual').classList.remove('hidden');}};
+$('issue').onclick=async()=>{const d=await call('issue',{membership_id:$('membership').value.trim()});if(d){clearQr();const payload={version:d.version,kind:d.kind,token:d.token};$('qrdata').textContent=JSON.stringify(payload,null,2)+'\nSon geçerlilik: '+d.expires_at;$('qrdata').classList.remove('hidden');await QRCode.toCanvas($('qrcanvas'),JSON.stringify(payload),{width:260,margin:2});$('qrvisual').classList.remove('hidden');const remaining=Date.parse(d.expires_at)-Date.now();expiryTimer=setTimeout(()=>{clearQr();msg('Ziyaret QR kodunun süresi doldu. Yeni kod oluşturun.')},Math.max(0,remaining));}};
 $('confirm').onclick=async()=>{const d=await call('confirm',{token:$('token').value.trim()});if(d)msg('Ziyaret onaylandı: '+d.result)};
 $('redeem').onclick=async()=>{const d=await call('redeem',{membership_id:$('redeemMembership').value.trim()});if(d)msg('Hediye teslim edildi: '+d.result)};
-let stream=null,scanning=false;
+let stream=null,scanning=false,expiryTimer=null;
+function clearQr(){if(expiryTimer){clearTimeout(expiryTimer);expiryTimer=null}$('qrdata').textContent='';$('qrdata').classList.add('hidden');$('qrvisual').classList.add('hidden')}
+
 function stopCamera(){scanning=false;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('camera').srcObject=null;$('cameraArea').classList.add('hidden')}
 $('stopScan').onclick=stopCamera;
 $('scan').onclick=async()=>{
@@ -51,6 +53,6 @@ $('scan').onclick=async()=>{
   }
  }catch{stopCamera();msg('Kamera açılamadı. İzinleri kontrol edin veya kodu elle girin.')}
 };
-window.addEventListener('pagehide',stopCamera);
+window.addEventListener('pagehide',()=>{stopCamera();clearQr()});
 initialize();
 </script></body></html>
