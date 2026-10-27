@@ -1,0 +1,11 @@
+-- Manual SQL integration test checklist for a disposable database only.
+-- 1. Seed two businesses, two owners, one customer membership, active entitlement.
+-- 2. Create a 120-second token; call confirm_visit(hash, verified_owner) once -> 1 ledger visit.
+-- 3. Call again -> error; ledger still 1.
+-- 4. Expired token -> error; ledger 0.
+-- 5. Wrong owner -> error; token remains unused.
+-- 6. Disabled entitlement -> error; token remains unused.
+-- 7. Concurrent calls in separate transactions -> exactly one succeeds.
+-- 8. Verify no anon/authenticated EXECUTE privileges and no direct table grants.
+-- 9. Ensure service_role JWT verification occurs in server code, never trusting user-provided owner ID.
+-- 10. Verify rollback on unique constraint failure leaves consumed_at null.
