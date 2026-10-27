@@ -344,4 +344,18 @@ window.addEventListener('DOMContentLoaded',loadFullDistricts);
   paint();
  });
 })();
-</script></body></html>
+</script>
+<script>
+/* Fırsatlar için bağımsız gezinme: diğer demo işlevlerinden etkilenmez. */
+(function(){
+ function showOffers(){
+  var target=document.getElementById('offers');if(!target)return;
+  document.querySelectorAll('main section').forEach(function(el){el.classList.toggle('hidden',el!==target)});
+  document.querySelectorAll('.nav').forEach(function(el){el.classList.toggle('active',el.getAttribute('data-tab')==='offers')});
+  try{if(typeof window.renderOffers==='function')window.renderOffers()}catch(err){console.warn('Fırsatlar verileri:',err)}
+  window.scrollTo(0,0);
+ }
+ document.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var action=b.getAttribute('onclick')||'';if(action.indexOf("nav('offers')")!==-1||b.getAttribute('data-tab')==='offers'){e.preventDefault();e.stopImmediatePropagation();showOffers()}},true);
+})();
+</script>
+</body></html>
