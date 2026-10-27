@@ -1,10 +1,10 @@
 <!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cebimde Sadakat — Test</title><style>
 :root{font-family:system-ui,sans-serif;background:#f8f4ed;color:#282725}*{box-sizing:border-box}body{margin:0}.wrap{max-width:560px;margin:auto;padding:28px 18px 60px}header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.logo{font-size:25px;font-weight:800;letter-spacing:-1px}.tag{font-size:12px;border:1px solid #ddd3c5;padding:7px 10px;border-radius:20px}h1{font-size:38px;letter-spacing:-1.5px;margin:0 0 10px}p{color:#68645e;line-height:1.55}.card{background:white;border:1px solid #e7dfd4;border-radius:19px;padding:21px;margin:12px 0}h2{font-size:20px;margin:0 0 10px}label{font-size:13px;font-weight:600;display:block;margin:12px 0 5px}input,button{width:100%;padding:13px;border-radius:11px;font:inherit}input{border:1px solid #d7cec3}button{border:0;background:#282725;color:#fff;font-weight:650;margin-top:12px;cursor:pointer}button.secondary{background:#eae3d9;color:#282725}.muted{font-size:13px}.hidden{display:none}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f7f3ed;padding:12px;border-radius:10px;font-size:12px}#msg{font-size:14px}small{color:#777}
-</style></head><body><main class="wrap"><header><div class="logo">Cebimde</div><span class="tag">Bağımsız test</span></header><h1>Sadakat kartın cebinde.</h1><p>İşletmelerin ziyaretlerini onaylasın, hediyelerini güvenle kazan.</p>
+</style></head><body><main class="wrap"><header><div class="logo">Cebimde</div><span class="tag">Müşteri</span></header><h1>Sadakat kartın cebinde.</h1><p>İşletmelerin ziyaretlerini onaylasın, hediyelerini güvenle kazan.</p>
 <section class="card" id="login"><h2>Giriş yap</h2><p class="muted">Mevcut FTMotion Supabase hesabınla giriş yap. Mevcut hesabınızla giriş yapın veya yeni müşteri üyeliği oluşturun.</p><form id="loginForm"><label>E-posta</label><input id="email" type="email" autocomplete="email" required><label>Şifre</label><input id="password" type="password" autocomplete="current-password" required><button type="submit">Giriş yap</button></form><button id="showSignup" class="secondary" type="button">Yeni müşteri üyeliği oluştur</button><form id="signupForm" class="hidden"><label>E-posta</label><input id="signupEmail" type="email" autocomplete="email" required><label>Şifre (en az 8 karakter)</label><input id="signupPassword" type="password" minlength="8" autocomplete="new-password" required><button type="submit">Üye ol</button><p class="muted">E-posta doğrulaması istenebilir. Doğrulama sonrası aynı bağlantıya dönüp giriş yapın.</p></form></section>
 <section id="app" class="hidden"><div class="card"><h2>Oturum</h2><p id="identity" class="muted"></p><button id="logout" class="secondary">Çıkış yap</button></div>
-<div class="card"><h2>Müşteri</h2><p class="muted">Test işletmesini seçip programa katıl. Tek kullanımlık QR kodunu işletmeye göster.</p><label>İşletme seç</label><select id="businessSelect" style="width:100%;padding:13px;border:1px solid #d7cec3;border-radius:11px;font:inherit;background:#fff"><option value="404e3c55-babc-4014-8d27-171b5bac591b">FTMotion Test İşletmesi · 10 ziyaret / 1 hediye</option></select><input id="business" type="hidden" value="404e3c55-babc-4014-8d27-171b5bac591b"><p id="scanJoinStatus" class="muted"></p><button id="enroll">Programa katıl</button><label>Üyelik numaran</label><input id="membership" readonly placeholder="Programa katılınca otomatik oluşur"><button id="issue">Ziyaret kodu oluştur</button><div id="qrvisual" class="hidden" style="margin-top:14px;text-align:center"><canvas id="qrcanvas" style="max-width:100%;border-radius:12px" aria-label="Ziyaret QR kodu"></canvas><p class="muted">QR kodu 90 saniye geçerlidir.</p></div><pre id="qrdata" class="hidden"></pre></div>
-<div class="card"><h2>İşletme QR kodu</h2><p class="muted">Bu sabit QR kodunu müşteriye gösterin veya işletmenize asın. Müşteri telefon kamerasıyla okutup giriş yapınca programa katılabilir.</p><canvas id="businessQr" style="display:block;max-width:100%;margin:12px auto" aria-label="İşletme katılım QR kodu"></canvas><p id="businessJoinLink" class="muted" style="overflow-wrap:anywhere"></p></div><div class="card"><h2>İşletme</h2><p class="muted">Yalnızca işletmenin doğrulanmış sahibi ziyaret ve hediye onaylayabilir.</p><label>Müşterinin ziyaret kodu</label><input id="token" placeholder="43 karakterlik ziyaret kodu"><button class="secondary" id="scan" type="button">Kamerayla QR okut</button><div id="cameraArea" class="hidden"><video id="camera" playsinline muted style="width:100%;border-radius:12px;margin-top:12px"></video><button id="stopScan" type="button" class="secondary">Kamerayı kapat</button></div><button id="confirm">Ziyareti onayla</button><label>Hediye teslim edilecek üyelik numarası</label><input id="redeemMembership" placeholder="Müşterinin üyelik numarası"><button id="redeem">Hediyeyi teslim et</button></div></section>
+<div class="card"><h2>Sadakat kartım</h2><p class="muted">Test işletmesini seçip programa katıl. Tek kullanımlık QR kodunu işletmeye göster.</p><label>İşletme seç</label><select id="businessSelect" style="width:100%;padding:13px;border:1px solid #d7cec3;border-radius:11px;font:inherit;background:#fff"><option value="404e3c55-babc-4014-8d27-171b5bac591b">FTMotion Test İşletmesi · 10 ziyaret / 1 hediye</option></select><input id="business" type="hidden" value="404e3c55-babc-4014-8d27-171b5bac591b"><p id="scanJoinStatus" class="muted"></p><button id="enroll">Programa katıl</button><label>Üyelik numaran</label><input id="membership" readonly placeholder="Programa katılınca otomatik oluşur"><button id="issue">Ziyaret kodu oluştur</button><div id="qrvisual" class="hidden" style="margin-top:14px;text-align:center"><canvas id="qrcanvas" style="max-width:100%;border-radius:12px" aria-label="Ziyaret QR kodu"></canvas><p class="muted">QR kodu 90 saniye geçerlidir.</p></div><pre id="qrdata" class="hidden"></pre></div>
+</section>
 <div class="card"><h2>İşlem sonucu</h2><p id="msg" role="status" aria-live="polite">Giriş bekleniyor.</p></div><small>Test arayüzüdür. V41 tasarımına ve mevcut işletme kartlarına bağlı değildir.</small></main>
 <script type="module">
 import{createClient}from 'https://esm.sh/@supabase/supabase-js@2.57.0';
@@ -13,7 +13,7 @@ const URL='https://trchdzdvacalsyrsllar.supabase.co',ENDPOINT=URL+'/functions/v1
 const $=id=>document.getElementById(id),msg=t=>$('msg').textContent=t;
 const login=$('login'),app=$('app');let supabase=null;
 const requestedBusiness=new URLSearchParams(location.search).get('isletme');const isUuid=x=>/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(x||'');let joinedFromQr=false;
-async function businessQr(){const id=$('business').value;const url=new URL(location.href);url.search='';url.searchParams.set('isletme',id);$('businessJoinLink').textContent=url.toString();await QRCode.toCanvas($('businessQr'),url.toString(),{width:240,margin:2})}
+async function businessQr(){if(!$('businessQr'))return;const id=$('business').value;const url=new URL(location.href);url.search='';url.searchParams.set('isletme',id);$('businessJoinLink').textContent=url.toString();await QRCode.toCanvas($('businessQr'),url.toString(),{width:240,margin:2})}
 
 async function initialize(){
  // This key is a public/publishable Supabase anon key, NOT a service-role key.
@@ -21,7 +21,7 @@ async function initialize(){
  const anon='sb_publishable_m9eSYTu9phCdpTRycB56rA_5clJ3LyB';
  if(typeof anon!=='string'||!anon){msg('Test bağlantısı için herkese açık Supabase anon anahtarı henüz yapılandırılmadı.');return}
  supabase=createClient(URL,anon,{auth:{persistSession:true,autoRefreshToken:true}});
- if(isUuid(requestedBusiness)){const option=[...$('businessSelect').options].find(o=>o.value===requestedBusiness);if(option){$('businessSelect').value=requestedBusiness;$('business').value=requestedBusiness;$('scanJoinStatus').textContent='İşletme QR koduyla geldiniz. Girişten sonra programa katılım yapılacak.'}}await businessQr();
+ if(isUuid(requestedBusiness)){const option=[...$('businessSelect').options].find(o=>o.value===requestedBusiness);if(option){$('businessSelect').value=requestedBusiness;$('business').value=requestedBusiness;$('scanJoinStatus').textContent='İşletme QR koduyla geldiniz. Girişten sonra programa katılım yapılacak.'}}if($('businessQr'))await businessQr();
  const{data:{session}}=await supabase.auth.getSession();render(session);
  supabase.auth.onAuthStateChange((_event,s)=>render(s));
 }
@@ -33,33 +33,11 @@ $('logout').onclick=async()=>{stopCamera();clearQr();await supabase?.auth.signOu
 async function call(action,payload){if(!supabase)return msg('Bağlantı yapılandırılmadı');const{data:{session}}=await supabase.auth.getSession();if(!session)return msg('Önce giriş yapın');msg('İşlem gönderiliyor...');try{const response=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','apikey':'sb_publishable_m9eSYTu9phCdpTRycB56rA_5clJ3LyB','Authorization':'Bearer '+session.access_token},body:JSON.stringify({action,...payload})});const data=await response.json();if(!response.ok)throw Error(data.error||'İşlem reddedildi');msg('İşlem başarılı');return data}catch(e){msg('İşlem yapılamadı: '+e.message);return null}}
 $('enroll').onclick=async()=>{const d=await call('enroll',{business_id:$('business').value.trim()});if(d){$('membership').value=d.result;const{data:{session}}=await supabase.auth.getSession();if(session?.user?.id)localStorage.setItem('cebimde_pilot_membership_'+session.user.id+'_'+$('business').value,d.result);msg('Programa katıldın. QR kodu oluşturabilirsin.')}};
 $('issue').onclick=async()=>{const d=await call('issue',{membership_id:$('membership').value.trim()});if(d){clearQr();const payload={version:d.version,kind:d.kind,token:d.token};$('qrdata').textContent=JSON.stringify(payload,null,2)+'\nSon geçerlilik: '+d.expires_at;$('qrdata').classList.remove('hidden');await QRCode.toCanvas($('qrcanvas'),JSON.stringify(payload),{width:260,margin:2});$('qrvisual').classList.remove('hidden');const remaining=Date.parse(d.expires_at)-Date.now();expiryTimer=setTimeout(()=>{clearQr();msg('Ziyaret QR kodunun süresi doldu. Yeni kod oluşturun.')},Math.max(0,remaining));}};
-$('confirm').onclick=async()=>{const d=await call('confirm',{token:$('token').value.trim()});if(d)msg('Ziyaret onaylandı: '+d.result)};
-$('redeem').onclick=async()=>{const d=await call('redeem',{membership_id:$('redeemMembership').value.trim()});if(d)msg('Hediye teslim edildi: '+d.result)};
 let stream=null,scanning=false,expiryTimer=null;
 function clearQr(){if(expiryTimer){clearTimeout(expiryTimer);expiryTimer=null}$('qrdata').textContent='';$('qrdata').classList.add('hidden');$('qrvisual').classList.add('hidden')}
 
-function stopCamera(){scanning=false;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('camera').srcObject=null;$('cameraArea').classList.add('hidden')}
-$('stopScan').onclick=stopCamera;
-$('scan').onclick=async()=>{
- if(!('BarcodeDetector' in window)){msg('Bu tarayıcı QR okumayı desteklemiyor. Kodu elle girin.');return}
- try{
-  stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
-  $('camera').srcObject=stream;$('cameraArea').classList.remove('hidden');
-  await $('camera').play();scanning=true;
-  const detector=new BarcodeDetector({formats:['qr_code']});
-  while(scanning){
-   const found=await detector.detect($('camera'));
-   if(found.length){
-    let payload;try{payload=JSON.parse(found[0].rawValue)}catch{payload=null}
-    if(payload?.version===1&&payload?.kind==='cebimde_visit'&&typeof payload.token==='string'&&/^[A-Za-z0-9_-]{43}$/.test(payload.token)){
-     $('token').value=payload.token;stopCamera();msg('QR okundu. Ziyareti onaylayabilirsiniz.');break
-    }
-   }
-   await new Promise(resolve=>setTimeout(resolve,250));
-  }
- }catch{stopCamera();msg('Kamera açılamadı. İzinleri kontrol edin veya kodu elle girin.')}
-};
+function stopCamera(){scanning=false;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}}
 window.addEventListener('pagehide',()=>{stopCamera();clearQr()});
-$('businessSelect').onchange=async()=>{$('business').value=$('businessSelect').value;const{data:{session}}=await supabase.auth.getSession();$('membership').value=session?.user?.id?localStorage.getItem('cebimde_pilot_membership_'+session.user.id+'_'+$('business').value)||'':'';clearQr();await businessQr()};
+$('businessSelect').onchange=async()=>{$('business').value=$('businessSelect').value;const{data:{session}}=await supabase.auth.getSession();$('membership').value=session?.user?.id?localStorage.getItem('cebimde_pilot_membership_'+session.user.id+'_'+$('business').value)||'':'';clearQr();if($('businessQr'))await businessQr()};
 initialize();
 </script></body></html>
