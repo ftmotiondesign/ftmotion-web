@@ -21,11 +21,11 @@ async function initialize(){
  const{data:{session}}=await supabase.auth.getSession();render(session);
  supabase.auth.onAuthStateChange((_event,s)=>render(s));
 }
-function render(s){login.classList.toggle('hidden',!!s);app.classList.toggle('hidden',!s);$('identity').textContent=s?.user?.email||'';if(s)msg('Oturum doğrulandı.')}
+function render(s){login.classList.toggle('hidden',!!s);app.classList.toggle('hidden',!s);$('identity').textContent=s?.user?.email||'';if(s){const k='cebimde_pilot_membership_'+s.user.id+'_'+$('business').value;const saved=localStorage.getItem(k);$('membership').value=saved||'';msg(saved?'Oturum doğrulandı. Önceki üyeliğiniz bu cihazda bulundu.':'Oturum doğrulandı.')}else{$('membership').value='';clearQr()}}
 $('loginForm').onsubmit=async e=>{e.preventDefault();if(!supabase)return;msg('Giriş yapılıyor...');const{error}=await supabase.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});msg(error?'Giriş başarısız: '+error.message:'Giriş başarılı');$('password').value=''};
 $('logout').onclick=async()=>{stopCamera();clearQr();await supabase?.auth.signOut();msg('Çıkış yapıldı')};
 async function call(action,payload){if(!supabase)return msg('Bağlantı yapılandırılmadı');const{data:{session}}=await supabase.auth.getSession();if(!session)return msg('Önce giriş yapın');msg('İşlem gönderiliyor...');try{const response=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','apikey':'sb_publishable_m9eSYTu9phCdpTRycB56rA_5clJ3LyB','Authorization':'Bearer '+session.access_token},body:JSON.stringify({action,...payload})});const data=await response.json();if(!response.ok)throw Error(data.error||'İşlem reddedildi');msg('İşlem başarılı');return data}catch(e){msg('İşlem yapılamadı: '+e.message);return null}}
-$('enroll').onclick=async()=>{const d=await call('enroll',{business_id:$('business').value.trim()});if(d){$('membership').value=d.result;msg('Programa katıldın. QR kodu oluşturabilirsin.')}};
+$('enroll').onclick=async()=>{const d=await call('enroll',{business_id:$('business').value.trim()});if(d){$('membership').value=d.result;const{data:{session}}=await supabase.auth.getSession();if(session?.user?.id)localStorage.setItem('cebimde_pilot_membership_'+session.user.id+'_'+$('business').value,d.result);msg('Programa katıldın. QR kodu oluşturabilirsin.')}};
 $('issue').onclick=async()=>{const d=await call('issue',{membership_id:$('membership').value.trim()});if(d){clearQr();const payload={version:d.version,kind:d.kind,token:d.token};$('qrdata').textContent=JSON.stringify(payload,null,2)+'\nSon geçerlilik: '+d.expires_at;$('qrdata').classList.remove('hidden');await QRCode.toCanvas($('qrcanvas'),JSON.stringify(payload),{width:260,margin:2});$('qrvisual').classList.remove('hidden');const remaining=Date.parse(d.expires_at)-Date.now();expiryTimer=setTimeout(()=>{clearQr();msg('Ziyaret QR kodunun süresi doldu. Yeni kod oluşturun.')},Math.max(0,remaining));}};
 $('confirm').onclick=async()=>{const d=await call('confirm',{token:$('token').value.trim()});if(d)msg('Ziyaret onaylandı: '+d.result)};
 $('redeem').onclick=async()=>{const d=await call('redeem',{membership_id:$('redeemMembership').value.trim()});if(d)msg('Hediye teslim edildi: '+d.result)};
@@ -54,6 +54,6 @@ $('scan').onclick=async()=>{
  }catch{stopCamera();msg('Kamera açılamadı. İzinleri kontrol edin veya kodu elle girin.')}
 };
 window.addEventListener('pagehide',()=>{stopCamera();clearQr()});
-$('businessSelect').onchange=()=>{$('business').value=$('businessSelect').value;$('membership').value='';clearQr()};
+$('businessSelect').onchange=async()=>{$('business').value=$('businessSelect').value;const{data:{session}}=await supabase.auth.getSession();$('membership').value=session?.user?.id?localStorage.getItem('cebimde_pilot_membership_'+session.user.id+'_'+$('business').value)||'':'';clearQr()};
 initialize();
 </script></body></html>
