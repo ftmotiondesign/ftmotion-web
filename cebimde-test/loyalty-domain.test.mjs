@@ -1,0 +1,15 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { earnedRewards, balanceFromLedger, tokenIsValid } from './loyalty-domain.mjs';
+const visits = n => Array.from({length:n},(_,i)=>({event_type:'visit',units:1,token_id:'t'+i}));
+test('10 visits earn exactly one gift',()=>assert.deepEqual(balanceFromLedger(visits(10)),{visits:10,rewardsEarned:1,rewardsRedeemed:0,rewardsAvailable:1,points:0}));
+test('20 visits earn two gifts',()=>assert.equal(balanceFromLedger(visits(20)).rewardsAvailable,2));
+test('redeeming a gift does not erase visits',()=>{const b=balanceFromLedger([...visits(10),{event_type:'reward_redeemed',units:1}]);assert.equal(b.visits,10);assert.equal(b.rewardsAvailable,0)});
+test('cannot redeem without earning',()=>assert.throws(()=>balanceFromLedger([{event_type:'reward_redeemed',units:1}])));
+test('duplicate visit token is rejected',()=>assert.throws(()=>balanceFromLedger([visits(1)[0],visits(1)[0]])));
+test('invalid visit amount is rejected',()=>assert.throws(()=>balanceFromLedger([{event_type:'visit',units:10,token_id:'t'}])));
+test('points never go negative',()=>assert.throws(()=>balanceFromLedger([{event_type:'points_spent',units:1}])));
+test('expired token rejected',()=>assert.equal(tokenIsValid({expires_at:new Date(Date.now()-1000).toISOString(),consumed_at:null}),false));
+test('consumed token rejected',()=>assert.equal(tokenIsValid({expires_at:new Date(Date.now()+10000).toISOString(),consumed_at:new Date().toISOString()}),false));
+test('valid unused token accepted',()=>assert.equal(tokenIsValid({expires_at:new Date(Date.now()+10000).toISOString(),consumed_at:null}),true));
+test('threshold bounds',()=>assert.throws(()=>earnedRewards(10,1)));
