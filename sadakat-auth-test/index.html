@@ -162,7 +162,7 @@ async function submitAuth(e){
   const full_name=$('#aname').value.trim();
   const d=await api('/auth/v1/signup','POST',{email,password,data:{full_name}});
   if(d.access_token){saveSession(d);authUser=d.user;await ensureProfile(authUser);hideModal();enter(users()[0])}
-  else{err.style.color='#417e52';err.textContent='Kayıt isteğin alındı. E-postana gelen bağlantıyı onayladıktan sonra giriş yap.';btn.textContent='Tekrar Gönderme';}
+  else{err.style.color='#8a593f';err.textContent='Eğer hesabın zaten varsa onay maili gelmez. Önce Giriş Yap seçeneğini dene; şifreni bilmiyorsan Şifremi Unuttum bağlantısını kullan.';btn.textContent='Girişe Geç';btn.type='button';btn.onclick=()=>showModal('login');}
  }else{
   const d=await api('/auth/v1/token?grant_type=password','POST',{email,password});saveSession(d);authUser=d.user;await ensureProfile(authUser);hideModal();enter(users()[0]);
  }
