@@ -96,6 +96,7 @@ h1 em{color:#ed6736}.primary,.qr-action{background:linear-gradient(105deg,#ff8b4
 .loyalty-details button,.offer-info button,.cards-sample button{background:#fff0e4;color:#ca5b30}
 .account-icon,.cards-sample-icon,.reward-empty .symbol{background:#ffe8d8}
 .secondary{background:#fff;border-color:#e1bba5;color:#784a3b}
+.password-box{position:relative;display:flex;align-items:center}.password-box input{width:100%;padding-right:60px}.password-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:#785a4a;border-radius:10px;padding:10px 12px;font-size:22px;line-height:1;cursor:pointer}.password-toggle:focus-visible{outline:2px solid #f07844;outline-offset:2px}
 </style></head><body><main class="app"><section id="welcome" class="welcome"><header class="head"><div class="brand">✦ Sadakat <b>Kartım</b></div><button class="help" onclick="showModal('how')">ⓘ Nasıl Kullanılır?</button></header><h1>Alışveriş yap.<br><em>Biriktir, kazan!</em></h1><p>Sevdiğin işletmelerde ziyaretlerin hediyeye dönüşsün.</p><div class="hero"><div class="copy">Tek QR ile<br>daha çok ödül ✨</div><div class="mock"><div><div class="qrmini">▦</div>Sadakat Kartım<br>QR Kartım</div></div></div><div class="steps"><div class="step"><i>▦</i><strong>Tek QR</strong><small>Kolay katılım</small></div><div class="step"><i>☕</i><strong>Damga Biriktir</strong><small>Ziyaret ettikçe</small></div><div class="step"><i>🎁</i><strong>Hediyeni Al</strong><small>Ödülünü kazan</small></div></div><button class="primary" onclick="showModal('register')">Hemen Ücretsiz Üye Ol →</button><button class="secondary" onclick="showModal('login')">Zaten Üyeyim · Giriş Yap</button><p class="notice">TEST SÜRÜMÜ · Gerçek e-posta üyeliği denemesi</p></section>
 <section id="dash" class="dash"><div class="dash-top"><header class="head"><div class="brand">♛ Sadakat <b>Kartım</b></div><button class="help" onclick="logout()">Çıkış Yap</button></header><h1>Merhaba <em id="firstName"></em> 👋</h1><p>Bugün yeni fırsatlar seni bekliyor.</p></div>
 <div class="dash-body">
@@ -121,12 +122,13 @@ function showModal(type){
  let body=type==='how'?'<p>Tek QR ile tüm anlaşmalı işletmelerde sadakat avantajı.</p><div class="info"><div>👤 <b>Üye Ol</b>Kartın oluşsun.</div><div>▦ <b>QR Göster</b>Kasada okut.</div><div>✅ <b>Damga Biriktir</b>İşletme onaylasın.</div><div>🎁 <b>Hediyeni Al</b>Şartları tamamla.</div></div><button class="primary" onclick="showModal(\'register\')">Hemen Üye Ol</button>':
  '<form onsubmit="submitAuth(event)">'+(type==='register'?'<label class="field">Ad Soyad<input id="aname" required minlength="3" autocomplete="name"></label>':'')+
  '<label class="field">E-posta<input type="email" id="email" required autocomplete="email"></label>'+
- '<label class="field">Şifre<input type="password" id="password" required minlength="8" autocomplete="'+(type==='register'?'new-password':'current-password')+'"></label>'+
+ '<label class="field">Şifre<div class="password-box"><input type="password" id="password" required minlength="8" autocomplete="'+(type==='register'?'new-password':'current-password')+'"><button type="button" class="password-toggle" id="passwordToggle" aria-label="Şifreyi göster" aria-pressed="false" onclick="togglePassword()">👁</button></div></label>'+
  '<div id="err" class="error" role="status"></div><button class="primary" id="authSubmit" type="submit">'+(type==='register'?'Üye Ol':'Giriş Yap')+'</button>'+
  (type==='login'?'<button class="secondary" type="button" onclick="forgotPassword()">Şifremi Unuttum</button>':'')+
  '<p class="notice">Gerçek e-posta kaydı testidir. Doğrulama e-postası gerekebilir.</p></form>';
  $('#modalContent').innerHTML='<h2>'+title+'</h2>'+body;$('#overlay').classList.add('show');
 }
+function togglePassword(){const input=document.getElementById('password'),btn=document.getElementById('passwordToggle');if(!input||!btn)return;const visible=input.type==='password';input.type=visible?'text':'password';btn.textContent=visible?'🙈':'👁';btn.setAttribute('aria-label',visible?'Şifreyi gizle':'Şifreyi göster');btn.setAttribute('aria-pressed',String(visible));}
 function hideModal(){$('#overlay').classList.remove('show')}
 async function api(path,method='GET',payload=null,token=null){
  const h={'apikey':KEY,'Content-Type':'application/json'};
