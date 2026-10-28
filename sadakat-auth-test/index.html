@@ -168,7 +168,7 @@ async function submitAuth(e){
  }else{
   const d=await api('/auth/v1/token?grant_type=password','POST',{email,password});saveSession(d);authUser=d.user;await ensureProfile(authUser);hideModal();enter(users()[0]);
  }
- }catch(ex){err.style.color='#b62e23';err.textContent=/Email not confirmed/i.test(ex.message)?'E-posta adresini doğruladıktan sonra tekrar giriş yap.':ex.message}
+ }catch(ex){err.style.color='#b62e23';err.textContent=/Email not confirmed/i.test(ex.message)?'E-posta adresini doğruladıktan sonra tekrar giriş yap.':/Invalid login credentials/i.test(ex.message)?'E-posta veya şifre eşleşmiyor. Bu adres FTMotion işletme hesabında kayıtlıysa aynı hesabın mevcut şifresi geçerlidir.':'İşlem tamamlanamadı: '+ex.message}
  finally{btn.disabled=false;if(btn.textContent==='İşleniyor...')btn.textContent=modalType==='register'?'Üye Ol':'Giriş Yap'}
 }
 async function forgotPassword(){
