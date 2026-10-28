@@ -32,6 +32,8 @@
 @media(max-width:375px){.dash-top{padding:23px 16px 78px}.dash-top .head{margin-bottom:34px}.dash-top h1{font-size:29px}.dash-body{padding:0 12px 20px}.dash .qrbox{width:116px;height:116px;min-height:116px}.dash .qrbox img,.dash .qrbox canvas{width:102px!important;height:102px!important}.member-name{font-size:17px}}
 
 .rewards-heading{font-size:25px;font-weight:850;letter-spacing:-.5px;margin:0 0 7px}.rewards-intro{font-size:13px;color:#8c7569;margin:0 0 19px}.reward-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:22px}.reward-summary div{background:white;border:1px solid #efe1d7;border-radius:17px;text-align:center;padding:15px 4px}.reward-summary strong{display:block;color:#e17c4a;font-size:26px}.reward-summary small{font-size:11px;color:#826e65}.reward-tabs{display:flex;gap:5px;background:#f1e8e2;padding:5px;border-radius:14px;margin:0 0 18px}.reward-tabs button{border:0;background:transparent;flex:1;color:#91766a;border-radius:11px;padding:11px 3px;font-size:12px;font-weight:750}.reward-tabs button.active{background:white;color:#cf7045;box-shadow:0 2px 7px #553c2914}.reward-empty{border:1px solid #f0e1d6;border-radius:22px;padding:33px 17px;text-align:center;background:#fff}.reward-empty .symbol{width:75px;height:75px;display:grid;place-items:center;border-radius:50%;margin:0 auto 14px;background:#fff0e5;font-size:34px}.reward-empty h3{font-size:17px;margin:0 0 8px}.reward-empty p{font-size:13px;margin:0;color:#8e776d}.reward-demo{background:white;border:1px solid #f1e2d7;border-radius:15px;display:flex;align-items:center;gap:12px;padding:12px;margin:9px 0}.reward-demo .emoji{font-size:26px;background:#fff0e6;border-radius:12px;display:grid;place-items:center;width:52px;height:52px;flex:none}.reward-demo .detail{flex:1;min-width:0}.reward-demo strong{display:block;font-size:13px}.reward-demo small{display:block;font-size:11px;color:#876e62;margin:4px 0 8px}.reward-progress{height:6px;border-radius:6px;background:#f0e6df;overflow:hidden}.reward-progress i{display:block;height:100%;border-radius:6px;background:#e78350}.reward-demo .count{font-size:12px;color:#d87549;font-weight:800}.reward-note{text-align:center;color:#a18c80;font-size:11px;margin:15px 0}
+
+.dash.subpage .dash-top{padding-bottom:28px}.dash.subpage .dash-top .head{margin-bottom:10px}.dash.subpage .dash-top h1,.dash.subpage .dash-top p{display:none}.dash.subpage .dash-body{margin-top:0;padding-top:22px}.dash.subpage .membercard,.dash.subpage .stat,#homeSections[hidden]{display:none!important}.dash.subpage #tabContent{display:block!important;min-height:55vh}.bottom button{touch-action:manipulation;cursor:pointer;position:relative;z-index:2}
 </style></head><body><main class="app"><section id="welcome" class="welcome"><header class="head"><div class="brand">✦ Sadakat <b>Kartım</b></div><button class="help" onclick="showModal('how')">ⓘ Nasıl Kullanılır?</button></header><h1>Alışveriş yap.<br><em>Biriktir, kazan!</em></h1><p>Sevdiğin işletmelerde ziyaretlerin hediyeye dönüşsün.</p><div class="hero"><div class="copy">Tek QR ile<br>daha çok ödül ✨</div><div class="mock"><div><div class="qrmini">▦</div>Sadakat Kartım<br>QR Kartım</div></div></div><div class="steps"><div class="step"><i>▦</i><strong>Tek QR</strong><small>Kolay katılım</small></div><div class="step"><i>☕</i><strong>Damga Biriktir</strong><small>Ziyaret ettikçe</small></div><div class="step"><i>🎁</i><strong>Hediyeni Al</strong><small>Ödülünü kazan</small></div></div><button class="primary" onclick="showModal('register')">Hemen Ücretsiz Üye Ol →</button><button class="secondary" onclick="showModal('login')">Zaten Üyeyim · Giriş Yap</button><p class="notice">TEST SÜRÜMÜ · Bu cihazda çalışan üyelik denemesi</p></section>
 <section id="dash" class="dash"><div class="dash-top"><header class="head"><div class="brand">♛ Sadakat <b>Kartım</b></div><button class="help" onclick="logout()">Çıkış Yap</button></header><h1>Merhaba <em id="firstName"></em> 👋</h1><p>Bugün yeni fırsatlar seni bekliyor.</p></div>
 <div class="dash-body">
@@ -66,15 +68,25 @@ function renderRewards(tab='ready'){
  root.querySelectorAll('[data-reward]').forEach(function(b){b.addEventListener('click',function(){renderRewards(b.dataset.reward)})});
 }
 function switchTab(t){
- document.querySelectorAll('.bottom button').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));
- document.querySelector('#homeSections').style.display=t==='anasayfa'?'':'none';
- let a=document.querySelector('#tabContent');
- if(t==='anasayfa'){a.style.display='none';window.scrollTo(0,0);return}
- a.style.display='block';
- if(t==='oduller'){renderRewards('ready');window.scrollTo(0,0);return}
- const data={kartlar:['Kartlarım','Henüz katıldığın işletme kartı yok. QR kodunu kullanarak kampanyalara katılabilirsin.'],firsatlar:['Fırsatlar','İşletme fırsatları bağlandığında burada listelenecek.'],hesabim:['Hesabım','Üyelik bilgilerini aşağıda görebilirsin.']};
- const d=data[t];a.style.background='white';a.style.padding='20px';a.innerHTML='<h2>'+d[0]+'</h2><p>'+d[1]+'</p>'+(t==='hesabim'?'<p><strong>'+document.querySelector('#memberName').textContent+'</strong></p><button class="secondary" onclick="logout()">Çıkış Yap</button>':'');window.scrollTo(0,0)
+ const dash=document.getElementById('dash');
+ const home=document.getElementById('homeSections');
+ const content=document.getElementById('tabContent');
+ const isHome=t==='anasayfa';
+ dash.classList.toggle('subpage',!isHome);
+ home.hidden=!isHome;
+ content.style.display=isHome?'none':'block';
+ document.querySelectorAll('.bottom button').forEach(b=>{b.classList.toggle('active',b.dataset.tab===t);b.setAttribute('aria-current',b.dataset.tab===t?'page':'false')});
+ if(isHome){window.scrollTo(0,0);return}
+ if(t==='oduller'){renderRewards('ready')}
+ else {
+ const data={kartlar:['Kartlarım','Henüz katıldığın bir işletme kartı yok.'],firsatlar:['Fırsatlar','İşletme fırsatları bağlandığında burada gösterilecek.'],hesabim:['Hesabım','Üyelik bilgilerin.']};
+ const d=data[t]||['Bilgi','Yakında'];
+ content.style.background='white';content.style.padding='20px';
+ content.innerHTML='<h2>'+d[0]+'</h2><p>'+d[1]+'</p>'+(t==='hesabim'?'<p><strong>'+document.querySelector('#memberName').textContent+'</strong></p><button class="secondary" onclick="logout()">Çıkış Yap</button>':'');
+ }
+ window.scrollTo({top:0,behavior:'instant'});
 }
-function logout(){localStorage.removeItem(S);$('#dash').classList.remove('active');$('#welcome').classList.remove('hidden');window.scrollTo(0,0)}
+document.querySelectorAll('.bottom button[data-tab]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+function logout(){document.getElementById('dash').classList.remove('subpage');localStorage.removeItem(S);$('#dash').classList.remove('active');$('#welcome').classList.remove('hidden');window.scrollTo(0,0)}
 const existing=users().find(u=>u.id===localStorage.getItem(S));if(existing)enter(existing);
 </script></body></html>
