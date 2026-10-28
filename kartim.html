@@ -292,6 +292,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <label>İşletme adı<input name="name" required maxlength="150"></label>
 <label>İl / İlçe<input name="location_text"></label>
 <label>Telefon<input name="phone" inputmode="tel" placeholder="+90"></label>
+<label>Cep Telefonu<input name="mobile_phone" inputmode="tel" placeholder="+90 (isteğe bağlı)"></label>
 <label>WhatsApp<input name="whatsapp" inputmode="tel" placeholder="+90"></label>
 <label>Instagram bağlantısı<input name="instagram" type="url" placeholder="https://instagram.com/..."></label>
 <label>Web sitesi<input name="website" type="url" placeholder="https://..."></label>
@@ -441,7 +442,7 @@ function showSaveToast(message='✓ Değişiklikler kaydedildi'){
 }
 $('stickySaveButton').onclick=()=>{const form=$('profile');const details=form.querySelector('details');if(details)details.open=true;form.requestSubmit()};
 
-const keys=['name','location_text','phone','whatsapp','instagram','website','email','google_review_url','maps_url','tour_url','streetview_url','address','qr_description'];
+const keys=['name','location_text','phone','mobile_phone','whatsapp','instagram','website','email','google_review_url','maps_url','tour_url','streetview_url','address','qr_description'];
 const mediaKeys=['logo_url','cover_url','location_video_url','promo_video_url'];
 const slugify=s=>s.toLocaleLowerCase('tr').replace(/ı/g,'i').replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ş/g,'s').replace(/ö/g,'o').replace(/ç/g,'c').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 function pageUrl(slug){return record.short_slug?new URL('qr/'+encodeURIComponent(record.short_slug)+'/'+encodeURIComponent(slug),location.href).href:url()+'&page='+encodeURIComponent(slug)}
@@ -754,6 +755,6 @@ async function loadAnalytics(){
 period.addEventListener('change',loadAnalytics);loadAnalytics();
 </script>
 <script>
-(()=>{const init=()=>{for(const name of ['phone','whatsapp']){const input=document.querySelector('#profile [name="'+name+'"]');if(!input)continue;input.addEventListener('focus',()=>{if(!input.value.trim())input.value='+90'});input.addEventListener('blur',()=>{if(input.value.trim()==='+90')input.value=''})}};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init()})();
+(()=>{const init=()=>{for(const name of ['phone','mobile_phone','whatsapp']){const input=document.querySelector('#profile [name="'+name+'"]');if(!input)continue;input.addEventListener('focus',()=>{if(!input.value.trim())input.value='+90'});input.addEventListener('blur',()=>{if(input.value.trim()==='+90')input.value=''})}};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init()})();
 </script></body></html>
 
