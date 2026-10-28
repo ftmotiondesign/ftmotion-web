@@ -76,6 +76,26 @@ body{background:#f8ede5;color:var(--ink)}
 .account-icon,.cards-sample-icon,.reward-empty .symbol{background:#fff0e7}
 .modal{background:#fffaf6}
 
+
+/* Canlı Soft Mercan — kontrast iyileştirmesi */
+:root{--ink:#35251f;--orange:#f36e38;--cream:#fff8f2;--line:#eed9ce}
+body{background:#f5e7dd;color:#35251f}.app,.dash{background:#fff8f2}
+.brand{color:#33221d}.brand b{color:#ec6735}.help{background:#ffebde;color:#a24b2e}
+h1 em{color:#ed6736}.primary,.qr-action{background:linear-gradient(105deg,#ff8b40,#f06435);box-shadow:0 10px 22px #e9733a35;color:#fff}
+.dash-top{background:linear-gradient(125deg,#583b35 0%,#925748 57%,#d47b58 100%)}
+.dash-top .brand{color:white}.dash-top .brand b,.dash-top h1 em{color:#ffc39d}
+.dash-top p{color:#fff0e6}.dash-top .help{background:#ffffff22;color:#fff;border:1px solid #ffffff80}
+.dash .membercard{background:linear-gradient(130deg,#67463e,#975d4d 62%,#c58163);border-color:#e7a580;box-shadow:0 14px 27px #6541312b}
+.dash .membercard h2,.dash .member-name{color:white}.dash .membercard .muted{color:#fcebe2}
+.account-person{background:linear-gradient(120deg,#774f43,#bb7355);color:#fff}
+.dash .stat div,.loyalty,.deal,.offer-card,.account-panel,.reward-summary div{background:#fff;border-color:#f0ddd1}
+.dash .stat strong,.reward-summary strong{color:#ea6d39}
+.bottom button.active,.section-heading button{color:#ed6c37}
+.reward-tabs button.active,.cards-tabs button.active{color:#e26837}
+.offers-filters button.active{background:#ed7642;border-color:#ed7642}
+.loyalty-details button,.offer-info button,.cards-sample button{background:#fff0e4;color:#ca5b30}
+.account-icon,.cards-sample-icon,.reward-empty .symbol{background:#ffe8d8}
+.secondary{background:#fff;border-color:#e1bba5;color:#784a3b}
 </style></head><body><main class="app"><section id="welcome" class="welcome"><header class="head"><div class="brand">✦ Sadakat <b>Kartım</b></div><button class="help" onclick="showModal('how')">ⓘ Nasıl Kullanılır?</button></header><h1>Alışveriş yap.<br><em>Biriktir, kazan!</em></h1><p>Sevdiğin işletmelerde ziyaretlerin hediyeye dönüşsün.</p><div class="hero"><div class="copy">Tek QR ile<br>daha çok ödül ✨</div><div class="mock"><div><div class="qrmini">▦</div>Sadakat Kartım<br>QR Kartım</div></div></div><div class="steps"><div class="step"><i>▦</i><strong>Tek QR</strong><small>Kolay katılım</small></div><div class="step"><i>☕</i><strong>Damga Biriktir</strong><small>Ziyaret ettikçe</small></div><div class="step"><i>🎁</i><strong>Hediyeni Al</strong><small>Ödülünü kazan</small></div></div><button class="primary" onclick="showModal('register')">Hemen Ücretsiz Üye Ol →</button><button class="secondary" onclick="showModal('login')">Zaten Üyeyim · Giriş Yap</button><p class="notice">TEST SÜRÜMÜ · Bu cihazda çalışan üyelik denemesi</p></section>
 <section id="dash" class="dash"><div class="dash-top"><header class="head"><div class="brand">♛ Sadakat <b>Kartım</b></div><button class="help" onclick="logout()">Çıkış Yap</button></header><h1>Merhaba <em id="firstName"></em> 👋</h1><p>Bugün yeni fırsatlar seni bekliyor.</p></div>
 <div class="dash-body">
