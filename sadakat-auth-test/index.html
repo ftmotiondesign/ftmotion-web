@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#fbf5ef"><title>Sadakat Kartım · Test</title>
+<style>
+:root{--ink:#342019;--orange:#e77a43;--cream:#fbf5ef;--line:#ead9ca}*{box-sizing:border-box}body{margin:0;background:#efe5db;color:var(--ink);font:15px system-ui,Arial}.app{max-width:440px;min-height:100dvh;margin:auto;background:var(--cream);padding:20px 19px 24px;position:relative}.head{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}.brand{font-weight:900;font-size:21px}.brand b{color:var(--orange)}button{font:inherit;cursor:pointer}.help{border:0;background:#f8e6d7;border-radius:24px;color:#6d4635;padding:10px 14px;font-size:12px;font-weight:700}h1{font-size:35px;line-height:1.13;letter-spacing:-1.3px;margin:0 0 12px}h1 em{font-style:normal;color:var(--orange)}p{color:#7a6358;line-height:1.48;margin:0 0 18px}.hero{height:285px;position:relative;border-radius:28px;overflow:hidden;background:linear-gradient(145deg,#5c3321,#be7f54);display:flex;align-items:end;padding:20px;color:white;box-shadow:0 14px 32px #8a655026}.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#2e180cc2,transparent 75%),url('https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=1000&q=85') center/cover}.hero .copy{position:relative;font-size:22px;font-weight:850;line-height:1.25;max-width:200px}.mock{position:absolute;right:22px;top:31px;background:#fff7f0;border:7px solid #342923;border-radius:25px;transform:rotate(10deg);height:191px;width:116px;box-shadow:0 12px 22px #0006;display:grid;place-items:center;text-align:center;color:#ac5934;font-size:10px;font-weight:800}.qrmini{font-size:60px;line-height:1}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:18px}.step{text-align:center;background:white;border-radius:17px;padding:16px 5px;box-shadow:0 6px 18px #65432d0c}.step i{font-style:normal;font-size:25px;display:block;background:#fff0e4;width:48px;height:48px;border-radius:50%;margin:0 auto 10px;line-height:48px}.step strong{font-size:12px;display:block}.step small{color:#8a7265;font-size:10px}.primary,.secondary{width:100%;border-radius:17px;padding:16px;border:0;font-weight:800;margin-top:12px}.primary{background:linear-gradient(90deg,#eb8d53,#e8753b);color:white}.secondary{background:transparent;border:1px solid #bd9682;color:#52372a}.notice{text-align:center;color:#947c70;font-size:11px;margin-top:12px}.shade{position:fixed;inset:0;background:#2417139c;display:none;align-items:center;justify-content:center;padding:18px;z-index:10}.shade.show{display:flex}.modal{background:#fffaf5;border-radius:27px;padding:24px;width:min(100%,390px);max-height:92dvh;overflow:auto;box-shadow:0 22px 60px #1b0d0747}.modal h2{margin:0 0 12px}.close{float:right;border:0;background:#f2e5da;padding:7px 11px;border-radius:20px}.field{display:block;font-size:13px;font-weight:700;margin-top:14px}.field input{display:block;width:100%;padding:13px;border:1px solid #ddc9ba;border-radius:12px;margin-top:6px;font:inherit}.error{font-size:12px;color:#b62e23;min-height:18px;margin-top:8px}.info{display:grid;grid-template-columns:1fr 1fr;gap:10px}.info div{border-radius:15px;background:#fff0e6;padding:12px;font-size:12px}.info b{display:block;margin:6px 0}.dash{display:none}.dash.active{display:block}.welcome.hidden{display:none}.membercard{border-radius:24px;padding:23px 20px;background:linear-gradient(135deg,#6b4639,#af7761);color:white}.membercard .muted{color:#fae6d7}.qrbox{background:white;width:190px;min-height:190px;border-radius:15px;margin:16px auto;padding:10px;display:grid;place-items:center;color:#333;text-align:center;font-size:12px}.qrbox img{width:170px;height:170px;display:block}.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:18px 0}.stat div{background:white;border-radius:13px;padding:12px 6px;text-align:center;font-size:12px}.stat strong{display:block;font-size:24px;color:var(--orange)}.campaign{background:white;border-radius:20px;padding:17px;margin-top:12px}.dots{letter-spacing:8px;color:var(--orange);font-size:22px}.bottom{display:flex;justify-content:space-around;position:sticky;bottom:0;background:#fffaf6;border-top:1px solid var(--line);padding:13px 0;margin:18px -19px -24px;font-size:11px;text-align:center;color:#84665b}.bottom span{cursor:pointer}.bottom span:first-child{color:var(--orange)}
+
+ 
+/* Üyelik sonrası premium ana ekran */
+.app:has(.dash.active){padding:0;background:#faf7f3}
+.dash{min-height:100dvh;padding-bottom:75px;background:#faf7f3}
+.dash-top{background:linear-gradient(145deg,#45322d 0%,#725044 55%,#aa7a62 100%);color:white;padding:28px 22px 88px;position:relative;overflow:hidden}
+.dash-top:after{content:"";position:absolute;border:38px solid #ffffff12;width:250px;height:250px;border-radius:50%;top:118px;right:-120px;pointer-events:none}
+.dash-top .head{margin:0 0 47px;position:relative;z-index:1}.dash-top .brand{font-size:24px}.dash-top .brand b{color:#ffc29d}
+.dash-top .help{background:#ffffff24;border:1px solid #ffffff5e;color:white}
+.dash-top h1{font-size:34px;position:relative;z-index:1;color:#fff}.dash-top h1 em{color:#ffc3a1}.dash-top p{color:#f3e4db;position:relative;z-index:1;font-size:16px;margin:0}
+.dash-body{padding:0 17px 28px;margin-top:-51px;position:relative;z-index:2}
+.dash .membercard{border:1.5px solid #d6a18a;border-radius:27px;padding:20px;background:linear-gradient(130deg,#584039,#7c5849 58%,#a5775f);box-shadow:0 14px 32px #51382b2e}
+.member-layout{display:flex;gap:12px;align-items:center;justify-content:space-between}
+.member-left{flex:1;min-width:0}.membercard h2{font-size:18px;margin:0 0 13px;color:white}.membercard .muted{color:#f6e6de;font-size:14px;margin:0 0 16px;line-height:1.45}
+.member-name{font-size:20px;font-weight:800;color:white;margin-top:15px;overflow-wrap:anywhere}.member-no{color:#e6c8bb;margin:4px 0 16px;font-size:12px}
+.dash .qrbox{flex-shrink:0;width:132px;height:132px;min-height:132px;margin:0;border-radius:17px;padding:7px;background:white}.dash .qrbox img,.dash .qrbox canvas{width:118px!important;height:118px!important}
+.qr-action{width:100%;padding:12px;border-radius:12px;border:0;background:#f18455;color:white;font-weight:800;font-size:14px}
+.dash .stat{gap:9px;margin:20px 0 26px}.dash .stat div{padding:13px 6px;background:#fff;border:1px solid #f0e4dc;box-shadow:0 8px 20px #42261b09;border-radius:19px;min-height:98px;font-size:11px;color:#806a61}
+.dash .stat .metric-icon{display:block;font-size:20px;margin-bottom:5px}.dash .stat strong{font-size:26px;color:#2e211d}
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 0 14px}.section-heading h2{margin:0;font-size:20px}.section-heading button{border:0;background:none;color:#806c61;font-size:12px}
+.cards-scroll{display:flex;overflow-x:auto;gap:12px;scroll-snap-type:x mandatory;padding:2px 2px 12px}.loyalty{background:white;flex:0 0 190px;border-radius:17px;overflow:hidden;box-shadow:0 6px 17px #42261b10;scroll-snap-align:start}
+.loyalty-photo{height:92px;background-size:cover;background-position:center;display:flex;align-items:end;padding:10px;color:white;font-weight:800;text-shadow:0 2px 8px #0009}
+.loyalty-details{padding:11px}.loyalty-details strong{font-size:13px}.loyalty-details small{display:block;color:#826b5f;margin:5px 0}.stamp-row{color:#f0804b;letter-spacing:3px;font-size:18px;white-space:nowrap}.stamp-row span{color:#d7d1cc}
+.loyalty-details button{border:0;background:#fff0e8;color:#df7040;border-radius:10px;width:100%;padding:9px;margin-top:7px;font-size:12px;font-weight:700}
+.deal-list{display:grid;grid-template-columns:1fr 1fr;gap:10px}.deal{background:#fff;border-radius:15px;overflow:hidden;border:1px solid #eee0d6}.deal img{width:100%;height:92px;object-fit:cover}.deal .copy{padding:10px}.deal strong{font-size:12px}.deal small{display:block;margin-top:6px;color:#9b7765}
+.dash .bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);margin:0;width:min(100%,440px);height:70px;padding:10px 5px 5px;background:#fffdfa;border-top:1px solid #eee3dd;z-index:7;box-shadow:0 -4px 22px #3922130c}.bottom button{border:0;background:transparent;color:#89776e;font-size:10px;min-width:0;flex:1}.bottom button i{display:block;font-size:22px;font-style:normal;margin-bottom:3px}.bottom button.active{color:#ea7a46;font-weight:800}
+#tabContent{display:none;background:white;border-radius:18px;padding:20px;margin:20px 0}
+@media(max-width:375px){.dash-top{padding:23px 16px 78px}.dash-top .head{margin-bottom:34px}.dash-top h1{font-size:29px}.dash-body{padding:0 12px 20px}.dash .qrbox{width:116px;height:116px;min-height:116px}.dash .qrbox img,.dash .qrbox canvas{width:102px!important;height:102px!important}.member-name{font-size:17px}}
+
+.rewards-heading{font-size:25px;font-weight:850;letter-spacing:-.5px;margin:0 0 7px}.rewards-intro{font-size:13px;color:#8c7569;margin:0 0 19px}.reward-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:22px}.reward-summary div{background:white;border:1px solid #efe1d7;border-radius:17px;text-align:center;padding:15px 4px}.reward-summary strong{display:block;color:#e17c4a;font-size:26px}.reward-summary small{font-size:11px;color:#826e65}.reward-tabs{display:flex;gap:5px;background:#f1e8e2;padding:5px;border-radius:14px;margin:0 0 18px}.reward-tabs button{border:0;background:transparent;flex:1;color:#91766a;border-radius:11px;padding:11px 3px;font-size:12px;font-weight:750}.reward-tabs button.active{background:white;color:#cf7045;box-shadow:0 2px 7px #553c2914}.reward-empty{border:1px solid #f0e1d6;border-radius:22px;padding:33px 17px;text-align:center;background:#fff}.reward-empty .symbol{width:75px;height:75px;display:grid;place-items:center;border-radius:50%;margin:0 auto 14px;background:#fff0e5;font-size:34px}.reward-empty h3{font-size:17px;margin:0 0 8px}.reward-empty p{font-size:13px;margin:0;color:#8e776d}.reward-demo{background:white;border:1px solid #f1e2d7;border-radius:15px;display:flex;align-items:center;gap:12px;padding:12px;margin:9px 0}.reward-demo .emoji{font-size:26px;background:#fff0e6;border-radius:12px;display:grid;place-items:center;width:52px;height:52px;flex:none}.reward-demo .detail{flex:1;min-width:0}.reward-demo strong{display:block;font-size:13px}.reward-demo small{display:block;font-size:11px;color:#876e62;margin:4px 0 8px}.reward-progress{height:6px;border-radius:6px;background:#f0e6df;overflow:hidden}.reward-progress i{display:block;height:100%;border-radius:6px;background:#e78350}.reward-demo .count{font-size:12px;color:#d87549;font-weight:800}.reward-note{text-align:center;color:#a18c80;font-size:11px;margin:15px 0}
+
+.dash.subpage .dash-top{padding-bottom:28px}.dash.subpage .dash-top .head{margin-bottom:10px}.dash.subpage .dash-top h1,.dash.subpage .dash-top p{display:none}.dash.subpage .dash-body{margin-top:0;padding-top:22px}.dash.subpage .stat,#homeSections[hidden]{display:none!important}.dash.subpage .membercard{display:block;padding:11px 15px;border-radius:17px;margin-bottom:14px}.dash.subpage .membercard h2{font-size:14px;margin:0 0 6px}.dash.subpage .member-layout{gap:9px}.dash.subpage .membercard .muted{display:none}.dash.subpage .member-name{font-size:14px;margin:0 0 3px}.dash.subpage .member-no{font-size:10px;margin:0 0 7px}.dash.subpage .qr-action{padding:8px;font-size:11px}.dash.subpage .qrbox{width:70px;height:70px;min-height:70px;padding:4px;border-radius:9px}.dash.subpage .qrbox img,.dash.subpage .qrbox canvas{width:62px!important;height:62px!important}.dash.subpage #tabContent{display:block!important;min-height:55vh}.bottom button{touch-action:manipulation;cursor:pointer;position:relative;z-index:2}
+
+.cards-title{font-size:25px;margin:0 0 6px;letter-spacing:-.6px}.cards-caption{font-size:13px;color:#8b756b;margin:0 0 18px}.cards-count{display:flex;align-items:center;justify-content:space-between;border-radius:17px;background:#fff0e4;padding:13px 15px;color:#765243;font-size:13px;margin-bottom:15px}.cards-count strong{font-size:20px;color:#d86d3b}.cards-tabs{display:flex;gap:7px;background:#f1e8e1;border-radius:14px;padding:5px;margin-bottom:16px}.cards-tabs button{flex:1;border:0;background:transparent;color:#846d62;font-weight:800;font-size:12px;border-radius:11px;padding:11px 3px}.cards-tabs button.active{background:#fff;color:#d97846}.cards-empty{background:#fff;border:1px solid #eddfd4;border-radius:21px;text-align:center;padding:29px 15px}.cards-empty .pic{font-size:40px;background:#fff0e6;border-radius:50%;width:75px;height:75px;display:grid;place-items:center;margin:0 auto 13px}.cards-empty h3{font-size:17px;margin:0 0 8px}.cards-empty p{font-size:13px;color:#8b756b;margin:0}.cards-sample{background:#fff;border:1px solid #ebddd1;border-radius:18px;padding:14px;margin:11px 0}.cards-sample-top{display:flex;gap:11px;align-items:center}.cards-sample-icon{width:52px;height:52px;border-radius:14px;background:#fff0e3;display:grid;place-items:center;font-size:27px}.cards-sample strong{font-size:14px}.cards-sample small{display:block;color:#8f7669;font-size:11px;margin-top:4px}.cards-sample .progress{height:7px;background:#efe6e0;border-radius:9px;margin:13px 0 6px;overflow:hidden}.cards-sample .progress i{display:block;height:100%;background:#e68b58}.cards-sample .foot{display:flex;justify-content:space-between;font-size:11px;color:#8d7468}.cards-sample button{background:#fdf0e7;border:0;border-radius:10px;color:#ce7148;font-size:12px;font-weight:800;padding:10px;width:100%;margin-top:12px}
+
+.offers-title{font-size:25px;margin:0 0 5px;letter-spacing:-.6px}.offers-sub{font-size:13px;color:#90796d;margin:0 0 15px}.offers-search{display:block;width:100%;padding:13px 15px;border:1px solid #eadbd1;border-radius:15px;background:#fff;font:inherit;outline-color:#ec976e}.offers-filters{display:flex;gap:8px;overflow-x:auto;padding:12px 0 17px;scrollbar-width:none}.offers-filters button{white-space:nowrap;border:1px solid #e9dacd;border-radius:20px;padding:9px 13px;background:#fff;color:#795f52;font-size:12px;font-weight:750}.offers-filters button.active{background:#e98452;border-color:#e98452;color:#fff}.offers-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.offer-card{background:#fff;border:1px solid #f0e4dc;border-radius:19px;overflow:hidden;box-shadow:0 7px 16px #4227180b}.offer-card img{width:100%;height:130px;display:block;object-fit:cover;background:#e6d5c7}.offer-info{padding:12px}.offer-info small{font-size:11px;color:#927c70}.offer-info h3{font-size:14px;line-height:1.3;margin:6px 0;min-height:36px}.offer-info p{font-size:12px;margin:0 0 10px;color:#826a5f;min-height:34px}.offer-info button{border:0;border-radius:11px;padding:10px;background:#fff0e7;color:#c76c40;font-size:12px;font-weight:800;width:100%}.offers-empty{text-align:center;padding:35px 16px;border-radius:20px;background:#fff;color:#8c766a}.offer-detail img{width:100%;height:165px;object-fit:cover;border-radius:16px}.offer-detail h3{font-size:21px;margin:14px 0 7px}.offer-detail p{font-size:14px}.offer-detail .primary{margin-top:14px}
+
+.account-title{font-size:25px;margin:0 0 6px}.account-sub{font-size:13px;color:#90796e;margin:0 0 17px}.account-person{background:linear-gradient(120deg,#5e443a,#a6755f);color:#fff;display:flex;gap:13px;align-items:center;border-radius:19px;padding:18px;margin-bottom:17px}.account-avatar{border-radius:50%;background:#ffffff2c;display:grid;place-items:center;width:52px;height:52px;font-size:23px;flex:none}.account-person b{font-size:17px}.account-person small{font-size:12px;display:block;color:#f4dfd3;margin-top:4px;overflow-wrap:anywhere}.account-panel{background:#fff;border:1px solid #ede0d7;border-radius:18px;padding:8px 15px;margin-bottom:14px}.account-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #f2e9e3}.account-row:last-child{border:0}.account-icon{width:37px;height:37px;border-radius:11px;display:grid;place-items:center;background:#fff1e8;font-size:18px}.account-row>div:nth-child(2){flex:1;min-width:0}.account-row strong{font-size:13px;display:block}.account-row small{font-size:11px;color:#937e72;display:block;margin-top:4px;overflow-wrap:anywhere}.account-row button{border:0;background:transparent;color:#c77248;font-weight:800;font-size:12px;padding:10px}.account-signout{width:100%;border:1px solid #edcbb8;background:#fff7f2;color:#b76042;border-radius:14px;padding:14px;font-weight:800}.account-hint{text-align:center;font-size:11px;color:#9a847a;margin:13px 0}
+
+.account-legal{margin:19px 0 10px;text-align:center}
+.account-legal-title{font-size:11px;color:#9a857b;letter-spacing:.05em;font-weight:800;margin-bottom:9px}
+.account-legal-links{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 11px}
+.account-legal-links button{background:transparent;border:0;color:#856c61;text-decoration:underline;text-decoration-color:#d2b8a8;text-underline-offset:3px;padding:5px 2px;font-size:11px}
+.legal-text{font-size:13px;color:#6f5a50;line-height:1.65}
+.legal-text h3{font-size:14px;color:#3a2922;margin:17px 0 6px}
+.legal-text p{margin:0 0 11px}
+.legal-draft{padding:10px 12px;background:#fff0e5;border-radius:12px;font-size:12px;color:#8b5137;margin:12px 0}
+
+/* Tema: Şeftali & Krem — yalnızca görünüm */
+:root{--ink:#60483f;--orange:#f18b60;--cream:#fff8f2;--line:#efddd0}
+body{background:#f8ede5;color:var(--ink)}
+.app,.dash{background:#fff8f2}
+.brand b,.dash-top .brand b{color:#ffac84}
+.help{background:#fff0e6;color:#8a5b49}
+.primary,.qr-action{background:linear-gradient(115deg,#ff9d70,#ef8559);color:white}
+.secondary{background:#fffdfb;border-color:#eac6b4;color:#755246}
+.hero{background:linear-gradient(135deg,#ba7e65,#f3b29b)}
+.dash-top{background:linear-gradient(135deg,#9b6d61 0%,#c18b77 56%,#ecb69d 100%)}
+.dash-top h1 em{color:#ffe4cf}.dash-top p{color:#fff9f4}
+.dash .membercard,.account-person{background:linear-gradient(125deg,#956b60,#ba8979 58%,#dbaa92);border-color:#f0bfa8}
+.dash .membercard .muted{color:#fff2eb}
+.dash .stat div,.loyalty,.deal,.reward-summary div,.cards-sample,.account-panel,.offer-card{background:#fffdfb;border-color:#f1e3d9}
+.dash .stat strong,.reward-summary strong{color:#ee885c}
+.section-heading button,.account-row button,.offer-info button{color:#db7952}
+.loyalty-details button,.offer-info button,.cards-sample button{background:#fff0e7;color:#c97351}
+.bottom{background:#fffefa!important;border-top-color:#efddd4!important}
+.bottom button.active{color:#eb855b}
+.reward-tabs,.cards-tabs{background:#f8eae2}
+.reward-tabs button.active,.cards-tabs button.active{color:#d67852}
+.offers-filters button.active{background:#f39569;border-color:#f39569}
+.account-signout{background:#fff4ee;border-color:#edc5b4;color:#b66d55}
+.account-icon,.cards-sample-icon,.reward-empty .symbol{background:#fff0e7}
+.modal{background:#fffaf6}
+
+
+/* Canlı Soft Mercan — kontrast iyileştirmesi */
+:root{--ink:#35251f;--orange:#f36e38;--cream:#fff8f2;--line:#eed9ce}
+body{background:#f5e7dd;color:#35251f}.app,.dash{background:#fff8f2}
+.brand{color:#33221d}.brand b{color:#ec6735}.help{background:#ffebde;color:#a24b2e}
+h1 em{color:#ed6736}.primary,.qr-action{background:linear-gradient(105deg,#ff8b40,#f06435);box-shadow:0 10px 22px #e9733a35;color:#fff}
+.dash-top{background:linear-gradient(125deg,#583b35 0%,#925748 57%,#d47b58 100%)}
+.dash-top .brand{color:white}.dash-top .brand b,.dash-top h1 em{color:#ffc39d}
+.dash-top p{color:#fff0e6}.dash-top .help{background:#ffffff22;color:#fff;border:1px solid #ffffff80}
+.dash .membercard{background:linear-gradient(130deg,#67463e,#975d4d 62%,#c58163);border-color:#e7a580;box-shadow:0 14px 27px #6541312b}
+.dash .membercard h2,.dash .member-name{color:white}.dash .membercard .muted{color:#fcebe2}
+.account-person{background:linear-gradient(120deg,#774f43,#bb7355);color:#fff}
+.dash .stat div,.loyalty,.deal,.offer-card,.account-panel,.reward-summary div{background:#fff;border-color:#f0ddd1}
+.dash .stat strong,.reward-summary strong{color:#ea6d39}
+.bottom button.active,.section-heading button{color:#ed6c37}
+.reward-tabs button.active,.cards-tabs button.active{color:#e26837}
+.offers-filters button.active{background:#ed7642;border-color:#ed7642}
+.loyalty-details button,.offer-info button,.cards-sample button{background:#fff0e4;color:#ca5b30}
+.account-icon,.cards-sample-icon,.reward-empty .symbol{background:#ffe8d8}
+.secondary{background:#fff;border-color:#e1bba5;color:#784a3b}
+</style></head><body><main class="app"><section id="welcome" class="welcome"><header class="head"><div class="brand">✦ Sadakat <b>Kartım</b></div><button class="help" onclick="showModal('how')">ⓘ Nasıl Kullanılır?</button></header><h1>Alışveriş yap.<br><em>Biriktir, kazan!</em></h1><p>Sevdiğin işletmelerde ziyaretlerin hediyeye dönüşsün.</p><div class="hero"><div class="copy">Tek QR ile<br>daha çok ödül ✨</div><div class="mock"><div><div class="qrmini">▦</div>Sadakat Kartım<br>QR Kartım</div></div></div><div class="steps"><div class="step"><i>▦</i><strong>Tek QR</strong><small>Kolay katılım</small></div><div class="step"><i>☕</i><strong>Damga Biriktir</strong><small>Ziyaret ettikçe</small></div><div class="step"><i>🎁</i><strong>Hediyeni Al</strong><small>Ödülünü kazan</small></div></div><button class="primary" onclick="showModal('register')">Hemen Ücretsiz Üye Ol →</button><button class="secondary" onclick="showModal('login')">Zaten Üyeyim · Giriş Yap</button><p class="notice">TEST SÜRÜMÜ · Gerçek e-posta üyeliği denemesi</p></section>
+<section id="dash" class="dash"><div class="dash-top"><header class="head"><div class="brand">♛ Sadakat <b>Kartım</b></div><button class="help" onclick="logout()">Çıkış Yap</button></header><h1>Merhaba <em id="firstName"></em> 👋</h1><p>Bugün yeni fırsatlar seni bekliyor.</p></div>
+<div class="dash-body">
+<div class="membercard"><h2>▦ &nbsp;Üye QR Kodum</h2><div class="member-layout"><div class="member-left"><div class="muted">Kasada bu kodu göstererek fırsatlardan yararlanabilirsin.</div><div class="member-name" id="memberName"></div><div class="member-no" id="memberId"></div><button class="qr-action" onclick="showMemberQR()">▦ &nbsp; QR'ı Göster ›</button></div><div class="qrbox" id="qrbox">QR oluşturuluyor...</div></div></div>
+<div class="stat"><div><span class="metric-icon">📣</span><strong>0</strong>Aktif Kampanya</div><div><span class="metric-icon">🎁</span><strong>0</strong>Hazır Hediye</div><div><span class="metric-icon">★</span><strong>0</strong>Toplam Damga</div></div>
+<div id="homeSections"><div class="section-heading"><h2>Katıldığım Kampanyalar</h2><button onclick="switchTab('kartlar')">Tümünü Gör ›</button></div><div class="cards-scroll"><article class="loyalty"><div class="loyalty-photo" style="background-image:linear-gradient(0deg,#0008,transparent),url('https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=500&q=80')">Kahve Dünyası</div><div class="loyalty-details"><strong>5 kahvede 1 hediye</strong><small>Örnek kampanya · Henüz katılmadın</small><div class="stamp-row">○○○○○</div><button onclick="showDemo()">Detay ›</button></div></article><article class="loyalty"><div class="loyalty-photo" style="background-image:linear-gradient(0deg,#0008,transparent),url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80')">Burger Noktası</div><div class="loyalty-details"><strong>6 menüde 1 hediye</strong><small>Örnek kampanya · Henüz katılmadın</small><div class="stamp-row">○○○○○○</div><button onclick="showDemo()">Detay ›</button></div></article><article class="loyalty"><div class="loyalty-photo" style="background-image:linear-gradient(0deg,#0008,transparent),url('https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=500&q=80')">Pastane</div><div class="loyalty-details"><strong>8 alışverişte hediye</strong><small>Örnek kampanya · Henüz katılmadın</small><div class="stamp-row">○○○○○○○○</div><button onclick="showDemo()">Detay ›</button></div></article></div>
+<div class="section-heading"><h2>Yakındaki Fırsatlar</h2><button onclick="switchTab('firsatlar')">Tümünü Gör ›</button></div><div class="deal-list"><div class="deal"><img alt="Kahve" src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=500&q=80"><div class="copy"><strong>Kahve fırsatları</strong><small>Tanıtım örneği</small></div></div><div class="deal"><img alt="Tatlı" src="https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=500&q=80"><div class="copy"><strong>Tatlı fırsatları</strong><small>Tanıtım örneği</small></div></div></div></div>
+<div id="tabContent"></div></div><nav class="bottom"><button class="active" data-tab="anasayfa" onclick="switchTab('anasayfa')"><i>⌂</i>Ana Sayfa</button><button data-tab="oduller" onclick="switchTab('oduller')"><i>🎁</i>Ödüllerim</button><button data-tab="kartlar" onclick="switchTab('kartlar')"><i>▤</i>Kartlar</button><button data-tab="firsatlar" onclick="switchTab('firsatlar')"><i>◇</i>Fırsatlar</button><button data-tab="hesabim" onclick="switchTab('hesabim')"><i>♙</i>Hesabım</button></nav></section></main>
+<div id="overlay" class="shade" onclick="if(event.target===this)hideModal()"><div class="modal"><button class="close" onclick="hideModal()">✕</button><div id="modalContent"></div></div></div>
+<script src="../sadakat-test/qrcode.min.js"></script>
+<script>
+
+const BASE='https://trchdzdvacalsyrsllar.supabase.co';
+const KEY='sb_publishable_m9eSYTu9phCdpTRycB56rA_5clJ3LyB';
+const SESSION_KEY='sadakat_real_auth_v1';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let modalType='',session=null,authUser=null;
+function users(){return authUser?[{id:authUser.id,name:authUser.user_metadata?.full_name||authUser.email?.split('@')[0]||'Üye',email:authUser.email}]:[]}
+function showModal(type){
+ modalType=type;
+ let title=type==='register'?'Ücretsiz Üye Ol':type==='login'?'Giriş Yap':'Nasıl Kullanılır?';
+ let body=type==='how'?'<p>Tek QR ile tüm anlaşmalı işletmelerde sadakat avantajı.</p><div class="info"><div>👤 <b>Üye Ol</b>Kartın oluşsun.</div><div>▦ <b>QR Göster</b>Kasada okut.</div><div>✅ <b>Damga Biriktir</b>İşletme onaylasın.</div><div>🎁 <b>Hediyeni Al</b>Şartları tamamla.</div></div><button class="primary" onclick="showModal(\'register\')">Hemen Üye Ol</button>':
+ '<form onsubmit="submitAuth(event)">'+(type==='register'?'<label class="field">Ad Soyad<input id="aname" required minlength="3" autocomplete="name"></label>':'')+
+ '<label class="field">E-posta<input type="email" id="email" required autocomplete="email"></label>'+
+ '<label class="field">Şifre<input type="password" id="password" required minlength="8" autocomplete="'+(type==='register'?'new-password':'current-password')+'"></label>'+
+ '<div id="err" class="error" role="status"></div><button class="primary" id="authSubmit" type="submit">'+(type==='register'?'Üye Ol':'Giriş Yap')+'</button>'+
+ (type==='login'?'<button class="secondary" type="button" onclick="forgotPassword()">Şifremi Unuttum</button>':'')+
+ '<p class="notice">Gerçek e-posta kaydı testidir. Doğrulama e-postası gerekebilir.</p></form>';
+ $('#modalContent').innerHTML='<h2>'+title+'</h2>'+body;$('#overlay').classList.add('show');
+}
+function hideModal(){$('#overlay').classList.remove('show')}
+async function api(path,method='GET',payload=null,token=null){
+ const h={'apikey':KEY,'Content-Type':'application/json'};
+ if(token)h.Authorization='Bearer '+token;
+ const r=await fetch(BASE+path,{method,headers:h,body:payload?JSON.stringify(payload):undefined});
+ const data=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error(data.msg||data.error_description||data.message||data.error||'Sunucu isteği tamamlanamadı');
+ return data;
+}
+function saveSession(d){
+ if(!d||!d.access_token||!d.refresh_token)return;
+ session={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:Math.floor(Date.now()/1000)+(d.expires_in||3600)};
+ localStorage.setItem(SESSION_KEY,JSON.stringify(session));
+}
+async function ensureSession(){
+ if(!session){try{session=JSON.parse(localStorage.getItem(SESSION_KEY)||'null')}catch{return null}}
+ if(!session)return null;
+ if(session.expires_at>Date.now()/1000+90)return session;
+ try{let d=await api('/auth/v1/token?grant_type=refresh_token','POST',{refresh_token:session.refresh_token});saveSession(d);return session}
+ catch{session=null;localStorage.removeItem(SESSION_KEY);return null}
+}
+async function ensureProfile(user){
+ if(!user)return;
+ const profile={user_id:user.id,full_name:(user.user_metadata?.full_name||user.email?.split('@')[0]||'Üye').slice(0,120)};
+ try{await api('/rest/v1/sadakat_customers?on_conflict=user_id','POST',profile,session.access_token)}
+ catch(e){/* user already has profile or temporary API issue; member auth remains valid */}
+}
+async function submitAuth(e){
+ e.preventDefault();const err=$('#err'),btn=$('#authSubmit'),email=$('#email').value.trim().toLowerCase(),password=$('#password').value;
+ btn.disabled=true;btn.textContent='İşleniyor...';err.textContent='';
+ try{
+ if(modalType==='register'){
+  const full_name=$('#aname').value.trim();
+  const d=await api('/auth/v1/signup','POST',{email,password,data:{full_name}});
+  if(d.access_token){saveSession(d);authUser=d.user;await ensureProfile(authUser);hideModal();enter(users()[0])}
+  else{err.style.color='#417e52';err.textContent='Kayıt isteğin alındı. E-postana gelen bağlantıyı onayladıktan sonra giriş yap.';btn.textContent='Tekrar Gönderme';}
+ }else{
+  const d=await api('/auth/v1/token?grant_type=password','POST',{email,password});saveSession(d);authUser=d.user;await ensureProfile(authUser);hideModal();enter(users()[0]);
+ }
+ }catch(ex){err.style.color='#b62e23';err.textContent=/Email not confirmed/i.test(ex.message)?'E-posta adresini doğruladıktan sonra tekrar giriş yap.':ex.message}
+ finally{btn.disabled=false;if(btn.textContent==='İşleniyor...')btn.textContent=modalType==='register'?'Üye Ol':'Giriş Yap'}
+}
+async function forgotPassword(){
+ const email=$('#email')?.value?.trim();const err=$('#err');
+ if(!email){err.textContent='Önce e-posta adresini yaz.';return}
+ try{await api('/auth/v1/recover','POST',{email});err.style.color='#417e52';err.textContent='Adres kayıtlıysa şifre sıfırlama e-postası gönderilecektir.'}
+ catch(e){err.textContent=e.message}
+}
+function enter(u){
+ if(!u)return;
+ $('#welcome').classList.add('hidden');$('#dash').classList.add('active');
+ $('#firstName').textContent=u.name.split(' ')[0];$('#memberName').textContent=u.name;$('#memberId').textContent='Üye No: '+u.id.slice(0,8).toUpperCase();
+ const box=$('#qrbox');box.innerHTML='';
+ if(typeof QRCode!=='undefined'){new QRCode(box,{text:'FTMOTION-SADAKAT:'+u.id,width:170,height:170,colorDark:'#231914',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M})}
+ else box.textContent='QR oluşturucu yüklenemedi';
+ window.scrollTo(0,0);
+}
+async function restoreAuth(){
+ let s=await ensureSession();if(!s)return;
+ try{authUser=await api('/auth/v1/user','GET',null,s.access_token);if(authUser?.id){await ensureProfile(authUser);enter(users()[0])}}
+ catch{session=null;authUser=null;localStorage.removeItem(SESSION_KEY)}
+}
+function showMemberQR(){const qr=document.querySelector('#qrbox img, #qrbox canvas');if(!qr){showDemo();return}document.querySelector('#modalContent').innerHTML='<h2>Kişisel QR Kodum</h2><p>İşletmede bu QR kodunu göster.</p><div style="background:white;padding:18px;border-radius:17px;display:grid;place-items:center" id="largeQR"></div>';const copy=qr.cloneNode(true);if(qr.tagName==='CANVAS'){const image=new Image();image.src=qr.toDataURL();copy.replaceWith?.(image);document.querySelector('#largeQR').appendChild(image)}else document.querySelector('#largeQR').appendChild(copy);document.querySelector('#largeQR img')?.style.setProperty('width','230px');document.querySelector('#largeQR img')?.style.setProperty('height','230px');document.querySelector('#overlay').classList.add('show')}
+function showDemo(){document.querySelector('#modalContent').innerHTML='<h2>Test kampanyası</h2><p>Bu kart örnek amaçlı gösteriliyor. Gerçek damga ve ödül işlemleri işletme sistemi bağlandığında kullanılabilecek.</p><button class="primary" onclick="hideModal()">Tamam</button>';document.querySelector('#overlay').classList.add('show')}
+const demoOffers=[
+{id:'coffee',category:'Kafe',business:'Kahve Durağı',name:'Kahve Molası',description:'5 kahvede 1 kahve hediye',image:'https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=500&q=80',detail:'Kahve alışverişlerinde damga biriktir. 5 damgayı tamamlayınca hediye kahveni kazan.'},
+{id:'sweet',category:'Pastane',business:'Tatlı Köşesi',name:'Tatlı Bir Fırsat',description:'8 alışverişte tatlı hediyesi',image:'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=500&q=80',detail:'8 uygun alışverişin ardından tatlı hediyesinden yararlan.'},
+{id:'burger',category:'Restoran',business:'Burger Noktası',name:'Menü Hediyesi',description:'6 menüde 1 menü hediye',image:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80',detail:'Kampanya şartlarına uygun 6 menü alışverişini tamamla, hediyeni kazan.'},
+{id:'breakfast',category:'Kafe',business:'Günaydın Kafe',name:'Kahvaltı Keyfi',description:'Kahvaltıya özel avantajlar',image:'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=500&q=80',detail:'Kahvaltı kampanyalarına bu alandan ulaşabilirsin.'}
+];
+let offerCategory='Tümü',offerSearch='';
+function renderOffers(){
+ const root=document.getElementById('tabContent');root.style.display='block';root.style.background='transparent';root.style.padding='0';
+ root.innerHTML='<h2 class="offers-title">Fırsatlar ✨</h2><p class="offers-sub">Sevdiğin işletmelerin fırsatlarını keşfet.</p><input class="offers-search" id="offerSearch" type="search" placeholder="İşletme veya fırsat ara..." aria-label="Fırsat ara"><div class="offers-filters" id="offerFilters"></div><div class="offers-grid" id="offersGrid"></div><p class="reward-note">Şimdilik örnek fırsatlar gösteriliyor.</p>';
+ const input=root.querySelector('#offerSearch');input.value=offerSearch;input.addEventListener('input',e=>{offerSearch=e.target.value;drawOffers()});
+ drawOffers();
+}
+function drawOffers(){
+ const filters=document.getElementById('offerFilters'),grid=document.getElementById('offersGrid');if(!filters||!grid)return;
+ const cats=['Tümü','Kafe','Pastane','Restoran'];
+ filters.innerHTML=cats.map(c=>'<button type="button" data-cat="'+c+'" class="'+(c===offerCategory?'active':'')+'">'+c+'</button>').join('');
+ filters.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{offerCategory=b.dataset.cat;drawOffers()}));
+ const q=offerSearch.trim().toLocaleLowerCase('tr');
+ const filtered=demoOffers.filter(o=>(offerCategory==='Tümü'||o.category===offerCategory)&&[o.business,o.name,o.description].join(' ').toLocaleLowerCase('tr').includes(q));
+ grid.innerHTML=filtered.length?filtered.map(o=>'<article class="offer-card"><img src="'+o.image+'" alt="'+o.business+'" loading="lazy"><div class="offer-info"><small>'+o.business+'</small><h3>'+o.name+'</h3><p>'+o.description+'</p><button type="button" data-offer="'+o.id+'">İncele ›</button></div></article>').join(''):'<div class="offers-empty" style="grid-column:1/-1">Bu aramaya uygun fırsat bulunamadı.</div>';
+ grid.querySelectorAll('[data-offer]').forEach(b=>b.addEventListener('click',()=>showOffer(b.dataset.offer)));
+}
+function showOffer(id){
+ const o=demoOffers.find(v=>v.id===id);if(!o)return;
+ document.getElementById('modalContent').innerHTML='<div class="offer-detail"><img src="'+o.image+'" alt=""><small>'+o.business+'</small><h3>'+o.name+'</h3><p>'+o.detail+'</p><p style="font-size:12px;color:#987e70">Bu içerik test amaçlıdır; işletme kampanyası henüz aktif değil.</p><button class="primary" type="button" id="offerClose">Tamam</button></div>';
+ document.getElementById('offerClose').addEventListener('click',hideModal);
+ document.getElementById('overlay').classList.add('show');
+}
+
+function showLegal(type){
+ const titles={kvkk:'KVKK Aydınlatma Metni',privacy:'Gizlilik Politikası',terms:'Kullanım Koşulları',cookies:'Çerez Politikası'};
+ const bodies={
+ kvkk:'<h3>Hangi bilgiler işlenir?</h3><p>Test sürümünde üye olurken girdiğiniz ad soyad ve e-posta, üyelik kimliği ve oturum bilgileri bu tarayıcıda yerel olarak saklanır. Test kampanyalarının damga veya ödül verileri merkezi olarak kaydedilmez.</p><h3>Amaç ve yöntem</h3><p>Bilgiler üyelik denemesini, giriş işlemlerini ve kişisel QR gösterimini sağlamak için tarayıcı üzerinden alınır. Merkezi hesap sistemi henüz etkin değildir.</p><h3>Canlı yayın öncesinde</h3><p>Veri sorumlusunun resmi unvanı ve iletişim adresi, veri işleme hukuki sebepleri, olası alıcı grupları, saklama süreleri ve KVKK madde 11 kapsamındaki başvuru yöntemi gerçek sistem esas alınarak tamamlanacaktır.</p>',
+ privacy:'<h3>Bilgilerin kullanımı</h3><p>Mevcut test sürümü hesap bilgilerini aynı tarayıcının yerel depolamasında tutar. Uygulamada görüntülenen örnek işletmeler, kampanyalar ve ödüller gerçek müşteri kaydı değildir.</p><h3>Güvenlik</h3><p>Bu test sürümü gerçek kimlik doğrulama veya sunucu tabanlı hesap koruması sağlamaz. Diğer hizmetlerde kullandığınız şifreleri burada kullanmayın.</p><h3>Canlı sürüm</h3><p>Merkezi veritabanı, tedarikçiler, saklama ve silme süreçleri devreye alındığında politika ayrıntılandırılacaktır.</p>',
+ terms:'<h3>Test kullanımı</h3><p>Sadakat Kartım şu anda deneme amaçlı sunulmaktadır. Görüntülenen örnek fırsatlar, damgalar ve hediyeler gerçek bir hak veya taahhüt oluşturmaz.</p><h3>Kampanyalar</h3><p>Canlı sistemde kampanyanın geçerlilik koşulları, süreleri ve ödül kullanımı ilgili işletmenin yayımladığı kurallara göre belirlenecektir.</p><h3>Hesap</h3><p>Test kaydı yalnızca kullanılan tarayıcıda tutulur; farklı cihazlarda aynı hesapla giriş desteği henüz yoktur.</p>',
+ cookies:'<h3>Tarayıcıda saklanan bilgiler</h3><p>Bu test, oturumun açık kalması ve üyeliğin aynı cihazda tanınması için tarayıcı yerel depolamasından (localStorage) yararlanır. Bu teknik, çerezlerden farklıdır.</p><h3>İsteğe bağlı takip</h3><p>Test sayfasında reklam hedefleme veya analiz çerezleri için özel bir izin sistemi kurulmamıştır. Canlı yayında kullanılan teknolojiler denetlenerek gerekli tercih ve açık rıza mekanizmaları ayrıca oluşturulacaktır.</p>'
+ };
+ const modal=document.getElementById('modalContent'); if(!modal)return;
+ modal.innerHTML='<h2>'+titles[type]+'</h2><div class="legal-draft">Test bilgilendirme taslağı · Nihai hukuki metin değildir.</div><div class="legal-text">'+bodies[type]+'</div><button type="button" class="secondary" id="legalClose">Kapat</button>';
+ modal.querySelector('#legalClose').addEventListener('click',hideModal);
+ document.getElementById('overlay').classList.add('show');
+}
+function renderAccount(){
+const root=document.getElementById('tabContent');root.style.display='block';root.style.background='transparent';root.style.padding='0';
+const u=users()[0];
+const name=u?u.name:'Üye';const email=u?u.email:'';
+root.innerHTML='<h2 class="account-title">Hesabım</h2><p class="account-sub">Üyelik bilgilerin ve ayarların.</p><div class="account-person"><div class="account-avatar">👤</div><div><b id="accountName"></b><small id="accountEmail"></small></div></div><div class="account-panel"><div class="account-row"><div class="account-icon">▦</div><div><strong>Kişisel QR Kodum</strong><small>Tüm anlaşmalı işletmeler için tek kod</small></div><button id="accountQr">Göster ›</button></div><div class="account-row"><div class="account-icon">✉</div><div><strong>E-posta</strong><small id="accountMail"></small></div></div><div class="account-row"><div class="account-icon">🔒</div><div><strong>Şifre ve güvenlik</strong><small>Şifre yenileme canlı üyelikte açılacak</small></div></div></div><div class="account-panel"><div class="account-row"><div class="account-icon">ⓘ</div><div><strong>Nasıl Kullanılır?</strong><small>Sadakat Kartım hakkında kısa rehber</small></div><button id="accountHelp">Aç ›</button></div><div class="account-row"><div class="account-icon">🔔</div><div><strong>Bildirimler</strong><small>İzin ayarları canlı sistemde açılacak</small></div></div></div><button class="account-signout" id="accountLogout">↪ Hesaptan Çıkış Yap</button><div class="account-legal"><div class="account-legal-title">YASAL BİLGİLER</div><div class="account-legal-links"><button type="button" data-legal="kvkk">KVKK Aydınlatma</button><button type="button" data-legal="privacy">Gizlilik Politikası</button><button type="button" data-legal="terms">Kullanım Koşulları</button><button type="button" data-legal="cookies">Çerez Politikası</button></div></div><p class="account-hint">Test sürümü · Üyelik Supabase ile yönetilir.</p>';
+root.querySelector('#accountName').textContent=name;
+root.querySelector('#accountEmail').textContent=email;
+root.querySelector('#accountMail').textContent=email;
+root.querySelector('#accountQr').addEventListener('click',showMemberQR);
+root.querySelector('#accountHelp').addEventListener('click',()=>showModal('how'));
+root.querySelector('#accountLogout').addEventListener('click',logout);
+root.querySelectorAll('[data-legal]').forEach(b=>b.addEventListener('click',()=>showLegal(b.dataset.legal)));
+}
+function renderCards(tab='mine'){
+const root=document.getElementById('tabContent');if(!root)return;
+root.style.display='block';root.style.background='transparent';root.style.padding='0';
+const btns=[['mine','Kartlarım'],['example','Örnek Kartlar']].map(x=>'<button data-cardtab="'+x[0]+'" class="'+(tab===x[0]?'active':'')+'">'+x[1]+'</button>').join('');
+let body=tab==='mine'?'<div class="cards-empty"><div class="pic">▦</div><h3>Henüz işletme kartın yok</h3><p>İşletmenin kampanya QR kodunu okutup katıldığında sadakat kartın burada görünecek.</p></div><button class="primary" id="cardQRshow">Kişisel QR Kodumu Göster</button>':'<p style="font-size:12px;color:#9c7d6c">Aşağıdakiler tasarım örneğidir; hesabında gerçek damga veya katılım oluşturmaz.</p>'+[['☕','Kahve Sadakat Kartı','5 kahvede 1 hediye','3/5','60%'],['🍰','Pastane Kartı','8 alışverişte hediye','2/8','25%'],['🍔','Restoran Kartı','6 menüde 1 hediye','4/6','67%']].map(x=>'<article class="cards-sample"><div class="cards-sample-top"><div class="cards-sample-icon">'+x[0]+'</div><div><strong>'+x[1]+'</strong><small>'+x[2]+'</small></div></div><div class="progress"><i style="width:'+x[4]+'"></i></div><div class="foot"><span>Örnek damga ilerlemesi</span><b>'+x[3]+'</b></div><button data-carddetail>Nasıl çalışır? ›</button></article>').join('');
+root.innerHTML='<h2 class="cards-title">Kartlarım ▤</h2><p class="cards-caption">Tüm işletme sadakat kartların bir arada.</p><div class="cards-count"><span>Katıldığım işletmeler</span><strong>0 Kart</strong></div><div class="cards-tabs">'+btns+'</div>'+body+'<p class="reward-note">Test sürümü · İşletme bağlantısı henüz kurulmadı.</p>';
+root.querySelectorAll('[data-cardtab]').forEach(b=>b.addEventListener('click',()=>renderCards(b.dataset.cardtab)));
+root.querySelector('#cardQRshow')?.addEventListener('click',showMemberQR);
+root.querySelectorAll('[data-carddetail]').forEach(b=>b.addEventListener('click',showDemo));
+}
+function renderRewards(tab='ready'){
+ const root=document.getElementById('tabContent');
+ if(!root)return;
+ root.style.display='block';root.style.background='transparent';root.style.padding='0';
+ const tabs=[['ready','Hazır'],['progress','Kazanılacak'],['history','Geçmiş']];
+ const buttons=tabs.map(function(v){return '<button type="button" data-reward="'+v[0]+'" class="'+(tab===v[0]?'active':'')+'">'+v[1]+'</button>'}).join('');
+ let body='';
+ if(tab==='ready')body='<div class="reward-empty"><div class="symbol">🎁</div><h3>Henüz hazır hediyen yok</h3><p>Kampanya şartları tamamlandığında kazandığın ödüller burada görünecek.</p></div>';
+ if(tab==='progress')body='<div class="reward-empty"><div class="symbol">⭐</div><h3>Henüz biriken damgan yok</h3><p>İşletmede QR kodunu göstererek damga biriktirebilirsin.</p></div><p style="font-size:12px;margin:20px 0 7px;color:#836b60"><b>Örnek görünüm</b> · Gerçek ödül değildir</p><div class="reward-demo"><div class="emoji">☕</div><div class="detail"><strong>1 kahve hediye</strong><small>Örnek ilerleme · 3/5 damga</small><div class="reward-progress"><i style="width:60%"></i></div></div><span class="count">3/5</span></div><div class="reward-demo"><div class="emoji">🍰</div><div class="detail"><strong>Tatlı hediyesi</strong><small>Örnek ilerleme · 6/8 damga</small><div class="reward-progress"><i style="width:75%"></i></div></div><span class="count">6/8</span></div>';
+ if(tab==='history')body='<div class="reward-empty"><div class="symbol">🕘</div><h3>Henüz ödül geçmişin yok</h3><p>Kullandığın hediyeler burada tarihleriyle listelenecek.</p></div>';
+ root.innerHTML='<h2 class="rewards-heading">Ödüllerim 🎁</h2><p class="rewards-intro">Hediyelerini kolayca takip et.</p><div class="reward-summary"><div><strong>0</strong><small>Hazır</small></div><div><strong>0</strong><small>Yaklaşan</small></div><div><strong>0</strong><small>Kullanılan</small></div></div><div class="reward-tabs">'+buttons+'</div>'+body+'<p class="reward-note">Test sürümü · Gerçek ödül verileri henüz bağlı değil.</p>';
+ root.querySelectorAll('[data-reward]').forEach(function(b){b.addEventListener('click',function(){renderRewards(b.dataset.reward)})});
+}
+function switchTab(t){
+ const dash=document.getElementById('dash');
+ const home=document.getElementById('homeSections');
+ const content=document.getElementById('tabContent');
+ const isHome=t==='anasayfa';
+ dash.classList.toggle('subpage',!isHome);
+ home.hidden=!isHome;
+ content.style.display=isHome?'none':'block';
+ document.querySelectorAll('.bottom button').forEach(b=>{b.classList.toggle('active',b.dataset.tab===t);b.setAttribute('aria-current',b.dataset.tab===t?'page':'false')});
+ if(isHome){window.scrollTo(0,0);return}
+ if(t==='oduller'){renderRewards('ready')}
+ else if(t==='kartlar'){renderCards('mine')}
+ else if(t==='firsatlar'){renderOffers()}
+ else if(t==='hesabim'){renderAccount()}
+ else {
+ const data={kartlar:['Kartlarım','Henüz katıldığın bir işletme kartı yok.'],firsatlar:['Fırsatlar','İşletme fırsatları bağlandığında burada gösterilecek.'],hesabim:['Hesabım','Üyelik bilgilerin.']};
+ const d=data[t]||['Bilgi','Yakında'];
+ content.style.background='white';content.style.padding='20px';
+ content.innerHTML='<h2>'+d[0]+'</h2><p>'+d[1]+'</p>'+(t==='hesabim'?'<p><strong>'+document.querySelector('#memberName').textContent+'</strong></p><button class="secondary" onclick="logout()">Çıkış Yap</button>':'');
+ }
+ requestAnimationFrame(()=>{const target=document.getElementById('tabContent');const y=target.getBoundingClientRect().top+window.scrollY-14;window.scrollTo({top:Math.max(0,y),behavior:'smooth'});});
+}
+document.querySelectorAll('.bottom button[data-tab]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+async function logout(){document.getElementById('dash').classList.remove('subpage');if(session){api('/auth/v1/logout','POST',null,session.access_token).catch(()=>{})}localStorage.removeItem(SESSION_KEY);session=null;authUser=null;$('#dash').classList.remove('active');$('#welcome').classList.remove('hidden');window.scrollTo(0,0)}
+restoreAuth();
+</script></body></html>
