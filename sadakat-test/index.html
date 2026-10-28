@@ -49,6 +49,33 @@
 .legal-text h3{font-size:14px;color:#3a2922;margin:17px 0 6px}
 .legal-text p{margin:0 0 11px}
 .legal-draft{padding:10px 12px;background:#fff0e5;border-radius:12px;font-size:12px;color:#8b5137;margin:12px 0}
+
+/* Tema: Şeftali & Krem — yalnızca görünüm */
+:root{--ink:#60483f;--orange:#f18b60;--cream:#fff8f2;--line:#efddd0}
+body{background:#f8ede5;color:var(--ink)}
+.app,.dash{background:#fff8f2}
+.brand b,.dash-top .brand b{color:#ffac84}
+.help{background:#fff0e6;color:#8a5b49}
+.primary,.qr-action{background:linear-gradient(115deg,#ff9d70,#ef8559);color:white}
+.secondary{background:#fffdfb;border-color:#eac6b4;color:#755246}
+.hero{background:linear-gradient(135deg,#ba7e65,#f3b29b)}
+.dash-top{background:linear-gradient(135deg,#9b6d61 0%,#c18b77 56%,#ecb69d 100%)}
+.dash-top h1 em{color:#ffe4cf}.dash-top p{color:#fff9f4}
+.dash .membercard,.account-person{background:linear-gradient(125deg,#956b60,#ba8979 58%,#dbaa92);border-color:#f0bfa8}
+.dash .membercard .muted{color:#fff2eb}
+.dash .stat div,.loyalty,.deal,.reward-summary div,.cards-sample,.account-panel,.offer-card{background:#fffdfb;border-color:#f1e3d9}
+.dash .stat strong,.reward-summary strong{color:#ee885c}
+.section-heading button,.account-row button,.offer-info button{color:#db7952}
+.loyalty-details button,.offer-info button,.cards-sample button{background:#fff0e7;color:#c97351}
+.bottom{background:#fffefa!important;border-top-color:#efddd4!important}
+.bottom button.active{color:#eb855b}
+.reward-tabs,.cards-tabs{background:#f8eae2}
+.reward-tabs button.active,.cards-tabs button.active{color:#d67852}
+.offers-filters button.active{background:#f39569;border-color:#f39569}
+.account-signout{background:#fff4ee;border-color:#edc5b4;color:#b66d55}
+.account-icon,.cards-sample-icon,.reward-empty .symbol{background:#fff0e7}
+.modal{background:#fffaf6}
+
 </style></head><body><main class="app"><section id="welcome" class="welcome"><header class="head"><div class="brand">✦ Sadakat <b>Kartım</b></div><button class="help" onclick="showModal('how')">ⓘ Nasıl Kullanılır?</button></header><h1>Alışveriş yap.<br><em>Biriktir, kazan!</em></h1><p>Sevdiğin işletmelerde ziyaretlerin hediyeye dönüşsün.</p><div class="hero"><div class="copy">Tek QR ile<br>daha çok ödül ✨</div><div class="mock"><div><div class="qrmini">▦</div>Sadakat Kartım<br>QR Kartım</div></div></div><div class="steps"><div class="step"><i>▦</i><strong>Tek QR</strong><small>Kolay katılım</small></div><div class="step"><i>☕</i><strong>Damga Biriktir</strong><small>Ziyaret ettikçe</small></div><div class="step"><i>🎁</i><strong>Hediyeni Al</strong><small>Ödülünü kazan</small></div></div><button class="primary" onclick="showModal('register')">Hemen Ücretsiz Üye Ol →</button><button class="secondary" onclick="showModal('login')">Zaten Üyeyim · Giriş Yap</button><p class="notice">TEST SÜRÜMÜ · Bu cihazda çalışan üyelik denemesi</p></section>
 <section id="dash" class="dash"><div class="dash-top"><header class="head"><div class="brand">♛ Sadakat <b>Kartım</b></div><button class="help" onclick="logout()">Çıkış Yap</button></header><h1>Merhaba <em id="firstName"></em> 👋</h1><p>Bugün yeni fırsatlar seni bekliyor.</p></div>
 <div class="dash-body">
