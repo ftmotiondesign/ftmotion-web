@@ -282,6 +282,8 @@ function chip(name,url,playVideo=false){if(!url)return;let a=el('a','chip');a.te
 $('closeVideo').onclick=()=>{$('videoPlayer').pause();$('videoPlayer').removeAttribute('src');$('videoPlayer').load();$('videoModal').hidden=true};$('videoModal').onclick=e=>{if(e.target===$('videoModal'))$('closeVideo').click()};function img(src){const index=galleryItems.push(src)-1;let a=el('a'),im=el('img');a.href='#';a.setAttribute('role','button');a.setAttribute('aria-label','Görseli büyüt');im.src=src;im.loading='lazy';a.append(im);a.onclick=e=>{e.preventDefault();openGallery(Math.max(0,galleryItems.indexOf(src)))};im.onerror=()=>{a.remove();const bad=galleryItems.indexOf(src);if(bad!==-1)galleryItems.splice(bad,1);$('noPhotos').hidden=false;$('noPhotos').textContent='Bazı galeri görselleri açılamadı. İşletme panelinden fotoğraf bağlantılarını kontrol edin.'};$('photos').append(a)}
 
 async function showBusinessIntro(b){
+ const introKey='ftmotion-intro-last-'+String(b.id||b.slug||'business');
+ try{const last=Number(localStorage.getItem(introKey)||0);if(last>0&&Date.now()-last<86400000)return}catch{}
  const settings=b.intro_settings&&typeof b.intro_settings==='object'?b.intro_settings:{};
  const demoIntroUrl='https://trchdzdvacalsyrsllar.supabase.co/storage/v1/object/public/business-intros/matbaa_promosyon_intro-1.mp4';
  const isMatbaa=String(b.slug||'').toLowerCase()==='matbaa-ve-promosyon'||String(shortSlug||slug||'').toLowerCase()==='matbaa-ve-promosyon';
@@ -290,6 +292,7 @@ async function showBusinessIntro(b){
  const el=document.getElementById('businessIntro'),logo=document.getElementById('introLogo'),name=document.getElementById('introName');
  let src=null;try{if(b.logo_url){src=new URL(b.logo_url,location.origin);if(!['https:','http:'].includes(src.protocol))src=null}}catch{src=null}
  if(!premium&&!src)return;
+ try{localStorage.setItem(introKey,String(Date.now()))}catch{}
 
 
  if(premium){
