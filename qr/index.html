@@ -516,5 +516,26 @@ await introPromise;document.body.classList.add('qr-ready');$('qrLoading').hidden
  if(media.addEventListener)media.addEventListener('change',placeActions);
  else media.addListener(placeActions);
 })();
+</script><script>
+/* Başol Yapı: Eşini Bul mini oyun, yalnızca deneme */
+(function(){
+const target='5cb58978-f52a-4bb4-b942-832f19a2a083';
+function init(){
+if(document.getElementById('ftMemoryLaunch'))return;
+const request=document.getElementById('ftRequestTab');
+if(!request)return;
+const btn=document.createElement('button');btn.id='ftMemoryLaunch';btn.type='button';btn.textContent='🧩 Eşini Bul';btn.style.cssText='display:block;margin:12px auto;padding:11px 22px;border-radius:16px;background:linear-gradient(135deg,#ffb24d,#f47b25);color:#23180d;font-weight:800;border:1px solid #ffd7a0;box-shadow:0 5px 18px #0003;cursor:pointer';
+const actions=document.querySelector('.ftm-card-actions');if(!actions)return;actions.insertAdjacentElement('afterend',btn);
+const backdrop=document.createElement('div');backdrop.style.cssText='display:none;position:fixed;inset:0;z-index:1600;background:#000b;align-items:flex-end;justify-content:center';
+backdrop.innerHTML='<section role="dialog" aria-modal="true" aria-label="Eşini Bul Oyunu" style="background:#fff;color:#20232a;width:min(100%,520px);border-radius:24px 24px 0 0;padding:20px 18px 28px;box-shadow:0 -12px 40px #0005"><div style="display:flex;align-items:center;justify-content:space-between"><strong style="font-size:21px">🧩 Eşini Bul</strong><button type="button" id="ftMemoryClose" aria-label="Kapat" style="font-size:24px;border:0;background:transparent;color:#333">×</button></div><p style="margin:8px 0;color:#555">Aynı görselleri eşleştir. 3 çifti bul!</p><div id="ftMemoryStatus" aria-live="polite" style="font-weight:700;margin-bottom:12px">Eşleşme: 0 / 3</div><div id="ftMemoryGrid" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px"></div><div id="ftMemoryWin" aria-live="polite" style="text-align:center;font-size:21px;font-weight:800;margin-top:12px"></div><button type="button" id="ftMemoryReset" style="margin-top:15px;width:100%;padding:12px;border:0;border-radius:12px;background:#f47b25;color:#fff;font-weight:800">Yeniden Oyna</button></section>';
+document.body.appendChild(backdrop);
+const grid=backdrop.querySelector('#ftMemoryGrid'),status=backdrop.querySelector('#ftMemoryStatus'),win=backdrop.querySelector('#ftMemoryWin');let cards=[],selected=[],matched=0,locked=false,turn=0;
+function reset(){turn++;const icons=['🏠','🔧','🧱'];cards=[...icons,...icons].map((v,i)=>({v,i,done:false}));for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]]}selected=[];matched=0;locked=false;status.textContent='Eşleşme: 0 / 3';win.textContent='';grid.replaceChildren();cards.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Kapalı kart '+(i+1));b.style.cssText='aspect-ratio:1/1;border:2px solid #ffcf97;border-radius:14px;background:#fff3e4;color:#20232a;font-size:34px;cursor:pointer';b.textContent='❔';b.onclick=()=>{if(locked||c.done||selected.some(x=>x.i===i))return;b.textContent=c.v;b.style.background='#fff';selected.push({i,c,b});if(selected.length===2){const pair=selected.slice();if(pair[0].c.v===pair[1].c.v){pair.forEach(x=>{x.c.done=true;x.b.style.background='#d9f8e3';x.b.setAttribute('aria-label','Eşleşti '+x.c.v)});matched++;status.textContent='Eşleşme: '+matched+' / 3';selected=[];if(matched===3)win.textContent='🎉 Tebrikler! Tüm eşleri buldun!'}else{locked=true;const thisTurn=turn;setTimeout(()=>{if(thisTurn!==turn)return;pair.forEach(x=>{x.b.textContent='❔';x.b.style.background='#fff3e4'});selected=[];locked=false},800)}}};grid.appendChild(b)})}
+btn.onclick=()=>{reset();backdrop.style.display='flex';document.body.style.overflow='hidden'};
+function close(){backdrop.style.display='none';document.body.style.overflow='';turn++}
+backdrop.querySelector('#ftMemoryClose').onclick=close;backdrop.querySelector('#ftMemoryReset').onclick=reset;backdrop.addEventListener('click',e=>{if(e.target===backdrop)close()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&backdrop.style.display!=='none')close()});
+}
+const observer=new MutationObserver(()=>{if(document.getElementById('ftRequestTab')){init();observer.disconnect()}});observer.observe(document.body,{childList:true,subtree:true});init();setTimeout(()=>observer.disconnect(),20000);
+})();
 </script></body></html>
 
