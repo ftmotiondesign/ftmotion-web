@@ -325,6 +325,16 @@ if(requestedQrSlug){
  }
 }
 if(error)throw error;if(!b)throw Error('Bu QR sayfası bulunamadı veya yayında değil.');
+// Yalnızca FTMotion Design kartında geçici sadakat butonu yerleşim testi.
+if(String(b.slug||requestedQrSlug||'').toLowerCase()==='ft-motion-design'){
+ const demo=document.createElement('a');
+ demo.href='https://ftmotiondesign.github.io/sadakatqr/';
+ demo.textContent='🎁 Sadakat & Hediyeler';
+ demo.setAttribute('aria-label','Sadakat ve hediyeler deneme sayfasını aç');
+ demo.style.cssText='display:block;margin:12px 17px;padding:14px 18px;border-radius:15px;background:linear-gradient(135deg,#ff8b24,#e45b0a);color:#161616;text-align:center;font-size:15px;font-weight:800;text-decoration:none;box-shadow:0 5px 18px rgba(255,116,20,.22)';
+ $('special').before(demo);
+}
+
 // Sahibinin doğrulanmış oturumu açıksa özel deftere kısayol göster.
 currentUser(db).then(owner=>{
  if(!owner||owner.id!==b.owner_id)return;
