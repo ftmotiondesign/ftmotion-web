@@ -432,6 +432,7 @@ document.querySelectorAll('.ft-home-action, .ft-quick a').forEach(link=>{
   event.preventDefault();
   const fold=target.matches('details.foldPanel')?target:target.querySelector('details.foldPanel')||target.closest('details.foldPanel');
   if(fold)fold.open=true;
+  if(hash==='#ftRequestWaSettings'){target.hidden=false;if(fold)fold.hidden=false;}
   requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'}));
  });
 });
