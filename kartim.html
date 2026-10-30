@@ -762,5 +762,17 @@ period.addEventListener('change',loadAnalytics);loadAnalytics();
 </script>
 <script>
 (()=>{const init=()=>{for(const name of ['phone','mobile_phone','whatsapp']){const input=document.querySelector('#profile [name="'+name+'"]');if(!input)continue;input.addEventListener('focus',()=>{if(!input.value.trim())input.value='+90'});input.addEventListener('blur',()=>{if(input.value.trim()==='+90')input.value=''})}};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init()})();
+</script><script id="ft-request-wa-modal-fix">
+document.addEventListener('click',function(e){
+ const tile=e.target.closest('#ftRequestWaTile');if(!tile)return;
+ e.preventDefault();e.stopImmediatePropagation();
+ const panel=document.getElementById('ftRequestWaSettings');if(!panel)return;
+ panel.hidden=false;panel.open=true;
+ panel.style.cssText='display:block!important;position:fixed!important;z-index:99999!important;top:8vh;left:4vw;right:4vw;width:92vw;max-width:520px;margin:auto;max-height:84vh;overflow:auto;background:#181818;color:#fff;border:2px solid #ff7900;border-radius:18px;padding:20px;box-shadow:0 0 0 100vmax #000b';
+ let close=panel.querySelector('#ftRequestWaClose');
+ if(!close){close=document.createElement('button');close.id='ftRequestWaClose';close.type='button';close.textContent='✕ Kapat';close.style.cssText='float:right;background:#333;color:white;padding:9px;border-radius:9px;border:0';panel.insertBefore(close,panel.firstChild);close.onclick=()=>{panel.removeAttribute('style');panel.open=false;};}
+ panel.querySelector('summary')?.setAttribute('style','display:none');
+ panel.querySelector('#ftRequestWaPhone')?.focus();
+},true);
 </script></body></html>
 
