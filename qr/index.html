@@ -484,9 +484,9 @@ if(shortSlug==='ftmotion-test-isletmesi'||String(b.slug||'')==='ftmotion-test-is
    if(result.error){const warn=el('p');warn.textContent='Firma bilgileri şu anda yüklenemedi.';panel.append(warn)}
    if(!result.error&&!firms.length){const warn=el('p');warn.textContent='Henüz firma eklenmedi. Yönetim panelindeki Firmalarım (TEST) bölümünden ekleyebilirsiniz.';warn.style.color='#bbb';panel.append(warn)}
    const detail=el('div');detail.style.cssText='margin-top:12px;padding:15px;border:1px solid #444;border-radius:14px;background:#26262b';
-   const buttons=[];
+   const buttons=[];let openIndex=-1;
    function show(i){
-     const f=firms[i];buttons.forEach((b,j)=>b.style.borderColor=i===j?'#ff8800':'#414147');
+     const f=firms[i];openIndex=i;buttons.forEach((item,j)=>{item.btn.style.borderColor=i===j?'#ff8800':'#414147';item.btn.textContent=(i===j?'✕ ':'🏢 ')+firms[j].name+(i===j?'  −':'  ＋')});
      detail.replaceChildren();
      const name=el('h3');name.textContent=f.name;name.style.margin='0 0 5px';
      const desc=el('p');desc.textContent=f.desc;desc.style.cssText='color:#bbb;margin:0 0 12px;font-size:12px';detail.append(name,desc);
@@ -504,8 +504,8 @@ if(shortSlug==='ftmotion-test-isletmesi'||String(b.slug||'')==='ftmotion-test-is
      });
      if(f.url){const foot=el('div');foot.style.cssText='display:flex;justify-content:flex-end;margin-top:12px';const link=el('a');link.href=f.url;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Kartı Aç ↗';link.style.cssText='display:inline-block;background:#ff8800;color:white;border-radius:8px;padding:7px 11px;font-size:11px;font-weight:700;text-decoration:none';foot.append(link);detail.append(foot)}
    }
-   firms.forEach((f,i)=>{const b=el('button');b.type='button';b.textContent='🏢 '+f.name+'  ›';b.style.cssText='display:block;width:100%;text-align:left;padding:15px;margin:8px 0;border:1px solid #414147;border-radius:12px;background:#29292e;color:#fff;font-weight:700;cursor:pointer';b.onclick=()=>show(i);buttons.push(b);panel.append(b)});
-   if(firms.length){panel.append(detail);show(0)}backdrop.append(panel);backdrop.addEventListener('click',e=>{if(e.target===backdrop)dismiss()});document.body.append(backdrop);document.body.style.overflow='hidden';document.addEventListener('keydown',onKey);close.focus();
+   firms.forEach((f,i)=>{const btn=el('button');btn.type='button';btn.textContent='🏢 '+f.name+'  ＋';btn.style.cssText='display:block;width:100%;text-align:left;padding:15px;margin:8px 0;border:1px solid #414147;border-radius:12px;background:#29292e;color:#fff;font-weight:700;cursor:pointer';const content=el('div');content.hidden=true;content.style.cssText='margin:0 0 10px';btn.setAttribute('aria-expanded','false');btn.onclick=()=>{const isOpen=openIndex===i;buttons.forEach((other,j)=>{other.content.hidden=true;other.btn.setAttribute('aria-expanded','false');other.btn.style.borderColor='#414147';other.btn.textContent='🏢 '+firms[j].name+'  ＋'});openIndex=-1;if(!isOpen){show(i);content.append(detail);content.hidden=false;btn.setAttribute('aria-expanded','true')}};buttons.push({btn,content});panel.append(btn,content)});
+   backdrop.append(panel);backdrop.addEventListener('click',e=>{if(e.target===backdrop)dismiss()});document.body.append(backdrop);document.body.style.overflow='hidden';document.addEventListener('keydown',onKey);close.focus();
  };
 }
 
