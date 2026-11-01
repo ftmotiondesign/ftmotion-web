@@ -238,8 +238,6 @@ body.template-personal{background:#050d1c;color:#f4f9ff}body.template-personal .
 <script src="/assets/ftm-analytics.js"></script>
 <script type="module">
 import {client,currentUser} from '../shared/supabase-client.js';
-import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
-async function publicQrClient(){const response=await fetch('/supabase-config.json',{cache:'no-store'});if(!response.ok)throw Error('Kart bağlantı ayarları yüklenemedi.');const config=await response.json();return createClient(config.url,config.anonKey,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}})}
 const $=s=>document.getElementById(s), el=(t,c)=>{let n=document.createElement(t);if(c)n.className=c;return n};
 const galleryItems=[];let galleryIndex=0,galleryTouchStartX=0,galleryTouchDeltaX=0;
 function renderGalleryThumbs(){const wrap=$('galleryThumbs');wrap.replaceChildren();galleryItems.forEach((src,i)=>{const im=el('img');im.src=src;im.alt='Galeri küçük görsel '+(i+1);if(i===galleryIndex)im.classList.add('active');im.onclick=()=>openGallery(i);wrap.append(im)})}
@@ -327,7 +325,7 @@ async function showBusinessIntro(b){
  });
 }
 
-try{if(!slug&&!shortSlug)throw Error('İşletme bağlantısı belirtilmedi.');const db=await publicQrClient();
+try{if(!slug&&!shortSlug)throw Error('İşletme bağlantısı belirtilmedi.');const db=await client();
 let b,error;
 // Kısa /qr/adres ve eski /qr/?slug=adres aynı yayın kontrolünü kullanır.
 const requestedQrSlug=shortSlug||slug;
@@ -353,7 +351,7 @@ if(String(requestedQrSlug||b.slug||'').toLowerCase()==='ft-motion-design'){
  const pair=document.createElement('div');pair.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:10px 17px 14px;align-items:stretch';demo.style.cssText='display:flex!important;align-items:center;justify-content:center;gap:4px;min-width:0;padding:9px 5px;border:1px solid rgba(255,146,30,.5);border-radius:14px;background:#21180f;color:#ffae50;text-align:center;font-size:12px;font-weight:750;text-decoration:none';const shop=document.createElement('a');shop.id='medikal-magaza-test-button';shop.href='/medikal-magaza/';shop.innerHTML='🛍️ <span>Mağaza</span>';shop.style.cssText='display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;padding:9px 5px;border:1px solid #167d82;border-radius:14px;background:#102e32;color:#9aeeea;text-align:center;font-size:13px;font-weight:750;text-decoration:none';pair.append(demo,shop);$('special').before(pair);
 }
 // Sahibinin doğrulanmış oturumu açıksa özel deftere kısayol göster.
-client().then(authDb=>currentUser(authDb)).then(owner=>{
+currentUser(db).then(owner=>{
  if(!owner||owner.id!==b.owner_id)return;
  const entry=document.createElement('a');const url=new URL('../musteri-defterim.html',import.meta.url);url.searchParams.set('business_id',b.id);
  entry.href=url.href;entry.textContent='📒 Müşteri ve Teklif Defterim';entry.style.cssText='display:block;margin:12px 17px;padding:13px;text-align:center;background:#ff7900;color:#171717;border-radius:11px;font-weight:800;text-decoration:none';
