@@ -71,7 +71,9 @@ function displayDesignPicker(){
 }
 function displayDesignChoices(){
  Array.from($('designOptions').children).forEach((btn,i)=>{const on=designTemplates[i][0]===chosenDesign;btn.style.borderColor=on?'#58dfc5':'#51647a';btn.setAttribute('aria-pressed',String(on))});
- const u=new URL(route(b.slug||''),location.origin);
+ const u=new URL(location.origin+base+'qr/');
+ const alias=rows.find(x=>x.id===b.id)?.short_slug;
+ u.searchParams.set(alias?'short':'slug',alias||b.slug||'');
  u.searchParams.set('template_preview',chosenDesign);
  $('designPreview').href=u.href;
 }
