@@ -584,20 +584,19 @@ document.querySelectorAll('.templateQuickPreview').forEach(button=>button.onclic
  $('templateDialogStatus').textContent='Önizleme yükleniyor. Kaydetmeden canlı kart değişmez.';
  const dialog=$('templateDialog');if(dialog.parentElement!==document.body)document.body.appendChild(dialog);if(!dialog.open)dialog.showModal();
  frame.onload=()=>{
- try{
-  const doc=frame.contentDocument;
-  if(doc&&doc.body&&pendingTemplate){
-   const themes=['light','premium','vitrine','gold','minimal','glass','personal'];
-   doc.body.classList.remove(...themes.map(t=>'template-'+t));
-   if(pendingTemplate!=='classic')doc.body.classList.add('template-'+pendingTemplate);
-   const palettes={classic:['#0b0b0d','#151515','#ffffff'],light:['#ffffff','#eaf0f5','#183048'],premium:['#0c1e34','#132a42','#f7f3e9'],vitrine:['#fff8f2','#f6ece4','#33241a'],gold:['#11100e','#1d1a14','#f6e8c8'],minimal:['#ffffff','#f0f1f3','#20252b'],glass:['#181b40','#30345c','#f6f7ff'],personal:['#081629','#133a67','#f4f9ff']};
-   const colors=palettes[pendingTemplate]||palettes.classic;
-   let style=doc.getElementById('ft-preview-selected-theme');if(!style){style=doc.createElement('style');style.id='ft-preview-selected-theme';doc.head.appendChild(style)}
-   style.textContent='body{background:'+colors[1]+'!important;color:'+colors[2]+'!important}body .wrap{background:'+colors[0]+'!important;color:'+colors[2]+'!important}body .tile{background:'+colors[1]+'!important;color:'+colors[2]+'!important}';
-  }
-  $('templateDialogStatus').textContent='Seçilen tasarım: '+templateNames[pendingTemplate]+'. Beğenirseniz Bu Tasarımı Kaydet butonuna basın.';
- }catch(err){$('templateDialogStatus').textContent='Önizleme açıldı. Tasarım görünümü doğrulanamadı.';}
-};
+  const selected=pendingTemplate;
+  try{
+   const doc=frame.contentDocument;
+   if(doc?.body){
+    const themes=['light','premium','vitrine','gold','minimal','glass','personal'];
+    doc.body.classList.remove(...themes.map(t=>'template-'+t));
+    if(selected!=='classic')doc.body.classList.add('template-'+selected);
+    doc.body.dataset.ftPreviewTheme=selected;
+    const existing=doc.getElementById('ft-preview-selected-theme');if(existing)existing.remove();
+    $('templateDialogStatus').textContent='Önizleme: '+templateNames[selected]+' · Kaydetmeden canlı kart değişmez.';
+   }else $('templateDialogStatus').textContent='Önizleme yüklenemedi. Lütfen yeniden deneyin.';
+  }catch(err){$('templateDialogStatus').textContent='Önizleme kontrol edilemedi: '+err.message;}
+ };
  frame.src=u.href;
 });
 $('templateDialogSave').onclick=async()=>{if(!pendingTemplate||!record||!user)return;const button=$('templateDialogSave');button.disabled=true;const value=pendingTemplate;try{const {data,error}=await db.from('businesses').update({qr_template:value}).eq('id',record.id).eq('owner_id',selectedOwner()).select('id').maybeSingle();if(error)throw error;if(!data)throw Error('Kayıt güncellenemedi');record.qr_template=value;showSaveToast('✓ Kart tasarımı kaydedildi');closeTemplateDialog()}catch(e){$('templateDialogStatus').textContent='Kaydedilemedi: '+e.message}finally{button.disabled=false}};
