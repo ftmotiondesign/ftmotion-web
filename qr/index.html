@@ -471,8 +471,8 @@ if(shortSlug==='ftmotion-test-isletmesi'||String(b.slug||'')==='ftmotion-test-is
  const ico=el('span','ico');ico.textContent='🏢';ico.style.background='#ff8800';
  const label=el('span');const strong=el('b');strong.textContent='Firmalarımız';const small=el('small');small.textContent='Firmaları Gör';label.append(strong,small);a.append(ico,label);$('tiles').append(a);
  a.onclick=async()=>{
-   const backdrop=el('div');backdrop.style.cssText='position:fixed;inset:0;background:#000b;z-index:99999;display:flex;align-items:flex-end;justify-content:center';
-   const panel=el('section');panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-label','Firmalarımız');panel.style.cssText='background:#1c1c20;color:#fff;width:100%;max-width:560px;max-height:85dvh;overflow:auto;border-radius:22px 22px 0 0;padding:20px';
+   const backdrop=el('div');backdrop.style.cssText='position:fixed;inset:0;background:#000b;z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px';
+   const panel=el('section');panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-label','Firmalarımız');panel.style.cssText='background:#1c1c20;color:#fff;width:100%;max-width:560px;max-height:85dvh;overflow:auto;border-radius:20px;padding:20px';
    const head=el('div');head.style.cssText='display:flex;justify-content:space-between;align-items:center;margin-bottom:16px';
    const heading=el('b');heading.textContent='Firmalarımız · Test';heading.style.fontSize='19px';
    const close=el('button');close.type='button';close.textContent='✕';close.style.cssText='border:0;border-radius:50%;background:#34343a;color:white;padding:9px 13px;cursor:pointer';
