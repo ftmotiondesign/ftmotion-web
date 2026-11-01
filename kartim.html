@@ -583,7 +583,17 @@ document.querySelectorAll('.templateQuickPreview').forEach(button=>button.onclic
  $('templateDialogTitle').textContent=templateNames[pendingTemplate]+' · Canlı Kart Önizlemesi';
  $('templateDialogStatus').textContent='Önizleme yükleniyor. Kaydetmeden canlı kart değişmez.';
  const dialog=$('templateDialog');if(dialog.parentElement!==document.body)document.body.appendChild(dialog);if(!dialog.open)dialog.showModal();
- frame.onload=()=>{$('templateDialogStatus').textContent='Bu tasarımı beğendiyseniz Bu Tasarımı Kaydet butonuna basın.'};
+ frame.onload=()=>{
+ try{
+  const doc=frame.contentDocument;
+  if(doc&&doc.body&&pendingTemplate){
+   const themes=['light','premium','vitrine','gold','minimal','glass','personal'];
+   doc.body.classList.remove(...themes.map(t=>'template-'+t));
+   if(pendingTemplate!=='classic')doc.body.classList.add('template-'+pendingTemplate);
+  }
+  $('templateDialogStatus').textContent='Seçilen tasarım: '+templateNames[pendingTemplate]+'. Beğenirseniz Bu Tasarımı Kaydet butonuna basın.';
+ }catch(err){$('templateDialogStatus').textContent='Önizleme açıldı. Tasarım görünümü doğrulanamadı.';}
+};
  frame.src=u.href;
 });
 $('templateDialogSave').onclick=async()=>{if(!pendingTemplate||!record||!user)return;const button=$('templateDialogSave');button.disabled=true;const value=pendingTemplate;try{const {data,error}=await db.from('businesses').update({qr_template:value}).eq('id',record.id).eq('owner_id',selectedOwner()).select('id').maybeSingle();if(error)throw error;if(!data)throw Error('Kayıt güncellenemedi');record.qr_template=value;showSaveToast('✓ Kart tasarımı kaydedildi');closeTemplateDialog()}catch(e){$('templateDialogStatus').textContent='Kaydedilemedi: '+e.message}finally{button.disabled=false}};
