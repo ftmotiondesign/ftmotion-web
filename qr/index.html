@@ -486,7 +486,25 @@ if(shortSlug==='ftmotion-test-isletmesi'||String(b.slug||'')==='ftmotion-test-is
    ];
    const detail=el('div');detail.style.cssText='margin-top:12px;padding:15px;border:1px solid #444;border-radius:14px;background:#26262b';
    const buttons=[];
-   function show(i){const f=firms[i];buttons.forEach((b,j)=>b.style.borderColor=i===j?'#ff8800':'#414147');detail.replaceChildren();const name=el('h3');name.textContent=f.name;name.style.margin='0 0 6px';const desc=el('p');desc.textContent=f.desc;desc.style.color='#bbb';detail.append(name,desc);if(f.url){const link=el('a');link.href=f.url;link.target='_blank';link.rel='noopener noreferrer';link.textContent='İşletme Kartını Aç ↗';link.style.cssText='display:inline-block;background:#ff8800;color:white;border-radius:10px;padding:11px;text-decoration:none';detail.append(link)}else{const note=el('p');note.textContent='Bu firma için bağlantı henüz eklenmedi.';note.style.color='#bbb';detail.append(note)}}
+   function show(i){
+     const f=firms[i];buttons.forEach((b,j)=>b.style.borderColor=i===j?'#ff8800':'#414147');
+     detail.replaceChildren();
+     const name=el('h3');name.textContent=f.name;name.style.margin='0 0 5px';
+     const desc=el('p');desc.textContent=f.desc;desc.style.cssText='color:#bbb;margin:0 0 12px;font-size:12px';detail.append(name,desc);
+     const rows=[
+       ['☎ Telefon',f.phone||'',f.phone?'tel:'+String(f.phone).replace(/[^+\\d]/g,''):''],
+       ['◉ WhatsApp',f.whatsapp||'',f.whatsapp?'https://wa.me/'+String(f.whatsapp).replace(/\\D/g,''):''],
+       ['📍 Konum',f.address||'',f.maps_url||((f.address)?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(f.address):'')]
+     ];
+     rows.forEach(([label,value,href])=>{
+       const row=el('div');row.style.cssText='display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid #3c3c42;padding:10px 0';
+       const title=el('b');title.textContent=label;title.style.cssText='font-size:12px;min-width:88px';
+       const v=href?el('a'):el('span');v.textContent=value||'Henüz eklenmedi';v.style.cssText='color:'+(href?'#ffab48':'#999')+';font-size:12px;text-align:right;overflow-wrap:anywhere';
+       if(href){v.href=href;v.rel='noopener noreferrer';if(/^https?:/.test(href))v.target='_blank'}
+       row.append(title,v);detail.append(row);
+     });
+     if(f.url){const foot=el('div');foot.style.cssText='display:flex;justify-content:flex-end;margin-top:12px';const link=el('a');link.href=f.url;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Kartı Aç ↗';link.style.cssText='display:inline-block;background:#ff8800;color:white;border-radius:8px;padding:7px 11px;font-size:11px;font-weight:700;text-decoration:none';foot.append(link);detail.append(foot)}
+   }
    firms.forEach((f,i)=>{const b=el('button');b.type='button';b.textContent='🏢 '+f.name+'  ›';b.style.cssText='display:block;width:100%;text-align:left;padding:15px;margin:8px 0;border:1px solid #414147;border-radius:12px;background:#29292e;color:#fff;font-weight:700;cursor:pointer';b.onclick=()=>show(i);buttons.push(b);panel.append(b)});
    panel.append(detail);show(0);backdrop.append(panel);backdrop.addEventListener('click',e=>{if(e.target===backdrop)dismiss()});document.body.append(backdrop);document.body.style.overflow='hidden';document.addEventListener('keydown',onKey);close.focus();
  };
