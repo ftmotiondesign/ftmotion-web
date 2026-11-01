@@ -496,8 +496,9 @@ if(employee){
  if(employee.email)tile('✉','E-posta','Çalışana Yaz','mailto:'+employee.email,'#333');
 }
 const digits=(b.whatsapp||b.phone||'').replace(/\D/g,'');tile('☎','Telefon','Hemen Ara',b.phone?'tel:'+b.phone.replace(/[^+\d]/g,''):null,'#06c761');tile('📱','Cep Telefonu','Cep Ara',b.mobile_phone?'tel:'+String(b.mobile_phone).replace(/[^+\d]/g,''):null,'#1889db');tile('✆','WhatsApp','Mesaj Gönder',digits?'https://wa.me/'+digits:null,'#02b95a');
-/* FTMotion: ONLY the explicitly approved test card gets the Firmalarımız pilot. */
-if(shortSlug==='ftmotion-test-isletmesi'||String(b.slug||'')==='ftmotion-test-isletmesi'||location.pathname.split('/').filter(Boolean).pop()==='ftmotion-test-isletmesi'){
+/* Show the existing Firmalarımız modal only for cards with saved firm rows. */
+const firmPresence=await db.from('ft_test_card_firms').select('id').eq('business_id',b.id).limit(1);
+if(!firmPresence.error&&(firmPresence.data||[]).length>0){
  const a=el('button','tile');a.type='button';a.style.cssText='color:white;text-align:left;font:inherit;cursor:pointer;border-color:#ff8800';
  const ico=el('span','ico');ico.textContent='🏢';ico.style.background='#ff8800';
  const label=el('span');const strong=el('b');strong.textContent='Firmalarımız';const small=el('small');small.textContent='Firmaları Gör';label.append(strong,small);a.append(ico,label);$('tiles').append(a);
@@ -505,7 +506,7 @@ if(shortSlug==='ftmotion-test-isletmesi'||String(b.slug||'')==='ftmotion-test-is
    const backdrop=el('div');backdrop.style.cssText='position:fixed;inset:0;background:#000b;z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px';
    const panel=el('section');panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-label','Firmalarımız');panel.style.cssText='background:#1c1c20;color:#fff;width:100%;max-width:560px;max-height:85dvh;overflow:auto;border-radius:20px;padding:20px';
    const head=el('div');head.style.cssText='display:flex;justify-content:space-between;align-items:center;margin-bottom:16px';
-   const heading=el('b');heading.textContent='Firmalarımız · Test';heading.style.fontSize='19px';
+   const heading=el('b');heading.textContent='Firmalarımız';heading.style.fontSize='19px';
    const close=el('button');close.type='button';close.textContent='✕';close.style.cssText='border:0;border-radius:50%;background:#34343a;color:white;padding:9px 13px;cursor:pointer';
    const dismiss=()=>{backdrop.remove();document.body.style.overflow='';document.removeEventListener('keydown',onKey)};
    const onKey=e=>{if(e.key==='Escape')dismiss()};
@@ -513,7 +514,7 @@ if(shortSlug==='ftmotion-test-isletmesi'||String(b.slug||'')==='ftmotion-test-is
    const result=await db.from('ft_test_card_firms').select('name,description,phone,whatsapp,address,maps_url,card_url').eq('business_id',b.id).order('sort_order');
    const firms=(result.data||[]).map(x=>({...x,desc:x.description||'',url:x.card_url||''}));
    if(result.error){const warn=el('p');warn.textContent='Firma bilgileri şu anda yüklenemedi.';panel.append(warn)}
-   if(!result.error&&!firms.length){const warn=el('p');warn.textContent='Henüz firma eklenmedi. Yönetim panelindeki Firmalarım (TEST) bölümünden ekleyebilirsiniz.';warn.style.color='#bbb';panel.append(warn)}
+   if(!result.error&&!firms.length){const warn=el('p');warn.textContent='Henüz firma eklenmedi. Yönetim panelindeki Firmalarım bölümünden ekleyebilirsiniz.';warn.style.color='#bbb';panel.append(warn)}
    const detail=el('div');detail.style.cssText='margin-top:12px;padding:15px;border:1px solid #444;border-radius:14px;background:#26262b';
    const buttons=[];let openIndex=-1;
    function show(i){
