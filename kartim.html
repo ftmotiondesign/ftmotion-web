@@ -691,7 +691,7 @@ else {
 if(data.length>1){notice('Hesabınıza birden fazla kart bağlı. İlk kartınız açıldı; ek kartların etkinleştirilmesi için FT Motion ile iletişime geçin. Ek kart: 299 TL/yıl.');}
 record=data[0];document.querySelectorAll('[data-ledger-link]').forEach(link=>{const url=new URL('musteri-defterim.html',location.href);url.searchParams.set('business_id',record.id);link.href=url.href});loadPhysicalCards();await loadDiscoverSettings();const introRes=await db.from('businesses').select('intro_settings').eq('id',record.id).eq('owner_id',selectedOwner()).maybeSingle();if(!introRes.error)record.intro_settings=introRes.data?.intro_settings;fillIntro();const support=$('memberSupport');if(support){const msg='Merhaba FTMotion, '+(record.name||'işletmem')+' için işletme panelimle ilgili destek almak istiyorum.';support.href='https://wa.me/905347815105?text='+encodeURIComponent(msg)}const qrAlias=await db.from('qr_short_links').select('short_slug').eq('business_id',record.id).maybeSingle();record.short_slug=qrAlias.data?.short_slug||null;
 // Isolated test-only firm editor; other business panels are unchanged.
-if(record.slug==='ftmotion-test-isletmesi'||record.short_slug==='ftmotion-test-isletmesi'){
+if(record.id==='404e3c55-babc-4014-8d27-171b5bac591b'){
  const grid=document.querySelector('#ftCardActions .ft-home-grid');
  if(grid&&!document.getElementById('ftTestFirmsTile')){
   const tile=document.createElement('button');tile.type='button';tile.className='ft-home-action';tile.id='ftTestFirmsTile';
