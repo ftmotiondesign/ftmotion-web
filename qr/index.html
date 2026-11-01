@@ -357,6 +357,25 @@ currentUser(db).then(owner=>{
  entry.href=url.href;entry.textContent='📒 Müşteri ve Teklif Defterim';entry.style.cssText='display:block;margin:12px 17px;padding:13px;text-align:center;background:#ff7900;color:#171717;border-radius:11px;font-weight:800;text-decoration:none';
  $('special').before(entry);
 }).catch(()=>{});
+// Pilot-only person cards: exact Başol routes; all other QR paths retain existing behavior.
+if(shortSlug==='basol-yapi' && ['burak-basol','yusuf-basol'].includes(pageSlug)){
+ const result=await db.from('ft_person_cards_pilot').select('full_name,phone,whatsapp,email,firms').eq('slug',pageSlug).eq('owner_id',b.owner_id).eq('published',true).maybeSingle();
+ if(result.error)throw result.error;
+ if(result.data){
+  const p=result.data;
+  const main=document.createElement('main');main.style.cssText='max-width:540px;margin:30px auto;padding:22px;background:#14161b;color:white;border-radius:18px;font:16px/1.5 system-ui';
+  const heading=document.createElement('h1');heading.textContent=p.full_name;main.append(heading);
+  const add=(label,href)=>{const a=document.createElement('a');a.textContent=label;a.href=href;a.style.cssText='display:block;background:#ff8300;color:#161616;text-decoration:none;font-weight:750;border-radius:12px;padding:14px;margin:10px 0;text-align:center';main.append(a)};
+  if(p.phone)add('Cep Telefonu','tel:'+p.phone);
+  if(p.whatsapp)add('WhatsApp','https://wa.me/'+p.whatsapp.replace(/[^0-9]/g,''));
+  if(p.email)add('E-posta','mailto:'+p.email);
+  const title=document.createElement('h2');title.textContent='Firmalarım';main.append(title);
+  add(b.name,'/qr/basol-yapi');
+  for(const f of p.firms||[]){if(typeof f.url==='string'&&f.url.startsWith('https://'))add(f.name,f.url)}
+  document.body.replaceChildren(main);document.title=p.full_name+' | FTMotion';
+  throw {ftmPilotHandled:true};
+ }
+}
 // Çalışan kartı: şirketin ortak bilgileri korunur, kişisel iletişim eklenir.
 let employee=null;
 if(pageSlug){
