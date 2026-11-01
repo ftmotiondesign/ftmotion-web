@@ -715,14 +715,14 @@ else {
 if(data.length>1){notice('Hesabınıza birden fazla kart bağlı. İlk kartınız açıldı; ek kartların etkinleştirilmesi için FT Motion ile iletişime geçin. Ek kart: 299 TL/yıl.');}
 record=data[0];document.querySelectorAll('[data-ledger-link]').forEach(link=>{const url=new URL('musteri-defterim.html',location.href);url.searchParams.set('business_id',record.id);link.href=url.href});loadPhysicalCards();await loadDiscoverSettings();const introRes=await db.from('businesses').select('intro_settings').eq('id',record.id).eq('owner_id',selectedOwner()).maybeSingle();if(!introRes.error)record.intro_settings=introRes.data?.intro_settings;fillIntro();const support=$('memberSupport');if(support){const msg='Merhaba FTMotion, '+(record.name||'işletmem')+' için işletme panelimle ilgili destek almak istiyorum.';support.href='https://wa.me/905347815105?text='+encodeURIComponent(msg)}const qrAlias=await db.from('qr_short_links').select('short_slug').eq('business_id',record.id).maybeSingle();record.short_slug=qrAlias.data?.short_slug||null;
 // Isolated test-only firm editor; other business panels are unchanged.
-if(record.id==='404e3c55-babc-4014-8d27-171b5bac591b'){
+if(record?.id){
  const grid=document.querySelector('#ftCardActions .ft-home-grid');
  if(grid&&!document.getElementById('ftTestFirmsTile')){
   const tile=document.createElement('button');tile.type='button';tile.className='ft-home-action';tile.id='ftTestFirmsTile';
-  tile.innerHTML='<span>🏢</span><strong>Firmalarım (TEST)</strong><small>Firma, telefon, WhatsApp ve konum</small>';
+  tile.innerHTML='<span>🏢</span><strong>Firmalarım</strong><small>Firma, telefon, WhatsApp ve konum</small>';
   grid.append(tile);
   const section=document.createElement('section');section.id='ftTestFirmsEditor';section.hidden=true;section.style.cssText='background:#fff;color:#202936;border:1px solid #e0e4ea;border-radius:16px;padding:18px;margin:15px 0';
-  section.innerHTML='<h3>Firmalarım · Yalnızca Test İşletmesi</h3><p style="font-size:12px;color:#667">Kaydedilen firmalar test kartındaki Firmalarımız penceresinde görüntülenir.</p><div id="ftTestFirmsRows"></div><button type="button" id="ftTestFirmsAdd" style="background:#f80;color:white;border:0;border-radius:9px;padding:11px;margin:10px 0">+ Firma Ekle</button><p id="ftTestFirmsStatus" aria-live="polite"></p>';
+  section.innerHTML='<h3>Firmalarım</h3><p style="font-size:12px;color:#667">Kaydettiğiniz firmalar işletme kartınızdaki Firmalarımız bölümünde görünür. Firma eklemezseniz buton çıkmaz.</p><div id="ftTestFirmsRows"></div><button type="button" id="ftTestFirmsAdd" style="background:#f80;color:white;border:0;border-radius:9px;padding:11px;margin:10px 0">+ Firma Ekle</button><p id="ftTestFirmsStatus" aria-live="polite"></p>';
   grid.closest('#ftCardActions').append(section);
   const rows=section.querySelector('#ftTestFirmsRows'),status=section.querySelector('#ftTestFirmsStatus');
   const fields=[['name','Firma Adı'],['description','Sektör / Açıklama'],['phone','Telefon'],['whatsapp','WhatsApp'],['address','Adres / Konum'],['maps_url','Harita Bağlantısı'],['card_url','İşletme Kartı Bağlantısı']];
