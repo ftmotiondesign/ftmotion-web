@@ -582,7 +582,7 @@ document.querySelectorAll('.templateQuickPreview').forEach(button=>button.onclic
  const u=new URL(url());u.searchParams.set('template_preview',pendingTemplate);u.hash='ftm-preview='+encodeURIComponent(pendingTemplate);
  $('templateDialogTitle').textContent=templateNames[pendingTemplate]+' · Canlı Kart Önizlemesi';
  $('templateDialogStatus').textContent='Önizleme yükleniyor. Kaydetmeden canlı kart değişmez.';
- const dialog=$('templateDialog');if(!dialog.open)dialog.showModal();
+ const dialog=$('templateDialog');if(dialog.parentElement!==document.body)document.body.appendChild(dialog);if(!dialog.open)dialog.showModal();
  frame.onload=()=>{$('templateDialogStatus').textContent='Bu tasarımı beğendiyseniz Bu Tasarımı Kaydet butonuna basın.'};
  frame.src=u.href;
 });
