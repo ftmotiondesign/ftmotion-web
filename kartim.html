@@ -459,15 +459,15 @@ const help=document.createElement('p');help.className='muted';help.textContent='
 const actions=document.createElement('div');actions.className='photoActions';
 for(const [label,mode] of [['📷 Fotoğraf Çek','camera'],['📁 Dosya Seç','file']]){const btn=document.createElement('button');btn.type='button';btn.className=mode==='file'?'secondary':'';btn.textContent=label;btn.onclick=()=>{closePhotoModal();$('uploadType').value=type;$('uploadType').dispatchEvent(new Event('change'));if(mode==='camera')$('cameraInput').click();else $('uploadFile').click()};actions.append(btn)}
 content.append(help,actions)})}
-async function deleteMainPhoto(key,title){if(!record||!user)return;if(!confirm(title+' silinsin mi?'))return;notice('Fotoğraf siliniyor...');try{const {data,error}=await db.from('businesses').update({[key]:null}).eq('id',record.id).eq('owner_id',selectedOwner()).select('id').maybeSingle();if(error)throw error;if(!data)throw Error('Kayda erişim izniniz yok.');record[key]=null;const input=document.querySelector('[name="'+key+'"]');if(input)input.value='';drawMedia();notice('');showSaveToast()}catch(e){notice('Fotoğraf silinemedi: '+e.message,true)}}
+async function deleteMainPhoto(key,title){if(!record||!user)return;if(!confirm(title+' silinsin mi?'))return;notice('Fotoğraf siliniyor...');try{const update=key==='intro_logo'?{intro_settings:{...(record.intro_settings||{}),logo_url:null}}:{[key]:null};const {data,error}=await db.from('businesses').update(update).eq('id',record.id).eq('owner_id',selectedOwner()).select('id').maybeSingle();if(error)throw error;if(!data)throw Error('Kayda erişim izniniz yok.');if(key==='intro_logo')record.intro_settings=update.intro_settings;else record[key]=null;const input=document.querySelector('[name="'+key+'"]');if(input)input.value='';drawMedia();notice('');showSaveToast()}catch(e){notice('Fotoğraf silinemedi: '+e.message,true)}}
 function drawMedia(){
  const list=$('mediaList');list.replaceChildren();
  const group=document.createElement('div');group.className='mediaGrid';
- for(const [title,key] of [['Logo','logo_url'],['Kapak fotoğrafı','cover_url']]){
+ for(const [title,key] of [['Profil resmi / işletme logosu','logo_url'],['Giriş intro logosu (ayrı)','intro_logo'],['Kapak fotoğrafı','cover_url']]){
   const tile=document.createElement('div');tile.className='mediaTile';
   const h=document.createElement('h3');h.textContent=title;
   const frame=document.createElement('div');frame.className='mediaImage';
-  const url=record[key];
+  const url=key==='intro_logo'?record.intro_settings?.logo_url:record[key];
   if(url){const img=document.createElement('img');img.src=url;img.alt=title;img.loading='lazy';img.onerror=()=>{frame.textContent='Görsel açılamadı'};frame.append(img)}
   else frame.textContent='Henüz fotoğraf yok';
   const actions=document.createElement('div');actions.className='actions';
